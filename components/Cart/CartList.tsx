@@ -1,14 +1,14 @@
 import QtyBox from "@components/Main/QtyBox";
 import Button from "@components/Member/Button";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 
 export default function CartList({ cartItems }: CartItemsProps) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [items, setItems] = useState(cartItems);
 
-  const changeQty = (totalPrice, items) => {
+  const changeQty = (totalPrice: number, items) => {
     if (totalPrice > 100000) {
       setDeliveryFee(0);
     } else {
@@ -28,7 +28,11 @@ export default function CartList({ cartItems }: CartItemsProps) {
     changeQty(totalPrice, cartItems);
   }, []);
 
-  const onQtyChange = (e) => {
+  const onQtyChange = (e: {
+    target: {
+      value: string;
+    };
+  }) => {
     const name = e.target.name;
     const value = Number(e.target.value);
     const names = name.split("-");
@@ -56,7 +60,7 @@ export default function CartList({ cartItems }: CartItemsProps) {
     }
   };
 
-  const onMinusClick = (id) => {
+  const onMinusClick = (id: number) => {
     let totalPrice = 0;
     const newItems = items.map((item) => {
       if (item.id === id) {
@@ -78,7 +82,7 @@ export default function CartList({ cartItems }: CartItemsProps) {
     changeQty(totalPrice, newItems);
   };
 
-  const onPlusClick = (id) => {
+  const onPlusClick = (id: number) => {
     let totalPrice = 0;
     const newItems = items.map((item) => {
       if (item.id === id) {
@@ -101,7 +105,7 @@ export default function CartList({ cartItems }: CartItemsProps) {
     changeQty(totalPrice, newItems);
   };
 
-  const onDeleteClick = (id) => {
+  const onDeleteClick = (id: number) => {
     const chkDelete = confirm("선택한 상품을 삭제하시겠습니까?");
     if (chkDelete) {
       let totalPrice = 0;
@@ -115,12 +119,12 @@ export default function CartList({ cartItems }: CartItemsProps) {
     }
   };
 
-  const onCartSubmit = (e) => {
+  const onCartSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
   return (
     <div>
-      <form action="" onSubmit={onCartSubmit}>
+      <form action="" onSubmit={(e) => onCartSubmit(e)}>
         {/* 장바구니 테이블 상단 */}
         <div className="flex border-b border-[#ccc] text-sm pb-4">
           <div className="flex-[4] flex">
@@ -175,7 +179,7 @@ export default function CartList({ cartItems }: CartItemsProps) {
                   <QtyBox
                     qty={item.qty}
                     name={`qty-${item.id}`}
-                    onQtyChange={onQtyChange}
+                    onQtyChange={(e) => onQtyChange(e)}
                     onMinusClick={() => onMinusClick(item.id)}
                     onPlusClick={() => onPlusClick(item.id)}
                   />
