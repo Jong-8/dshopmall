@@ -93,4 +93,22 @@ declare global {
     id: number;
     onPopupBgClick: () => void;
   }
+
+  interface CartItemsProps {
+    cartItems: [
+      {
+        id: number;
+        title: string;
+        price: number;
+        thumbnailUrl: string;
+        selectOption: {
+          selectOptionTitle: string;
+          selectOptionName: string;
+          selectOptionAddPrice: number;
+        };
+        qty: number;
+        stock: number;
+      }
+    ];
+  }
 }
