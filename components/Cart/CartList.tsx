@@ -3,7 +3,7 @@ import Button from "@components/Member/Button";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-export default function CartList({ cartItems }) {
+export default function CartList({ cartItems }: CartItemsProps) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [items, setItems] = useState(cartItems);
