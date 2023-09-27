@@ -8,7 +8,24 @@ export default function CartList({ cartItems }: CartItemsProps) {
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [items, setItems] = useState(cartItems);
 
-  const changeQty = (totalPrice: number, items) => {
+  const changeQty = (
+    totalPrice: number,
+    items: [
+      {
+        id: number;
+        title: string;
+        price: number;
+        thumbnailUrl: string;
+        selectOption: {
+          selectOptionTitle: string;
+          selectOptionName: string;
+          selectOptionAddPrice: number;
+        };
+        qty: number;
+        stock: number;
+      }
+    ]
+  ) => {
     if (totalPrice > 100000) {
       setDeliveryFee(0);
     } else {
