@@ -49,7 +49,7 @@ declare global {
   interface QtyBoxProps {
     qty: number;
     name?: string | undefined;
-    onQtyChange(e: { target: { value: string } }): void;
+    onQtyChange(e: { target: { value: string; name: string } }): void;
     onMinusClick(e): void;
     onPlusClick(e): void;
   }
@@ -95,20 +95,18 @@ declare global {
   }
 
   interface CartItemsProps {
-    cartItems: [
-      {
-        id: number;
-        title: string;
-        price: number;
-        thumbnailUrl: string;
-        selectOption: {
-          selectOptionTitle: string;
-          selectOptionName: string;
-          selectOptionAddPrice: number;
-        };
-        qty: number;
-        stock: number;
-      }
-    ];
+    cartItems: {
+      id: number;
+      title: string;
+      price: number;
+      thumbnailUrl: string;
+      selectOption: {
+        selectOptionTitle: string;
+        selectOptionName: string;
+        selectOptionAddPrice: number;
+      };
+      qty: number;
+      stock: number;
+    }[];
   }
 }
