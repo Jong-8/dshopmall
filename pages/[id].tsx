@@ -62,7 +62,7 @@ export default function Item() {
   const [mainThumbnail, setMainThumbnail] = useState("");
 
   useEffect(() => {
-    if (item) return;
+    //if (item) return;
     //axios
     //  .get(`https://jsonplaceholder.typicode.com/photos/${router.query.id}`)
     //  .then((res) => {
@@ -103,7 +103,7 @@ export default function Item() {
     if (selectList) {
       setSelectOptionList(selectList.options);
     }
-  }, [item]);
+  }, []);
 
   const onImgClick = (url: string) => {
     setMainThumbnail(url);
