@@ -1,8 +1,8 @@
 import ContentLayout from "@components/Layout/ContentLayout";
 import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
-import DaumPostcodeEmbed from "react-daum-postcode";
-import { useState, useEffect } from "react";
+import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
+import { useState, useEffect, FormEvent } from "react";
 import Button from "@components/Member/Button";
 import Link from "next/link";
 
@@ -43,8 +43,8 @@ export default function Mypage() {
     setPost(true);
   };
 
-  const handleComplete = (data) => {
-    console.log(data);
+  const handleComplete = (data: Address) => {
+    //console.log(data);
     let fullAddress = data.address;
     let extraAddress = "";
 
@@ -66,6 +66,10 @@ export default function Mypage() {
   const foldDaumPostcode = () => {
     // iframe을 넣은 element를 안보이게 한다.
     setPost(false);
+  };
+
+  const onInfoSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
   };
   return (
     <>
@@ -129,7 +133,7 @@ export default function Mypage() {
                 <div className="text-[#999]">로그아웃</div>
               </div>
               <div className="text-sm">
-                <form action="">
+                <form action="" onSubmit={onInfoSubmit}>
                   <div className="my_input_box">
                     <div className="my_label">이메일</div>
                     <div>

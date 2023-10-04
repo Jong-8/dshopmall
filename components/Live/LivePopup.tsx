@@ -7,7 +7,7 @@ import {
   RefObject,
 } from "react";
 import ReactPlayer, { ReactPlayerProps } from "react-player";
-import { useDrag } from "@use-gesture/react";
+import { FullGestureState, useDrag } from "@use-gesture/react";
 import { IoClose } from "react-icons/io5";
 import { IoMdPause, IoMdPlay } from "react-icons/io";
 import { GrRotateLeft, GrRotateRight } from "react-icons/gr";
@@ -162,7 +162,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
   const onTotalProgressBarClick = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
-    const bar = e.target.clientWidth;
+    const bar = (e.target as HTMLDivElement).clientWidth;
     const clickX = e.nativeEvent.offsetX;
     const percent = clickX / bar;
     if (ref.current) {
@@ -173,7 +173,8 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
   const onProgressBarClick = (
     e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
   ) => {
-    const bar = e.target.offsetParent.clientWidth;
+    const bar = ((e.target as HTMLDivElement).offsetParent as HTMLDivElement)
+      .clientWidth;
     const clickX = e.nativeEvent.offsetX;
     const percent = clickX / bar;
     if (ref.current) {
@@ -181,26 +182,37 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
     }
   };
 
-  const bind = useDrag((state) => {
-    const parent = state.currentTarget.offsetParent;
-    const bar = parent.clientWidth;
-    let movement = 0;
-    if (played === 0) {
-      // 시작일 때
-      movement = state.movement[0] / bar;
-    } else {
-      if (state.first) {
-        // 처음 클릭했을 때 중간일 때
-        movement = played + state.movement[0] / bar;
+  const bind = useDrag(
+    (
+      state: Omit<FullGestureState<"drag">, "event"> & {
+        event:
+          | globalThis.MouseEvent
+          | PointerEvent
+          | TouchEvent
+          | KeyboardEvent;
+      }
+    ) => {
+      const parent = (state.currentTarget as HTMLDivElement)
+        .offsetParent as HTMLDivElement;
+      const bar = parent.clientWidth;
+      let movement = 0;
+      if (played === 0) {
+        // 시작일 때
+        movement = state.movement[0] / bar;
       } else {
-        // 마우스 이동 중 중간일 때
-        movement = (state.values[0] - parent.getBoundingClientRect().x) / bar;
+        if (state.first) {
+          // 처음 클릭했을 때 중간일 때
+          movement = played + state.movement[0] / bar;
+        } else {
+          // 마우스 이동 중 중간일 때
+          movement = (state.values[0] - parent.getBoundingClientRect().x) / bar;
+        }
+      }
+      if (ref.current) {
+        ref.current.seekTo(movement);
       }
     }
-    if (ref.current) {
-      ref.current.seekTo(movement);
-    }
-  });
+  );
 
   const timeSet = (time: number) => {
     const hour = time > 3600 && time / 3600;

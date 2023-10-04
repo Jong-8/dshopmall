@@ -13,8 +13,7 @@ export default function Main() {
       category: "",
       thumbnailUrl: "",
       stock: 0,
-      requiredOption: false,
-      selectOption: false,
+      isSelectOption: false,
       images: [""],
       description: "",
     },
@@ -25,7 +24,7 @@ export default function Main() {
     //axios.get("https://jsonplaceholder.typicode.com/photos").then((res) => {
     //  setDatas(res.data);
     //});
-    setDatas(itemList);
+    itemList && setDatas(itemList);
   }, []);
 
   const onTabClick = (category: string) => {

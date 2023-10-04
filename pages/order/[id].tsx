@@ -1,7 +1,7 @@
 import ContentLayout from "@components/Layout/ContentLayout";
 import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
-import DaumPostcodeEmbed from "react-daum-postcode";
+import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
 import { useState } from "react";
 
 export default function Order() {
@@ -11,7 +11,7 @@ export default function Order() {
     setPost(true);
   };
 
-  const handleComplete = (data) => {
+  const handleComplete = (data: Address) => {
     //console.log(data);
     let fullAddress = data.address;
     let extraAddress = "";

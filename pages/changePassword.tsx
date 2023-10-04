@@ -1,7 +1,7 @@
 import SubLayout from "@components/Layout/SubLayout";
 import Button from "@components/Member/Button";
 import Input from "@components/Member/Input";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 
 export default function ChangePassword() {
   const [values, setValues] = useState({
@@ -10,12 +10,10 @@ export default function ChangePassword() {
     changePasswordConfirm: "",
   });
   const { password, changePassword, changePasswordConfirm } = values;
-  const onChangePasswordSubmit = (e: { preventDefault(): void }) => {
+  const onChangePasswordSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
-  const onChange = (e: {
-    target: { name: string; value: string | number };
-  }) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({
       ...values,

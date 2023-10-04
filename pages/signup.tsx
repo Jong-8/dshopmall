@@ -2,7 +2,7 @@ import SubLayout from "@components/Layout/SubLayout";
 import Button from "@components/Member/Button";
 import Input from "@components/Member/Input";
 import Verification from "@components/Member/Verification";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 
 export default function Signup() {
   const [values, setValues] = useState({
@@ -22,13 +22,11 @@ export default function Signup() {
   const { id, password, passwordConfirm, name, phone, email } = values;
   const { allChk, requiredChk1, requiredChk2, selectChk } = chks;
 
-  const onSignupSubmit = (e: { preventDefault(): void }) => {
+  const onSignupSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
 
-  const onChange = (e: {
-    target: { name: string; value: string | number };
-  }) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({
       ...values,

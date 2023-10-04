@@ -2,7 +2,7 @@ import SubLayout from "@components/Layout/SubLayout";
 import Button from "@components/Member/Button";
 import Input from "@components/Member/Input";
 import Verification from "@components/Member/Verification";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 
 export default function FindPassword() {
   const [values, setValues] = useState({
@@ -12,9 +12,7 @@ export default function FindPassword() {
   });
   const { id, name, phone } = values;
 
-  const onChange = (e: {
-    target: { name: string; value: string | number };
-  }) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({
       ...values,
@@ -22,7 +20,7 @@ export default function FindPassword() {
     });
   };
 
-  const onFindPasswordSubmit = (e: { preventDefault(): void }) => {
+  const onFindPasswordSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
   return (

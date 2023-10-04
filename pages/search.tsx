@@ -2,7 +2,7 @@ import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
 import { GoSearch, GoX } from "react-icons/go";
 import { itemList } from "../services/dummy/dummy";
 
@@ -22,20 +22,19 @@ export default function Search() {
       category: "",
       thumbnailUrl: "",
       stock: 0,
-      requiredOption: false,
-      selectOption: false,
+      isSelectOption: false,
       images: [""],
       description: "",
     },
   ]);
-  const inputRef = useRef<HTMLDivElement>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setKeyword(router.query.keyword);
     setDatas(itemList);
   }, [router.query.keyword]);
 
-  const onKeywordChange = (e) => {
+  const onKeywordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setKeywordReset(value ? true : false);
     setKeyword(value);
@@ -47,7 +46,7 @@ export default function Search() {
     inputRef.current?.focus();
   };
 
-  const onSearchSubmit = (e) => {
+  const onSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     router.push(`/search?keyword=${keyword}`);
   };

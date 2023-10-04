@@ -1,7 +1,7 @@
 import SubLayout from "@components/Layout/SubLayout";
 import Button from "@components/Member/Button";
 import Input from "@components/Member/Input";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 
 export default function CheckGuestOrder() {
   const [values, setValues] = useState({
@@ -10,9 +10,7 @@ export default function CheckGuestOrder() {
   });
   const { name, orderId } = values;
 
-  const onChange = (e: {
-    target: { name: string; value: string | number };
-  }) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({
       ...values,
@@ -20,7 +18,7 @@ export default function CheckGuestOrder() {
     });
   };
 
-  const onCheckGuestOrderSubmit = (e: { preventDefault(): void }) => {
+  const onCheckGuestOrderSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
   };
   return (

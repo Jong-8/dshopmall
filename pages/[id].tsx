@@ -3,7 +3,7 @@ import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { itemList, selectOptions } from "../services/dummy/dummy";
 import Button from "@components/Member/Button";
 import Link from "next/link";
@@ -37,23 +37,27 @@ export default function Item() {
     | undefined
   >();
   const [selectedOptions, setSelectedOptions] = useState<
-    [
-      {
-        optionId: number;
-        name?: string;
-        qty: number | 1;
-        price?: number;
-        stock?: number;
-      }
-    ]
-  >([]);
+    {
+      optionId: number;
+      name: string | "";
+      qty: number | 1;
+      price: number | 0;
+      stock: number | 0;
+    }[]
+  >([
+    {
+      optionId: 0,
+      name: "",
+      qty: 1,
+      price: 0,
+      stock: 0,
+    },
+  ]);
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState(0);
-  const [accordionBox, setAccordionBox] = useState({
-    cancelBox: false,
-    deliveryBox: false,
-    returnBox: false,
-  });
+  const [cancelBox, setCancelBox] = useState(false);
+  const [deliveryBox, setDeliveryBox] = useState(false);
+  const [returnBox, setReturnBox] = useState(false);
   const router = useRouter();
   const [mainThumbnail, setMainThumbnail] = useState("");
 
@@ -109,7 +113,7 @@ export default function Item() {
     setOpen(!open);
   };
 
-  const checkQty = (array: [{ qty: number }]) => {
+  const checkQty = (array: { qty: number }[]) => {
     let totalQty = 0;
     array?.map((option) => {
       totalQty += option.qty;
@@ -117,7 +121,7 @@ export default function Item() {
     return totalQty;
   };
 
-  const checkTotalPrice = (array: [{ qty: number; price: number }]) => {
+  const checkTotalPrice = (array: { qty: number; price: number }[]) => {
     let totalPrice = 0;
     array?.map((option) => {
       totalPrice += option.price * option.qty;
@@ -129,8 +133,16 @@ export default function Item() {
     let isOption = false;
     let overStock = false;
     let nextQty = 0;
-    let selectedOption = {};
-    let selected = [];
+    let selectedOption = { optionId: 0, name: "", price: 0, qty: 0, stock: 0 };
+    let selected = [
+      {
+        optionId: 0,
+        name: "",
+        price: 0,
+        qty: 0,
+        stock: 0,
+      },
+    ];
     // 선택한 옵션이 존재하는지 확인
     selected = selectedOptions?.map((selectedOption) => {
       if (selectedOption.optionId === id) {
@@ -189,13 +201,13 @@ export default function Item() {
     setOpen(false);
   };
 
-  const onQtyChange = (e: { target: { value: string } }, id: string) => {
+  const onQtyChange = (e: { target: { value: string } }, id: number) => {
     let overStock = false;
     const value = Number(e.target.value);
     if (value > 0) {
       const newSelectedOptions = selectedOptions.map((selectedOption) => {
         if (selectedOption.optionId === Number(id)) {
-          if (selectedOption.stock < value) {
+          if (selectedOption.stock && selectedOption.stock < value) {
             // 바뀐 수량이 재고보다 많으면
             overStock = true;
             return selectedOption;
@@ -220,7 +232,7 @@ export default function Item() {
     }
   };
 
-  const onMinusClick = (id: string) => {
+  const onMinusClick = (id: number) => {
     let overStock = false;
     const newSelectedOptions = selectedOptions.map((selectedOption) => {
       if (selectedOption.optionId === Number(id)) {
@@ -245,7 +257,7 @@ export default function Item() {
     setTotalPrice(totalPrice);
   };
 
-  const onPlusClick = (id: string) => {
+  const onPlusClick = (id: number) => {
     let overStock = false;
     const newSelectedOptions = selectedOptions.map((selectedOption) => {
       if (selectedOption.optionId === Number(id)) {
@@ -274,7 +286,7 @@ export default function Item() {
     setTotalPrice(totalPrice);
   };
 
-  const onDeleteClick = (id: string) => {
+  const onDeleteClick = (id: number) => {
     const newSelectedOptions = selectedOptions.filter((selectedOption) => {
       return selectedOption.optionId !== Number(id);
     });
@@ -294,15 +306,19 @@ export default function Item() {
     setTab(num);
   };
 
-  const { cancelBox, deliveryBox, returnBox } = accordionBox;
-
-  const onAccordionBoxClick = (box: string) => {
-    setAccordionBox({
-      ...accordionBox,
-      [box]: !accordionBox[box],
-    });
+  const onCancelBoxClick = () => {
+    setCancelBox(!cancelBox);
   };
-  const onItemSubmit = (e: { preventDefault(): void }) => {
+
+  const onDeliveryBoxClick = () => {
+    setDeliveryBox(!deliveryBox);
+  };
+
+  const onReturnBoxClick = () => {
+    setReturnBox(!returnBox);
+  };
+
+  const onItemSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     //const { buy, cart } = e.target.elements;
   };
@@ -513,9 +529,7 @@ export default function Item() {
                         <div>
                           <div
                             className="px-7 py-6 flex justify-between items-center font-semibold cursor-pointer"
-                            onClick={() => {
-                              onAccordionBoxClick("cancelBox");
-                            }}
+                            onClick={onCancelBoxClick}
                           >
                             <div>주문취소</div>
                             <div
@@ -548,9 +562,7 @@ export default function Item() {
                         <div>
                           <div
                             className="border-t border-t-[#e0e0e0] px-7 py-6 flex justify-between items-center font-semibold cursor-pointer"
-                            onClick={() => {
-                              onAccordionBoxClick("deliveryBox");
-                            }}
+                            onClick={onDeliveryBoxClick}
                           >
                             <div>배송안내</div>
                             <div className={`${deliveryBox && "rotate-180"}`}>
@@ -605,9 +617,7 @@ export default function Item() {
                         <div>
                           <div
                             className="border-t border-t-[#e0e0e0] px-7 py-6 flex justify-between items-center font-semibold cursor-pointer"
-                            onClick={() => {
-                              onAccordionBoxClick("returnBox");
-                            }}
+                            onClick={onReturnBoxClick}
                           >
                             <div>반품안내</div>
                             <div className={`${returnBox && "rotate-180"}`}>

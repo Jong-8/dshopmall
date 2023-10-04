@@ -3,7 +3,7 @@ import Button from "@components/Member/Button";
 import Input from "@components/Member/Input";
 import API from "@services/API";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 
 type LoginProps = {
   id: string;
@@ -19,7 +19,7 @@ export default function Login() {
     password: "",
   });
   const { id, password } = values;
-  const onLoginSubmit = async (e: { preventDefault(): void }) => {
+  const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     //const res = await API.auth.login(id, password);
@@ -31,9 +31,7 @@ export default function Login() {
     //   alert("로그인 성공");
     // } else alert("비밀번호가 올바르지않습니다.");
   };
-  const onChange = (e: {
-    target: { name: string; value: string | number };
-  }) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({
       ...values,
