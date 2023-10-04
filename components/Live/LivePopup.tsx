@@ -1,10 +1,11 @@
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, MouseEvent } from "react";
 import ReactPlayer from "react-player";
 import { useDrag } from "@use-gesture/react";
 import { IoClose } from "react-icons/io5";
 import { IoMdPause, IoMdPlay } from "react-icons/io";
 import { GrRotateLeft, GrRotateRight } from "react-icons/gr";
 import Link from "next/link";
+import { OnProgressProps } from "react-player/base";
 
 const liveLists = [
   {
@@ -121,7 +122,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
     });
   };
 
-  const handleProgress = (state) => {
+  const handleProgress = (state: OnProgressProps) => {
     //console.log(state);
     // We only want to update time slider if we are not currently seeking
     if (state.played < 1) {
@@ -147,14 +148,18 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
     });
   };
 
-  const onTotalProgressBarClick = (e) => {
+  const onTotalProgressBarClick = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
     const bar = e.target.clientWidth;
     const clickX = e.nativeEvent.offsetX;
     const percent = clickX / bar;
     ref.current.seekTo(percent);
   };
 
-  const onProgressBarClick = (e) => {
+  const onProgressBarClick = (
+    e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>
+  ) => {
     const bar = e.target.offsetParent.clientWidth;
     const clickX = e.nativeEvent.offsetX;
     const percent = clickX / bar;

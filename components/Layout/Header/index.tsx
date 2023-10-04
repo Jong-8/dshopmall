@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, FormEvent, ChangeEvent } from "react";
 import { GoSearch, GoX } from "react-icons/go";
 
 export default function Header({ title, description }: HeaderProps) {
@@ -12,7 +12,7 @@ export default function Header({ title, description }: HeaderProps) {
   const searchRef = useRef<HTMLDivElement>();
   const inputRef = useRef<HTMLDivElement>();
 
-  const handleClickOutside = (e) => {
+  const handleClickOutside = (e: MouseEvent) => {
     if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
       setSearch(false);
       document.removeEventListener("mousedown", handleClickOutside);
@@ -25,7 +25,7 @@ export default function Header({ title, description }: HeaderProps) {
     document.addEventListener("mousedown", handleClickOutside);
   };
 
-  const onSearchKeywordChange = (e) => {
+  const onSearchKeywordChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchKeywordReset(value ? true : false);
     setSearchKeyword(value);
@@ -37,7 +37,7 @@ export default function Header({ title, description }: HeaderProps) {
     inputRef.current?.focus();
   };
 
-  const onSearchSubmit = (e: HTMLInputElement) => {
+  const onSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
     router.push(`/search?keyword=${searchKeyword}`);
   };
