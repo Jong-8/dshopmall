@@ -9,8 +9,8 @@ export default function Header({ title, description }: HeaderProps) {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [searchKeywordReset, setSearchKeywordReset] = useState<boolean>(false);
   const router = useRouter();
-  const searchRef = useRef<HTMLDivElement>();
-  const inputRef = useRef<HTMLDivElement>();
+  const searchRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (searchRef.current && !searchRef.current.contains(e.target as Node)) {

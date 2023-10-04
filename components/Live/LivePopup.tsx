@@ -1,11 +1,18 @@
-import { useRef, useState, useEffect, useCallback, MouseEvent } from "react";
-import ReactPlayer from "react-player";
+import {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  MouseEvent,
+  RefObject,
+} from "react";
+import ReactPlayer, { ReactPlayerProps } from "react-player";
 import { useDrag } from "@use-gesture/react";
 import { IoClose } from "react-icons/io5";
 import { IoMdPause, IoMdPlay } from "react-icons/io";
 import { GrRotateLeft, GrRotateRight } from "react-icons/gr";
 import Link from "next/link";
-import { OnProgressProps } from "react-player/base";
+import BaseReactPlayer, { OnProgressProps } from "react-player/base";
 
 const liveLists = [
   {
@@ -78,7 +85,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
     currentTime: 0,
     endTime: 0,
   });
-  const ref = useRef();
+  const ref = useRef<BaseReactPlayer<ReactPlayerProps> | null>(null);
 
   const { play, speed, played, currentTime, endTime } = videoState;
   const speedList = [1, 2, 4];
@@ -87,7 +94,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
     const info = liveLists.find((liveList) => {
       return liveList.id === id;
     });
-    setLiveInfo(info);
+    info && setLiveInfo(info);
   }, []);
 
   const onSpeedClick = () => {
@@ -99,13 +106,17 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
   };
 
   const onPrevClick = (time: number) => {
-    const prevTime = ref.current.getCurrentTime() - time;
-    ref.current.seekTo(prevTime);
+    if (ref.current) {
+      const prevTime = ref.current.getCurrentTime() - time;
+      ref.current.seekTo(prevTime);
+    }
   };
 
   const onNextClick = (time: number) => {
-    const nextTime = ref.current.getCurrentTime() + time;
-    ref.current.seekTo(nextTime);
+    if (ref.current) {
+      const nextTime = ref.current.getCurrentTime() + time;
+      ref.current.seekTo(nextTime);
+    }
   };
 
   const onPlayClick = () => {
@@ -154,7 +165,9 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
     const bar = e.target.clientWidth;
     const clickX = e.nativeEvent.offsetX;
     const percent = clickX / bar;
-    ref.current.seekTo(percent);
+    if (ref.current) {
+      ref.current.seekTo(percent);
+    }
   };
 
   const onProgressBarClick = (
@@ -163,7 +176,9 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
     const bar = e.target.offsetParent.clientWidth;
     const clickX = e.nativeEvent.offsetX;
     const percent = clickX / bar;
-    ref.current.seekTo(percent);
+    if (ref.current) {
+      ref.current.seekTo(percent);
+    }
   };
 
   const bind = useDrag((state) => {
@@ -182,7 +197,9 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
         movement = (state.values[0] - parent.getBoundingClientRect().x) / bar;
       }
     }
-    ref.current.seekTo(movement);
+    if (ref.current) {
+      ref.current.seekTo(movement);
+    }
   });
 
   const timeSet = (time: number) => {
