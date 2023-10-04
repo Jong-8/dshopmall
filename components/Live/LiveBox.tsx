@@ -16,7 +16,7 @@ export default function LiveBox({ info, onVideoClick }: LiveBoxProps) {
   return (
     <div>
       <div className="relative rounded-md overflow-hidden">
-        <div onClick={() => onVideoClick(id)}>
+        <div onClick={() => onVideoClick(id)} className="cursor-pointer">
           <div>
             <img src={thumb} alt={thumb} />
           </div>

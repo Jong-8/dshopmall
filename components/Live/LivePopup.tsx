@@ -17,7 +17,7 @@ import BaseReactPlayer, { OnProgressProps } from "react-player/base";
 const liveLists = [
   {
     id: 4,
-    thumb: "http://localhost:3000/img/live_thumb03.png",
+    thumb: "/img/live_thumb03.png",
     title: "[썸머썸머 추천템] 화장품1",
     itemId: 1,
     itemName: "9:35 발라또 퍼플 세럼",
@@ -29,7 +29,7 @@ const liveLists = [
   },
   {
     id: 3,
-    thumb: "http://localhost:3000/img/live_thumb03.png",
+    thumb: "/img/live_thumb03.png",
     title: "[썸머썸머 추천템] 화장품1",
     itemId: 1,
     itemName: "9:35 발라또 퍼플 세럼",
@@ -41,7 +41,7 @@ const liveLists = [
   },
   {
     id: 2,
-    thumb: "http://localhost:3000/img/live_thumb02.png",
+    thumb: "/img/live_thumb02.png",
     title: "피부 속으로 깊훅하게 밀어 넣어주는 강력한 스킨부스터",
     itemId: 2,
     itemName: "9:35 발라또 퍼플 오일미스트",
@@ -53,7 +53,7 @@ const liveLists = [
   },
   {
     id: 1,
-    thumb: "http://localhost:3000/img/live_thumb01.png",
+    thumb: "/img/live_thumb01.png",
     title:
       "임시제목입니다. 임시제목입니다. 임시제목입니다. 임시제목입니다. 임시제목입니다.",
     itemId: 3,
