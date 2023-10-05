@@ -468,24 +468,24 @@ export default function Item() {
                         </dl>
                       </div>
                       {/* 버튼 */}
-                      <div className="flex">
-                        <div className="mr-5">
+                      <div className="flex w-[100%]">
+                        <div className="mr-5 w-[40%]">
                           <Link href={`/order/${item.id}`}>
                             <a>
                               <Button
                                 text="구매하기"
                                 type=""
-                                width="w-[160px]"
+                                width="w-[160px] max-lg:w-[100%]"
                                 name="buy"
                               />
                             </a>
                           </Link>
                         </div>
-                        <div>
+                        <div className="w-[40%]">
                           <Button
                             text="장바구니에 담기"
                             type="submit"
-                            width="w-[160px]"
+                            width="w-[160px] max-lg:w-[100%]"
                             theme="white"
                             name="cart"
                           />

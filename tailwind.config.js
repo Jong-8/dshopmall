@@ -4,7 +4,6 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    screens: {},
     // fontFamily: {
     //   advent: "'Advent Pro'",
     //   goldman: "'Goldman'",

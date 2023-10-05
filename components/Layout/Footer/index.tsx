@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer>
-      <div className="max-w-[1800px] px-[90px] pt-10 pb-5 m-auto">
+      <div className="max-w-[1800px] px-[90px] pt-10 pb-5 m-auto max-lg:px-4 max-md:text-xs">
         <div className="flex justify-center">
           <Link href={"/about"}>
             <a className="mx-[0.5em] hover:text-[#6846b7]">ABOUT</a>
@@ -20,19 +20,33 @@ export default function Footer() {
           <Link href={"/privacy"}>
             <a className="mx-[0.5em] hover:text-[#6846b7]">개인정보처리방침</a>
           </Link>
-          <Link href={""}>
+          {/* <Link href={""}>
             <a className="mx-[0.5em] hover:text-[#6846b7]">사업자정보확인</a>
-          </Link>
+          </Link> */}
         </div>
-        <div className="text-center py-4 leading-7">
-          <p>
-            상호: 디샵몰 | 대표: 박제일 | 개인정보관리책임자: 박제일 | 전화:
-            02-2088-1850 | 이메일: contact@designershop.io
-          </p>
-          <p>
-            주소: 서울특별시 강남구 강남대로 324 역삼디오슈페리움 1층 |
-            사업자등록번호: 743-86-02152 | 통신판매: 0000-서울강남-00000
-          </p>
+        <div className="text-center py-4 leading-7 max-md:leading-5">
+          <div className="flex justify-center flex-wrap">
+            <p className="max-lg:w-[100%]">
+              상호: 디샵몰 <span className="px-1">|</span>
+              대표: 박제일 <span className="px-1">|</span>
+              개인정보관리책임자: 박제일{" "}
+              <span className="px-1 max-lg:hidden">|</span>
+            </p>
+            <p className="max-lg:w-[100%]">
+              전화: 02-2088-1850 <span className="px-1">|</span> 이메일:
+              contact@designershop.io
+            </p>
+          </div>
+          <div className="flex justify-center flex-wrap">
+            <p className="max-lg:w-[100%]">
+              주소: 서울특별시 강남구 강남대로 324 역삼디오슈페리움 1층
+              <span className="px-1 max-lg:hidden">|</span>
+            </p>
+            <p className="max-lg:w-[100%]">
+              사업자등록번호: 743-86-02152 <span className="px-1">|</span>{" "}
+              통신판매: 0000-서울강남-00000
+            </p>
+          </div>
         </div>
       </div>
     </footer>

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useRef, FormEvent, ChangeEvent } from "react";
 import { GoSearch, GoX } from "react-icons/go";
+import { FiMenu } from "react-icons/fi";
+import { BsCart2, BsPerson } from "react-icons/bs";
 
 export default function Header({ title, description }: HeaderProps) {
   const [search, setSearch] = useState<boolean>(false);
@@ -49,8 +51,8 @@ export default function Header({ title, description }: HeaderProps) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="border-b-[#999] border-b fixed top-0 left-0 w-[100%] z-[99] bg-white">
-        <div className="flex items-center max-w-[1800px] m-auto px-[90px] pt-5 pb-1">
-          <div className="flex-1 pl-4">
+        <div className="flex items-center max-w-[1800px] m-auto px-[90px] pt-5 pb-1 max-lg:px-[0] max-md:hidden">
+          <div className="flex flex-wrap flex-1 pl-4">
             {/* <Link href={""}>
               <a
                 className={`mr-7 text-[15px] hover:text-[#6846b7] ${
@@ -95,13 +97,13 @@ export default function Header({ title, description }: HeaderProps) {
               </a>
             </Link>
           </div>
-          <div className="flex-1 text-right pr-4 relative">
+          <div className="flex flex-wrap flex-1 justify-end pr-4 relative">
             <div
               className={`${
                 !search || router.pathname === "/search"
                   ? "z-10"
                   : "opacity-0 z-0"
-              } ease-in-out duration-300 relative`}
+              } ease-in-out duration-300 relative text-right`}
             >
               <a
                 className={`mr-7 text-[15px] cursor-pointer hover:text-[#6846b7] ${
@@ -166,6 +168,40 @@ export default function Header({ title, description }: HeaderProps) {
                 </div>
               </form>
             </div>
+          </div>
+        </div>
+        <div className="hidden items-center px-4 py-2 max-md:flex">
+          <div className="flex flex-wrap flex-1">
+            <button className="text-[24px]">
+              <FiMenu />
+            </button>
+          </div>
+          <div>
+            <Link href={"/"}>
+              <a className="block w-[180px] text-center h-[42px] leading-[42px] text-[20px] bg-[#333] text-white font-black">
+                ADAMMALL
+              </a>
+            </Link>
+          </div>
+          <div className="flex flex-wrap flex-1 justify-end">
+            <Link href={"/login"}>
+              <a
+                className={`mr-2 text-[26px] hover:text-[#6846b7] ${
+                  router.pathname === "/login" ? "active" : ""
+                }`}
+              >
+                <BsPerson />
+              </a>
+            </Link>
+            <Link href={"/cart"}>
+              <a
+                className={`text-[22px] hover:text-[#6846b7] ${
+                  router.pathname === "/cart" ? "active" : ""
+                }`}
+              >
+                <BsCart2 />
+              </a>
+            </Link>
           </div>
         </div>
         <style jsx>{`
