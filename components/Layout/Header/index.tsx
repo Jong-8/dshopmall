@@ -234,14 +234,14 @@ export default function Header({ title, description }: HeaderProps) {
           className={`hidden w-[100%] h-[100%] fixed left-0 top-0 group`}
           ref={menuRef}
         >
-          <div className="w-[85%] h-[100%] fixed left-[-100%] top-0 bg-white transition-all ease-linear duration-300 z-10 group-[.show]:left-0">
+          <div className="w-[80%] h-[100%] fixed left-[-100%] top-0 bg-white transition-all ease-linear duration-300 z-10 group-[.show]:left-0">
             <div
-              className="text-white absolute top-[10px] right-[-30px] text-[20px]"
+              className="text-white absolute top-[16px] right-[-36px] text-[24px]"
               onClick={onMenuCloseClick}
             >
               <AiOutlineClose />
             </div>
-            <div className="flex justify-between uppercase px-8 py-5 text-sm text-gray-500">
+            <div className="flex justify-between uppercase px-6 py-5 text-sm text-gray-500">
               <Link href={"/login"}>
                 <div>login</div>
               </Link>
@@ -255,7 +255,36 @@ export default function Header({ title, description }: HeaderProps) {
                 <div>order</div>
               </Link>
             </div>
-            <div className="px-8 py-5 uppercase font-bold leading-[3.5rem] tracking-widest">
+            <div className="px-6 pb-5">
+              <form onSubmit={onSearchSubmit}>
+                <div className="flex items-center justify-between group relative border-b border-[#6846b7] pb-2">
+                  <button
+                    type="submit"
+                    className="text-xl mr-3 text-[#6846b7] ease-in-out duration-300"
+                  >
+                    <GoSearch />
+                  </button>
+                  <input
+                    type="text"
+                    name="keyword"
+                    className=" w-[100%] text-[#6846b7] ease-in-out duration-300 pr-5"
+                    ref={inputRef}
+                    autoComplete="off"
+                    value={searchKeyword}
+                    onChange={(e) => onSearchKeywordChange(e)}
+                  />
+                  {searchKeywordReset && (
+                    <a
+                      className="absolute top-[4px] right-0 text-[#6846b7] cursor-pointer"
+                      onClick={onResetClick}
+                    >
+                      <GoX />
+                    </a>
+                  )}
+                </div>
+              </form>
+            </div>{" "}
+            <div className="px-6 uppercase font-jamsilBold leading-[3.2rem] tracking-wider">
               <Link href={"/"}>
                 <div>shop</div>
               </Link>
@@ -271,7 +300,7 @@ export default function Header({ title, description }: HeaderProps) {
             </div>
           </div>
           <div
-            className="w-[100%] h-[100%] fixed left-0 top-0 bg-black/50 transition ease-linear duration-300 opacity-0 group-[.show]:opacity-100"
+            className="w-[100%] h-[100%] fixed left-0 top-0 bg-black/70 transition ease-linear duration-300 opacity-0 group-[.show]:opacity-100"
             onClick={onMenuBgClick}
             ref={menuBgRef}
           ></div>

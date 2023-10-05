@@ -17,6 +17,10 @@ module.exports = {
       //  Montserrat: "'Montserrat'",
       //  poppins: "Poppins",
       //  noto: "'Noto Sans KR'",
+      jamsilRegular: "TheJamsilRegular",
+      jamsilMedium: "TheJamsilMedium",
+      jamsilBold: "TheJamsilBold",
+      jamsilExtraBold: "TheJamsilExtraBold",
     },
     extend: {
       flex: {
