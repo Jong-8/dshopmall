@@ -75,7 +75,7 @@ export default function About() {
             <div className="uppercase font-black text-[42px] mb-6 gmarket max-md:text-[24px]">
               design my beauty
             </div>
-            <div className="leading-8 max-md:text-sm">
+            <div className="leading-8 max-md:text-xs">
               디샵은 나 자신을 디자인하여 다양한 페르소나를{" "}
               <br className="md:hidden" />
               표현 할 수 있는 뷰티철학을 가진 브랜드입니다. <br />
@@ -91,14 +91,17 @@ export default function About() {
             <div className="w-[283px] h-[283px] bg-[url('/img/round_text.png')] bg-no-repeat bg-bottom bg-cover absolute right-[-100px] bottom-[-100px] animate-[spin_8s_linear_infinite] max-md:right-[-20px] max-md:bottom-[5px] max-md:w-[160px] max-md:h-[160px]"></div>
           </div>
         </div>
-        <div className="text-center py-[80px] max-md:py-[60px] max-md:text-sm">
+        <div className="text-center py-[80px] max-md:py-[60px] max-md:text-xs">
           서울특별시 강남구 강남대로 324 <br className="md:hidden" />
           역삼디오슈페리움 1층
         </div>
       </ContentLayout>
       <div className="">
         <div className="">
-          <div id="map" className="w-[100%] h-[520px] max-md:h-[240px]"></div>
+          <div
+            id="map"
+            className="w-[100%] h-[520px] max-md:h-[240px] max-md:text-sm"
+          ></div>
         </div>
       </div>
       <Footer />

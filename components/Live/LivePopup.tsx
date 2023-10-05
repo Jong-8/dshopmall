@@ -240,7 +240,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
   return (
     <div className="fixed w-[100%] h-[100%] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[100]">
       {id !== 0 && (
-        <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[101] max-w-[400px]">
+        <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[101] max-w-[400px] max-md:w-[calc(100%-1.5rem)]">
           <div className="w-[100%] rounded-2xl overflow-hidden relative">
             <ReactPlayer
               url={"/video/insta_video2.mp4"}

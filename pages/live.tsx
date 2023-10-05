@@ -76,7 +76,7 @@ export default function Live() {
       <Header title="DSHOPMALL | LIVE" description="LIVE" />
       <ContentLayout>
         <ContentTitle title="live" />
-        <div className="grid grid-cols-4 gap-5 mt-8">
+        <div className="grid grid-cols-4 gap-5 mt-8 max-xl:px-4 max-lg:grid-cols-3 max-md:px-3 max-md:pb-8 max-md:mt-4 max-sm:grid-cols-2 max-sm:gap-3">
           {liveLists.map((liveList) => (
             <LiveBox
               key={liveList.id}
