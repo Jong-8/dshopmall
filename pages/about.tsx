@@ -70,32 +70,35 @@ export default function About() {
       <Header title="DSHOPMALL | ABOUT" description="ABOUT" />
       <ContentLayout>
         <ContentTitle title="about" />
-        <div className="p-4 pb-10">
+        <div className="p-4 pb-10 max-md:px-3 max-md:pb-6">
           <div className="text-center mb-4">
-            <div className="uppercase font-black text-[42px] mb-6 gmarket">
+            <div className="uppercase font-black text-[42px] mb-6 gmarket max-md:text-[24px]">
               design my beauty
             </div>
-            <div className="leading-8">
-              디샵은 나 자신을 디자인하여 다양한 페르소나를 표현 할 수 있는
-              뷰티철학을 가진 브랜드입니다. <br />
-              누구나 쉽고 빠르게 이용할 수 있는 디샵과 함께 나를 표현 할 수 있는
-              아름다움을 느껴보세요.
+            <div className="leading-8 max-md:text-sm">
+              디샵은 나 자신을 디자인하여 다양한 페르소나를{" "}
+              <br className="md:hidden" />
+              표현 할 수 있는 뷰티철학을 가진 브랜드입니다. <br />
+              누구나 쉽고 빠르게 이용할 수 있는 디샵과 함께 나를{" "}
+              <br className="md:hidden" />
+              표현 할 수 있는 아름다움을 느껴보세요.
             </div>
           </div>
         </div>
-        <div className="max-w-[900px] m-auto pb-[80px]">
-          <div className="p-5 relative">
-            <div className="w-[100%] h-[1080px] bg-[url('/img/cosmetics.jpg')] bg-no-repeat bg-bottom bg-cover"></div>
-            <div className="w-[283px] h-[283px] bg-[url('/img/round_text.png')] bg-no-repeat bg-bottom bg-cover absolute right-[-100px] bottom-[-100px] animate-[spin_8s_linear_infinite]"></div>
+        <div className="max-w-[900px] m-auto pb-[80px] max-md:pb-[0px]">
+          <div className="p-5 relative max-md:overflow-hidden max-md:pb-10">
+            <div className="w-[100%] h-[1080px] bg-[url('/img/cosmetics.jpg')] bg-no-repeat bg-bottom bg-cover max-md:h-[auto] max-md:pt-[120%]"></div>
+            <div className="w-[283px] h-[283px] bg-[url('/img/round_text.png')] bg-no-repeat bg-bottom bg-cover absolute right-[-100px] bottom-[-100px] animate-[spin_8s_linear_infinite] max-md:right-[-20px] max-md:bottom-[5px] max-md:w-[160px] max-md:h-[160px]"></div>
           </div>
         </div>
-        <div className="text-center py-[80px]">
-          서울특별시 강남구 강남대로 324 역삼디오슈페리움 1층
+        <div className="text-center py-[80px] max-md:py-[60px] max-md:text-sm">
+          서울특별시 강남구 강남대로 324 <br className="md:hidden" />
+          역삼디오슈페리움 1층
         </div>
       </ContentLayout>
       <div className="">
         <div className="">
-          <div id="map" className="w-[100%] h-[520px]"></div>
+          <div id="map" className="w-[100%] h-[520px] max-md:h-[240px]"></div>
         </div>
       </div>
       <Footer />

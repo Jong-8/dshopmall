@@ -284,7 +284,7 @@ export default function Header({ title, description }: HeaderProps) {
                 </div>
               </form>
             </div>{" "}
-            <div className="px-6 uppercase font-jamsilBold leading-[3.2rem] tracking-wider">
+            <div className="px-6 uppercase font-jamsilMedium leading-[3.2rem] tracking-wider">
               <Link href={"/"}>
                 <div>shop</div>
               </Link>
