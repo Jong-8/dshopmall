@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer>
-      <div className="max-w-[1800px] px-[90px] pt-10 pb-5 m-auto max-lg:px-4 max-md:text-xs">
+      <div className="max-w-[1800px] px-[90px] pt-10 pb-5 m-auto max-lg:px-3 max-md:text-xs">
         <div className="flex justify-center">
           <Link href={"/about"}>
             <a className="mx-[0.5em] hover:text-[#6846b7]">ABOUT</a>
@@ -24,7 +24,7 @@ export default function Footer() {
             <a className="mx-[0.5em] hover:text-[#6846b7]">사업자정보확인</a>
           </Link> */}
         </div>
-        <div className="text-center py-4 leading-7 max-md:leading-5">
+        <div className="text-center py-4 leading-7 break-keep max-md:leading-5">
           <div className="flex justify-center flex-wrap">
             <p className="max-lg:w-[100%]">
               상호: 디샵몰 <span className="px-1">|</span>

@@ -5,14 +5,18 @@ import { useState, useRef, FormEvent, ChangeEvent } from "react";
 import { GoSearch, GoX } from "react-icons/go";
 import { FiMenu } from "react-icons/fi";
 import { BsCart2, BsPerson } from "react-icons/bs";
+import { AiOutlineClose } from "react-icons/ai";
 
 export default function Header({ title, description }: HeaderProps) {
+  const [menu, setMenu] = useState<boolean>(false);
   const [search, setSearch] = useState<boolean>(false);
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [searchKeywordReset, setSearchKeywordReset] = useState<boolean>(false);
   const router = useRouter();
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuBgRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -42,6 +46,28 @@ export default function Header({ title, description }: HeaderProps) {
   const onSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
     router.push(`/search?keyword=${searchKeyword}`);
+  };
+
+  const sleep = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  };
+
+  const onMenuClick = async () => {
+    menuRef.current && menuRef.current.classList.add("max-md:flex");
+    await sleep(1);
+    menuRef.current && menuRef.current.classList.add("show");
+  };
+
+  const onMenuBgClick = async () => {
+    menuRef.current && menuRef.current.classList.remove("show");
+    await sleep(300);
+    menuRef.current && menuRef.current.classList.remove("max-md:flex");
+  };
+
+  const onMenuCloseClick = async () => {
+    menuRef.current && menuRef.current.classList.remove("show");
+    await sleep(300);
+    menuRef.current && menuRef.current.classList.remove("max-md:flex");
   };
   return (
     <>
@@ -170,9 +196,9 @@ export default function Header({ title, description }: HeaderProps) {
             </div>
           </div>
         </div>
-        <div className="hidden items-center px-4 py-2 max-md:flex">
+        <div className="hidden items-center px-3 py-2 max-md:flex">
           <div className="flex flex-wrap flex-1">
-            <button className="text-[24px]">
+            <button className="text-[20px]" onClick={onMenuClick}>
               <FiMenu />
             </button>
           </div>
@@ -186,7 +212,7 @@ export default function Header({ title, description }: HeaderProps) {
           <div className="flex flex-wrap flex-1 justify-end">
             <Link href={"/login"}>
               <a
-                className={`mr-2 text-[26px] hover:text-[#6846b7] ${
+                className={`mr-2 text-[24px] hover:text-[#6846b7] ${
                   router.pathname === "/login" ? "active" : ""
                 }`}
               >
@@ -195,7 +221,7 @@ export default function Header({ title, description }: HeaderProps) {
             </Link>
             <Link href={"/cart"}>
               <a
-                className={`text-[22px] hover:text-[#6846b7] ${
+                className={`text-[20px] hover:text-[#6846b7] ${
                   router.pathname === "/cart" ? "active" : ""
                 }`}
               >
@@ -203,6 +229,52 @@ export default function Header({ title, description }: HeaderProps) {
               </a>
             </Link>
           </div>
+        </div>
+        <div
+          className={`hidden w-[100%] h-[100%] fixed left-0 top-0 group`}
+          ref={menuRef}
+        >
+          <div className="w-[85%] h-[100%] fixed left-[-100%] top-0 bg-white transition-all ease-linear duration-300 z-10 group-[.show]:left-0">
+            <div
+              className="text-white absolute top-[10px] right-[-30px] text-[20px]"
+              onClick={onMenuCloseClick}
+            >
+              <AiOutlineClose />
+            </div>
+            <div className="flex justify-between uppercase px-8 py-5 text-sm text-gray-500">
+              <Link href={"/login"}>
+                <div>login</div>
+              </Link>
+              <Link href={"/signup"}>
+                <div>join us</div>
+              </Link>
+              <Link href={"/mypage"}>
+                <div>mypage</div>
+              </Link>
+              <Link href={"/login?member=no"}>
+                <div>order</div>
+              </Link>
+            </div>
+            <div className="px-8 py-5 uppercase font-bold leading-[3.5rem] tracking-widest">
+              <Link href={"/"}>
+                <div>shop</div>
+              </Link>
+              <Link href={"/about"}>
+                <div>about</div>
+              </Link>
+              <Link href={"/dshop"}>
+                <div>dshop</div>
+              </Link>
+              <Link href={"/live"}>
+                <div>live</div>
+              </Link>
+            </div>
+          </div>
+          <div
+            className="w-[100%] h-[100%] fixed left-0 top-0 bg-black/50 transition ease-linear duration-300 opacity-0 group-[.show]:opacity-100"
+            onClick={onMenuBgClick}
+            ref={menuBgRef}
+          ></div>
         </div>
         <style jsx>{`
           .active {

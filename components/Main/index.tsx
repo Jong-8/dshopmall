@@ -55,8 +55,8 @@ export default function Main() {
   return (
     <>
       <ContentTitle title="shop" />
-      <div className="w-[100%] p-4">
-        <div className="flex justify-center uppercase">
+      <div className="w-[100%] p-4 max-md:p-3">
+        <div className="flex justify-center uppercase max-md:text-xs">
           {categories.map((category, index) => (
             <div
               key={index}
@@ -74,7 +74,7 @@ export default function Main() {
             <img src="/img/loading.gif" alt="" className="m-auto" />
           </div>
         )}
-        <div className="grid grid-cols-2 gap-2.5 p-5">
+        <div className="grid grid-cols-2 gap-2.5 p-5 max-md:p-0 max-md:py-3">
           {datas.map((data) => (
             <div key={data.id} className="w-[100%] group">
               <Link href={`/${data.id}`}>
@@ -84,7 +84,7 @@ export default function Main() {
                     alt={data.title}
                     className="w-[100%] object-contain "
                   />
-                  <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg">
+                  <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg max-md:group-hover:hidden">
                     <div>{data.title}</div>
                     <div>{data.price.toLocaleString()}원</div>
                   </div>
