@@ -77,16 +77,16 @@ export default function Mypage() {
       <ContentLayout>
         <div className="max-w-[960px] m-auto">
           {/* 마이페이지 레이아웃 */}
-          <div className="px-4 pt-[60px] pb-[70px] flex justify-between">
+          <div className="px-4 pt-[60px] pb-[70px] flex justify-between flex-wrap max-md:flex-col-reverse">
             {/* 마이페이지 왼쪽 컨텐츠 */}
-            <div className="w-[45%]">
+            <div className="w-[45%] max-md:w-[100%]">
               {/* 주문 내역 */}
-              <div className="mb-[70px]">
+              <div className="mb-[70px] max-md:mb-10">
                 <div className="my_title">주문 내역</div>
                 <div>
                   {orderHistory.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-[20%_40%_20%_20%] border-b border-b-[#ddd] text-sm pb-3">
+                      <div className="grid grid-cols-[20%_40%_20%_20%] border-b border-b-[#ddd] text-sm pb-3 max-md:text-xs">
                         <div>주문일자</div>
                         <div>상품 정보</div>
                         <div className="text-right">가격</div>
@@ -94,7 +94,7 @@ export default function Mypage() {
                       </div>
                       {orderHistory.map((order) => (
                         <Link href={`/orderDetails/${order.id}`} key={order.id}>
-                          <div className="grid grid-cols-[20%_40%_20%_20%] border-b border-b-[#ddd] text-sm py-4 items-center cursor-pointer">
+                          <div className="grid grid-cols-[20%_40%_20%_20%] border-b border-b-[#ddd] text-sm py-4 items-center cursor-pointer max-md:text-xs max-md:py-3">
                             <div>{order.date}</div>
                             <div>{order.name}</div>
                             <div className="text-right">
@@ -106,7 +106,7 @@ export default function Mypage() {
                       ))}
                     </>
                   ) : (
-                    <div className="py-[100px] text-center">
+                    <div className="py-[100px] text-center max-md:py-[60px] max-md:text-sm">
                       주문 내역이 없습니다.
                     </div>
                   )}
@@ -119,7 +119,7 @@ export default function Mypage() {
                   {accumulation.length > 0 ? (
                     <></>
                   ) : (
-                    <div className="py-[100px] text-center">
+                    <div className="py-[100px] text-center max-md:py-[60px] max-md:text-sm">
                       적립금 내역이 없습니다.
                     </div>
                   )}
@@ -127,9 +127,9 @@ export default function Mypage() {
               </div>
             </div>
             {/* 마이페이지 오른쪽 컨텐츠 */}
-            <div className="w-[45%]">
+            <div className="w-[45%] max-md:w-[100%] max-md:mb-10">
               <div className="my_title">회원 정보</div>
-              <div className="my-5 flex justify-end text-sm">
+              <div className="my-5 flex justify-end text-sm max-md:text-xs max-md:my-3">
                 <div className="text-[#999]">로그아웃</div>
               </div>
               <div className="text-sm">
@@ -180,7 +180,7 @@ export default function Mypage() {
                         readOnly
                       />
                       <div
-                        className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer hover:bg-[#6846b7] hover:text-white ease-in-out duration-300"
+                        className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
                         onClick={onPostClick}
                       >
                         검색하기
@@ -189,7 +189,7 @@ export default function Mypage() {
                     {post && (
                       <div
                         id="wrap"
-                        className="border border-[#333] w-[420px] h-[402px] my-[10px] fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
+                        className="border border-[#333] w-[420px] h-[402px] my-[10px] fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-md:w-[calc(100%-1.5rem)]"
                       >
                         <img
                           src="//t1.daumcdn.net/postcode/resource/images/close.png"
@@ -203,7 +203,7 @@ export default function Mypage() {
                   </div>
                   <div className="my_input_box">
                     <div className="my_label">주소</div>
-                    <div className="mb-3">
+                    <div className="mb-3 max-md:mb-2">
                       <input
                         type="text"
                         className="my_input read-only:bg-[#f9f9f9]"
@@ -215,27 +215,29 @@ export default function Mypage() {
                     </div>
                   </div>
                   <div className="my_input_box">
-                    <div className="mb-3">마케팅 정보 수신 동의</div>
+                    <div className="mb-3 max-md:text-xs">
+                      마케팅 정보 수신 동의
+                    </div>
                     <div className="flex">
-                      <div className="flex items-center mr-4">
+                      <div className="flex items-center mr-4 max-md:text-xs">
                         <input
                           type="checkbox"
                           id="agreeEmail"
-                          className="mr-2 w-[14px] h-[14px] accent-[#7a1cea]"
+                          className="mr-2 w-[14px] h-[14px] accent-[#7a1cea] max-md:w-3 max-md:h-3"
                         />{" "}
                         <label htmlFor="agreeEmail">이메일</label>
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex items-center max-md:text-xs">
                         <input
                           type="checkbox"
                           id="agreeMessage"
-                          className="mr-2 w-[14px] h-[14px] accent-[#7a1cea]"
+                          className="mr-2 w-[14px] h-[14px] accent-[#7a1cea] max-md:w-3 max-md:h-3"
                         />{" "}
                         <label htmlFor="agreeMessage">문자 메세지</label>
                       </div>
                     </div>
                   </div>
-                  <div className="flex justify-center text-[#999] mt-5 mb-[30px]">
+                  <div className="flex justify-center text-[#999] mt-5 mb-[30px] max-md:text-xs">
                     <Link href={"/changePassword"}>
                       <div className="mr-5 cursor-pointer">
                         비밀번호 변경하기
@@ -271,6 +273,18 @@ export default function Mypage() {
           padding: 10px;
           width: 100%;
           height: 45px;
+        }
+        @media not all and (min-width: 768px) {
+          .my_title {
+            font-size: 18px;
+            margin-bottom: 30px;
+          }
+          .my_label {
+            font-size: 12px;
+          }
+          .my_input {
+            height: 40px;
+          }
         }
       `}</style>
     </>

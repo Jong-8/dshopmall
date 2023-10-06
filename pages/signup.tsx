@@ -136,7 +136,7 @@ export default function Signup() {
                 value={allChk}
                 checked={allChk === 1 && true}
                 onChange={onAllChkChange}
-                className="max-md:w-3 max-md:h-3"
+                className="accent-[#7a1cea] max-md:w-3 max-md:h-3"
               />
             </div>
             <div onClick={onAllChkChange} className="cursor-pointer">
@@ -150,7 +150,7 @@ export default function Signup() {
                 value={requiredChk1}
                 checked={requiredChk1 === 1 && true}
                 onChange={onRequiredChk1Change}
-                className="max-md:w-3 max-md:h-3"
+                className="accent-[#7a1cea] max-md:w-3 max-md:h-3"
               />
             </div>
             <div onClick={onRequiredChk1Change} className="cursor-pointer">
@@ -172,7 +172,7 @@ export default function Signup() {
                 value={requiredChk2}
                 checked={requiredChk2 === 1 && true}
                 onChange={onRequiredChk2Change}
-                className="max-md:w-3 max-md:h-3"
+                className="accent-[#7a1cea] max-md:w-3 max-md:h-3"
               />
             </div>
             <div
@@ -193,7 +193,7 @@ export default function Signup() {
                 value={selectChk}
                 checked={selectChk === 1 && true}
                 onChange={onSelectChkChange}
-                className="max-md:w-3 max-md:h-3"
+                className="accent-[#7a1cea] max-md:w-3 max-md:h-3"
               />
             </div>
             <div

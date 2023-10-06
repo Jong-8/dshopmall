@@ -69,14 +69,23 @@ export default function Login() {
             </Link>
           </div>
         </div>
-        <div>
-          <div className="mb-5 text-center">
-            <Button text="로그인하기" type="submit" />
+        <div className="max-md:flex max-md:justify-center">
+          <div className="mb-5 text-center max-md:mb-0 max-md:mr-3 max-md:w-[43%]">
+            <Button
+              text="로그인하기"
+              type="submit"
+              width="w-[240px] max-md:w-[100%]"
+            />
           </div>
-          <div className="text-center">
+          <div className="text-center max-md:w-[43%]">
             <Link href={"/signup"}>
               <a>
-                <Button text="회원 가입하기" theme="white" type="" />
+                <Button
+                  text="회원 가입하기"
+                  theme="white"
+                  type=""
+                  width="w-[240px] max-md:w-[100%]"
+                />
               </a>
             </Link>
           </div>

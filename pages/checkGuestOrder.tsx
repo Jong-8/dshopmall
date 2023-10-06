@@ -32,7 +32,7 @@ export default function CheckGuestOrder() {
           onChange={onChange}
         />
         <Input
-          title="주문번호"
+          title="주문번호 *"
           name="orderId"
           type="text"
           value={orderId}
