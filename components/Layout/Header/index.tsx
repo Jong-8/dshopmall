@@ -54,19 +54,19 @@ export default function Header({ title, description }: HeaderProps) {
 
   const onMenuClick = async () => {
     menuRef.current && menuRef.current.classList.add("max-md:flex");
-    await sleep(1);
+    await sleep(0);
     menuRef.current && menuRef.current.classList.add("show");
   };
 
   const onMenuBgClick = async () => {
     menuRef.current && menuRef.current.classList.remove("show");
-    await sleep(300);
+    await sleep(350);
     menuRef.current && menuRef.current.classList.remove("max-md:flex");
   };
 
   const onMenuCloseClick = async () => {
     menuRef.current && menuRef.current.classList.remove("show");
-    await sleep(300);
+    await sleep(350);
     menuRef.current && menuRef.current.classList.remove("max-md:flex");
   };
   return (
