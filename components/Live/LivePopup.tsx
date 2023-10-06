@@ -240,7 +240,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
   return (
     <div className="fixed w-[100%] h-[100%] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[100]">
       {id !== 0 && (
-        <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[101] max-w-[400px] max-md:w-[calc(100%-4rem)]">
+        <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[101] max-w-[400px] max-md:w-[calc(100%-6rem)]">
           <div className="w-[100%] rounded-2xl overflow-hidden relative">
             <ReactPlayer
               url={"/video/insta_video2.mp4"}
@@ -252,11 +252,14 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
               onPlay={handlePlay}
               onProgress={handleProgress}
               onDuration={handleDuration}
+              className="relative z-0"
             />
             <div className="absolute bottom-0 w-[100%] text-white px-3 z-10">
               <div className="w-[100%] flex text-xs items-baseline">
-                <div className="w-[14%]">{timeSet(currentTime)}</div>
-                <div className="w-[72%] h-[6px] rounded relative">
+                <div className="w-[14%] max-md:w-[16%]">
+                  {timeSet(currentTime)}
+                </div>
+                <div className="w-[72%] h-[6px] rounded relative max-md:w-[68%]">
                   <div
                     className="w-[100%] h-[6px] bg-white/20 rounded absolute top-[50%] left-0 translate-y-[-50%] z-0"
                     onClick={(e) => onTotalProgressBarClick(e)}
@@ -274,7 +277,9 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
                     {...bind()}
                   ></div>
                 </div>
-                <div className="w-[14%] text-right">{timeSet(endTime)}</div>
+                <div className="w-[14%] text-right max-md:w-[16%]">
+                  {timeSet(endTime)}
+                </div>
               </div>
               <div className="relative flex justify-center">
                 <div
@@ -316,14 +321,14 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
           <div className="w-[100%] mt-5">
             <Link href={`/${liveInfo.itemId}`}>
               <div className="flex overflow-hidden w-[100%] cursor-pointer">
-                <div className="w-[80px] h-[80px] relative rounded-lg overflow-hidden max-md:w-[70px] max-md:h-[70px]">
+                <div className="w-[80px] h-[80px] relative rounded-lg overflow-hidden max-md:w-[60px] max-md:h-[60px]">
                   <img
                     src={liveInfo.itemThumb}
                     alt={liveInfo.itemName}
                     className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
                   />
                 </div>
-                <div className="w-[calc(100%-80px)] text-white flex flex-col px-3 justify-center max-md:w-[calc(100%-70px)] max-md:text-sm">
+                <div className="w-[calc(100%-80px)] text-white flex flex-col px-3 justify-center max-md:w-[calc(100%-60px)] max-md:text-sm">
                   <div className="truncate mb-1">{liveInfo.itemName}</div>
                   <div className="flex">
                     <div className="mr-2 text-[#fd4f39]">
