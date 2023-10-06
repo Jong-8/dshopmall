@@ -289,7 +289,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
                     onClick={() => onPrevClick(10)}
                   >
                     <GrRotateLeft />
-                    <div className="absolute top-[52%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-[10px]">
+                    <div className="absolute top-[54%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-[10px] max-md:left-[48%]">
                       10
                     </div>
                   </div>
@@ -304,7 +304,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
                     onClick={() => onNextClick(10)}
                   >
                     <GrRotateRight />
-                    <div className="absolute top-[52%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-[10px]">
+                    <div className="absolute top-[54%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-[10px] max-md:left-[52%]">
                       10
                     </div>
                   </div>

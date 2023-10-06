@@ -128,7 +128,7 @@ export default function Signup() {
             onChange={onChange}
           />
         </div>
-        <div>
+        <div className="max-md:text-xs">
           <div className="flex mb-2">
             <div className="mr-2 pt-[1px]">
               <input
@@ -136,6 +136,7 @@ export default function Signup() {
                 value={allChk}
                 checked={allChk === 1 && true}
                 onChange={onAllChkChange}
+                className="max-md:w-3 max-md:h-3"
               />
             </div>
             <div onClick={onAllChkChange} className="cursor-pointer">
@@ -149,6 +150,7 @@ export default function Signup() {
                 value={requiredChk1}
                 checked={requiredChk1 === 1 && true}
                 onChange={onRequiredChk1Change}
+                className="max-md:w-3 max-md:h-3"
               />
             </div>
             <div onClick={onRequiredChk1Change} className="cursor-pointer">
@@ -164,12 +166,13 @@ export default function Signup() {
             </div>
           </div>
           <div className="flex mb-2">
-            <div className="mr-2 pt-[1px]">
+            <div className="mr-2 pt-[1px] max-md:pt-[5px]">
               <input
                 type="checkbox"
                 value={requiredChk2}
                 checked={requiredChk2 === 1 && true}
                 onChange={onRequiredChk2Change}
+                className="max-md:w-3 max-md:h-3"
               />
             </div>
             <div
@@ -177,19 +180,20 @@ export default function Signup() {
               className="cursor-pointer leading-6"
             >
               (필수) 만 14세 이상입니다.
-              <span className="block text-xs">
+              <span className="block text-xs max-md:text-[10px]">
                 만 19세 미만의 미성년자가 결제 시 법정대리인이 거래를 취소할 수
                 있습니다.
               </span>
             </div>
           </div>
           <div className="flex">
-            <div className="mr-2 pt-[1px]">
+            <div className="mr-2 pt-[1px] max-md:pt-[5px]">
               <input
                 type="checkbox"
                 value={selectChk}
                 checked={selectChk === 1 && true}
                 onChange={onSelectChkChange}
+                className="max-md:w-3 max-md:h-3"
               />
             </div>
             <div
@@ -197,7 +201,7 @@ export default function Signup() {
               className="cursor-pointer leading-6"
             >
               (선택) 이메일 및 SMS 마케팅 정보 수신에 동의합니다.
-              <span className="block text-xs">
+              <span className="block text-xs max-md:text-[10px]">
                 회원은 언제든지 회원 정보에서 수신 거부로 변경할 수 있습니다.
               </span>
             </div>

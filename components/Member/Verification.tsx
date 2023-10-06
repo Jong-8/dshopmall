@@ -50,7 +50,7 @@ export default function Verification({
           readonly={true}
         />
         <button
-          className="absolute right-0 top-0 text-sm font-bold text-[#6846b7]"
+          className="absolute right-0 top-0 text-sm font-bold text-[#6846b7] max-md:text-xs"
           onClick={handleVerification}
         >
           본인인증

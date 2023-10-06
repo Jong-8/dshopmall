@@ -58,12 +58,12 @@ export default function Login() {
           />
           <div className="flex justify-center mb-7">
             <Link href={"/findPassword"}>
-              <a className="text-sm font-medium text-[#6846b7]">
+              <a className="text-sm font-medium text-[#6846b7] max-md:text-xs">
                 비밀번호 찾기
               </a>
             </Link>
             <Link href={"/checkGuestOrder"}>
-              <a className="text-sm font-medium text-[#6846b7] ml-5">
+              <a className="text-sm font-medium text-[#6846b7] ml-5 max-md:text-xs">
                 비회원 주문 조회하기
               </a>
             </Link>
