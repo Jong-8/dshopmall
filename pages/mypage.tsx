@@ -279,6 +279,9 @@ export default function Mypage() {
             font-size: 18px;
             margin-bottom: 30px;
           }
+          .my_input_box {
+            margin-bottom: 12px;
+          }
           .my_label {
             font-size: 12px;
           }

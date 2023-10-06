@@ -35,7 +35,7 @@ declare global {
     name: string;
     type: InputHTMLAttributes<HTMLInputElement>;
     value: string | number;
-    onChange(e: { target: { name: string; value: string | number } }): void;
+    onChange(e: ChangeEvent<HTMLInputElement>): void;
     readonly?: boolean;
     placeholder?: string;
   }
@@ -43,13 +43,13 @@ declare global {
   interface VerificationProps {
     name: string;
     phone: string;
-    onChange(e: { target: { name: string; value: string | number } }): void;
+    onChange(e: ChangeEvent<HTMLInputElement>): void;
   }
 
   interface QtyBoxProps {
     qty: number;
     name?: string | undefined;
-    onQtyChange(e: { target: { value: string; name: string } }): void;
+    onQtyChange(e: ChangeEvent<HTMLInputElement>): void;
     onMinusClick(e): void;
     onPlusClick(e): void;
   }

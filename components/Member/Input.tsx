@@ -16,7 +16,7 @@ export default function Input({
             name={name}
             type={type}
             value={value}
-            className="w-[100%] h-[45px] py-[10px] px-[15px] text-sm border border-[#ddd] rounded-none max-md:h-[40px] max-md:text-xs"
+            className="w-[100%] h-[45px] py-[10px] px-[15px] text-sm border border-[#ddd] rounded-none max-md:h-[40px] max-md:text-xs max-md:px-[10px]"
             onChange={onChange}
             readOnly={readonly}
             placeholder={placeholder}

@@ -25,10 +25,10 @@ export default function Cart() {
   return (
     <>
       <Header title="장바구니" description="장바구니" />
-      <div className="pt-[100px] max-w-[1800px] m-auto">
-        <div className="pt-[60px] px-[106px] pb-[70px]">
+      <div className="pt-[100px] max-w-[1800px] m-auto max-md:pt-[58px]">
+        <div className="pt-[60px] px-[106px] pb-[70px] max-md:px-3">
           <div>
-            <div className="text-2xl font-bold tracking-wider mb-10">
+            <div className="text-2xl font-bold tracking-wider mb-10 max-md:text-lg max-md:mb-8">
               장바구니 ({count})
             </div>
           </div>
@@ -36,7 +36,7 @@ export default function Cart() {
             {count > 0 ? (
               <CartList cartItems={cartItems} />
             ) : (
-              <div className="py-[200px] text-center leading-6">
+              <div className="py-[200px] text-center leading-6 max-md:py-[120px] max-md:text-sm">
                 장바구니가 비어 있습니다.
               </div>
             )}
