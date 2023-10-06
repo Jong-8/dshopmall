@@ -240,7 +240,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
   return (
     <div className="fixed w-[100%] h-[100%] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[100]">
       {id !== 0 && (
-        <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[101] max-w-[400px] max-md:w-[calc(100%-1.5rem)]">
+        <div className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] z-[101] max-w-[400px] max-md:w-[calc(100%-4rem)]">
           <div className="w-[100%] rounded-2xl overflow-hidden relative">
             <ReactPlayer
               url={"/video/insta_video2.mp4"}
@@ -253,7 +253,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
               onProgress={handleProgress}
               onDuration={handleDuration}
             />
-            <div className="absolute bottom-0 w-[100%] text-white px-3">
+            <div className="absolute bottom-0 w-[100%] text-white px-3 z-10">
               <div className="w-[100%] flex text-xs items-baseline">
                 <div className="w-[14%]">{timeSet(currentTime)}</div>
                 <div className="w-[72%] h-[6px] rounded relative">
@@ -316,14 +316,14 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
           <div className="w-[100%] mt-5">
             <Link href={`/${liveInfo.itemId}`}>
               <div className="flex overflow-hidden w-[100%] cursor-pointer">
-                <div className="w-[80px] h-[80px] relative rounded-lg overflow-hidden">
+                <div className="w-[80px] h-[80px] relative rounded-lg overflow-hidden max-md:w-[70px] max-md:h-[70px]">
                   <img
                     src={liveInfo.itemThumb}
                     alt={liveInfo.itemName}
                     className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
                   />
                 </div>
-                <div className="w-[calc(100%-80px)] text-white flex flex-col px-3 justify-center">
+                <div className="w-[calc(100%-80px)] text-white flex flex-col px-3 justify-center max-md:w-[calc(100%-70px)] max-md:text-sm">
                   <div className="truncate mb-1">{liveInfo.itemName}</div>
                   <div className="flex">
                     <div className="mr-2 text-[#fd4f39]">
