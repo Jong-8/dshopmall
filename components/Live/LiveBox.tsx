@@ -50,7 +50,7 @@ export default function LiveBox({ info, onVideoClick }: LiveBoxProps) {
           </Link>
         </div>
       </div>
-      <div className="mt-3 max-md:text-xs">
+      <div className="my-3 max-md:text-xs">
         <div>{title}</div>
       </div>
     </div>
