@@ -116,4 +116,10 @@ declare global {
     label: string;
     defaultChecked: boolean;
   }
+
+  interface AddrRadioProps {
+    id: string;
+    label: string;
+    defaultChecked: boolean;
+  }
 }

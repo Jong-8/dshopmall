@@ -7,9 +7,9 @@ export default function PolicyLayout({ title, children }: PolicyLayoutProps) {
     <>
       <Header title={`DSHOPMALL | ${title}`} description={title} />
       <ContentLayout>
-        <div className="max-w-[832px] m-auto px-4 pt-[60px] pb-[70px]">
+        <div className="max-w-[832px] m-auto px-4 pt-[60px] pb-[70px] max-md:px-3">
           <div className="text-sm font-bold text-center mb-8">{title}</div>
-          <div>{children}</div>
+          <div className="max-md:text-sm">{children}</div>
         </div>
       </ContentLayout>
       <Footer />

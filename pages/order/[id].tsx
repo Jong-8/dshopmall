@@ -4,6 +4,7 @@ import Header from "@components/Layout/Header";
 import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
 import { useState } from "react";
 import Payment from "@components/Order/Payment";
+import AddrRadio from "@components/Order/AddrRadio";
 
 export default function Order() {
   const [post, setPost] = useState(false);
@@ -122,36 +123,16 @@ export default function Order() {
               <div className="od_title">배송지</div>
               <div>
                 <div className="flex mb-5 max-md:mb-3">
-                  <div className="relative">
-                    <input
-                      type="radio"
-                      name="select_addr"
-                      id="basicAddr"
-                      className="w-0 h-0 absolute top-0 left-0 peer"
-                    />{" "}
-                    <label
-                      htmlFor="basicAddr"
-                      className="flex items-center group opacity-50 peer-checked:font-bold peer-checked:opacity-100 max-md:text-sm"
-                    >
-                      <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-1 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
-                      기본 배송지
-                    </label>
-                  </div>
-                  <div className="ml-4 relative">
-                    <input
-                      type="radio"
-                      name="select_addr"
-                      id="newAddr"
-                      className="w-0 h-0 absolute top-0 left-0 peer"
-                    />{" "}
-                    <label
-                      htmlFor="newAddr"
-                      className="flex items-center group opacity-50 peer-checked:font-bold peer-checked:opacity-100 max-md:text-sm"
-                    >
-                      <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-1 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
-                      신규 입력
-                    </label>
-                  </div>
+                  <AddrRadio
+                    id="basicAddr"
+                    label="기본 배송지"
+                    defaultChecked={true}
+                  />
+                  <AddrRadio
+                    id="newAddr"
+                    label="신규 입력"
+                    defaultChecked={false}
+                  />
                 </div>
                 <div className="border-b border-[#e0e0e0] pb-8 max-md:pb-6">
                   <div className="od_input_box">
@@ -285,7 +266,7 @@ export default function Order() {
                 <div>
                   <div className="pt-[30px] flex justify-between items-center max-md:text-sm max-md:pt-6">
                     <div className="font-bold">상품합계</div>
-                    <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg">
+                    <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg max-md:font-jamsilRegular">
                       60,000원
                     </div>
                   </div>
@@ -319,7 +300,7 @@ export default function Order() {
               </div>
             </div>
             <div className="sticky bottom-0 pb-4 max-md:pb-0">
-              <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[58px] max-md:leading-[58px] max-md:text-base">
+              <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[58px] max-md:leading-[58px] max-md:text-lg">
                 60,000원 결제하기
               </button>
             </div>
