@@ -57,21 +57,21 @@ export default function Search() {
         title={`DSHOPMALL | ${keyword} 검색`}
         description={`${keyword} 검색`}
       />
-      <div className="pt-[100px] max-w-[1800px] m-auto">
-        <div className="pt-[60px] px-[106px] pb-[70px]">
-          <div className="border border-[#ddd] mb-10">
+      <div className="pt-[100px] max-w-[1800px] m-auto max-md:pt-[58px]">
+        <div className="pt-[60px] px-[106px] pb-[70px] max-md:px-3 max-md:pt-5">
+          <div className="border border-[#ddd] mb-10 max-md:mb-4">
             <form onSubmit={onSearchSubmit}>
               <div className="flex relative">
                 <button
                   type="submit"
-                  className="text-[30px] py-5 pr-[10px] pl-5"
+                  className="text-[30px] py-5 pr-[10px] pl-5 max-md:py-3 max-md:pl-4 max-md:text-[20px]"
                 >
                   <GoSearch />
                 </button>
                 <input
                   type="text"
                   name="keyword"
-                  className="w-[100%] py-[10px] px-[15px]"
+                  className="w-[100%] py-[10px] px-[15px] max-md:py-[6px] max-md:text-xs"
                   ref={inputRef}
                   autoComplete="off"
                   value={keyword}
@@ -79,7 +79,7 @@ export default function Search() {
                 />
                 {keywordReset && (
                   <a
-                    className="absolute top-[50%] right-5 translate-y-[-50%] cursor-pointer text-lg"
+                    className="absolute top-[50%] right-5 translate-y-[-50%] cursor-pointer text-lg max-md:right-4"
                     onClick={onResetClick}
                   >
                     <GoX />
@@ -94,7 +94,7 @@ export default function Search() {
                 <img src="/img/loading.gif" alt="" className="m-auto" />
               </div>
             )}
-            <div className="grid grid-cols-3 gap-2.5 py-5">
+            <div className="grid grid-cols-3 gap-2.5 py-5 max-md:py-3 max-md:grid-cols-2">
               {datas.map((data) => (
                 <div key={data.id} className="w-[100%] group">
                   <Link href={`/${data.id}`}>
@@ -104,7 +104,7 @@ export default function Search() {
                         alt={data.title}
                         className="w-[100%] object-contain "
                       />
-                      <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg">
+                      <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden md:group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg">
                         <div>{data.title}</div>
                         <div>{data.price.toLocaleString()}원</div>
                       </div>

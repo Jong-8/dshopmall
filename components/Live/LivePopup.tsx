@@ -4,6 +4,10 @@ import { FullGestureState, useDrag } from "@use-gesture/react";
 import { IoClose } from "react-icons/io5";
 import { IoMdPause, IoMdPlay } from "react-icons/io";
 import { GrRotateLeft, GrRotateRight } from "react-icons/gr";
+import {
+  PiArrowClockwiseDuotone,
+  PiArrowCounterClockwiseDuotone,
+} from "react-icons/pi";
 import Link from "next/link";
 import BaseReactPlayer, { OnProgressProps } from "react-player/base";
 
@@ -277,7 +281,7 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
               </div>
               <div className="relative flex justify-center">
                 <div
-                  className="absolute left-0 top-[52%] translate-y-[-50%] py-1 px-4 cursor-pointer bg-black/50 rounded-2xl flex items-center max-md:text-sm max-md:px-3"
+                  className="absolute left-0 top-[52%] translate-y-[-50%] py-1 px-4 cursor-pointer bg-black/50 rounded-2xl flex items-center max-md:text-sm max-md:px-3 max-md:top-[50%]"
                   onClick={onSpeedClick}
                 >
                   <IoClose />{" "}
@@ -285,26 +289,26 @@ export default function LivePopup({ id, onPopupBgClick }: LivePopupProps) {
                 </div>
                 <div className="flex py-4 max-md:pt-3">
                   <div
-                    className="cursor-pointer relative text-[32px] flex justify-center items-center max-md:text-[24px]"
+                    className="cursor-pointer relative text-[32px] flex justify-center items-center max-md:text-[26px]"
                     onClick={() => onPrevClick(10)}
                   >
                     <GrRotateLeft />
-                    <div className="absolute top-[54%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-[10px] max-md:left-[48%]">
+                    <div className="absolute top-[52%] left-[48%] translate-x-[-50%] translate-y-[-50%] text-[10px] max-md:top-[54%]">
                       10
                     </div>
                   </div>
                   <div
-                    className="text-[32px] cursor-pointer px-4 max-md:text-[24px]"
+                    className="text-[32px] cursor-pointer px-4 max-md:text-[26px]"
                     onClick={onPlayClick}
                   >
                     {play ? <IoMdPause /> : <IoMdPlay />}
                   </div>
                   <div
-                    className="cursor-pointer relative text-[32px] flex justify-center items-center max-md:text-[24px]"
+                    className="cursor-pointer relative text-[32px] flex justify-center items-center max-md:text-[26px]"
                     onClick={() => onNextClick(10)}
                   >
                     <GrRotateRight />
-                    <div className="absolute top-[54%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-[10px] max-md:left-[52%]">
+                    <div className="absolute top-[52%] left-[52%] translate-x-[-50%] translate-y-[-50%] text-[10px] max-md:top-[54%]">
                       10
                     </div>
                   </div>

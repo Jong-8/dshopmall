@@ -25,6 +25,7 @@ declare global {
     width?: string;
     height?: string;
     rounded?: string;
+    fontSize?: string;
     type?: ButtonHTMLAttributes<HTMLButtonElement>;
     theme?: string;
     name?: string;
@@ -108,5 +109,11 @@ declare global {
       qty: number;
       stock: number;
     }[];
+  }
+
+  interface PaymentProps {
+    id: string;
+    label: string;
+    defaultChecked: boolean;
   }
 }

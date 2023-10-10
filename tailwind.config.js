@@ -27,6 +27,9 @@ module.exports = {
         4: "4",
         1: "1",
       },
+      boxShadow: {
+        line: "0px 12px 30px 5px rgba(0, 0, 0, 0.7)",
+      },
     },
   },
   plugins: [],

@@ -20,7 +20,7 @@ export default function QtyBox({
         type="number"
         value={qty}
         min="1"
-        className="w-10 h-9 border-t border-b border-[#ddd] text-center max-md:w-8 max-md:h-7 max-md:text-sm"
+        className="w-10 h-9 border-t border-b border-[#ddd] text-center rounded-none max-md:h-7 max-md:text-sm"
         onChange={onQtyChange}
         name={name}
       />

@@ -84,7 +84,7 @@ export default function Main() {
                     alt={data.title}
                     className="w-[100%] object-contain "
                   />
-                  <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg max-md:group-hover:hidden">
+                  <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden md:group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg">
                     <div>{data.title}</div>
                     <div>{data.price.toLocaleString()}원</div>
                   </div>

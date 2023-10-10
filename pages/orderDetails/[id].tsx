@@ -140,11 +140,13 @@ export default function OrderDetails() {
       <ContentLayout>
         <div className="max-w-[960px] m-auto">
           {/* 주문 상세 정보 레이아웃 */}
-          <div className="px-4 pt-[60px] pb-[70px]">
-            <div className="text-2xl mb-8 font-semibold">주문 상세 정보</div>
+          <div className="px-4 pt-[60px] pb-[70px] max-md:px-3">
+            <div className="text-2xl mb-8 font-semibold max-md:text-lg">
+              주문 상세 정보
+            </div>
             <div className="mb-[80px]">
               {/* 주문 상세 정보 상단 */}
-              <div className="flex border-b border-[#ccc] text-sm pb-4">
+              <div className="flex border-b border-[#ccc] text-sm pb-4 max-md:hidden">
                 <div className="flex-[4] flex">
                   <div className="w-[70%]">상품 정보</div>
                   <div className="w-[15%] text-center">수량</div>
@@ -153,17 +155,17 @@ export default function OrderDetails() {
                 <div className="flex-[1] text-center">배송비</div>
               </div>
               {/* 주문 상품 리스트 */}
-              <div className="flex border-b border-[#ccc] text-sm">
-                <div className="flex-[4]">
+              <div className="flex border-b border-[#ccc] text-sm max-md:border-t max-md:flex-wrap">
+                <div className="flex-[4] max-md:flex-auto max-md:w-[100%]">
                   {orderItems.map((orderItem, index) => (
                     <div
                       className={`py-5 flex ${
                         index > 0 && "border-t border-[#ccc]"
-                      }`}
+                      } max-md:py-3 max-md:flex-wrap`}
                       key={index}
                     >
-                      <div className="flex items-center w-[70%]">
-                        <div className="w-[16%]">
+                      <div className="flex w-[70%] max-md:w-[100%]">
+                        <div className="w-[16%] max-md:w-[70px]">
                           <Link href={`/${orderItem.id}`}>
                             <img
                               src={orderItem.thumbnailUrl}
@@ -172,8 +174,8 @@ export default function OrderDetails() {
                             />
                           </Link>
                         </div>
-                        <div className="pl-[4%]">
-                          <div>
+                        <div className="pl-[4%] max-md:pl-3 max-md:w-[calc(100%-70px)]">
+                          <div className="pt-6 max-md:pt-4 max-md:text-sm max-md:mb-1">
                             <Link href={`/${orderItem.id}`}>
                               {orderItem.name}
                             </Link>
@@ -187,24 +189,24 @@ export default function OrderDetails() {
                           )}
                         </div>
                       </div>
-                      <div className="flex justify-center items-center w-[15%]">
+                      <div className="flex justify-center items-center w-[15%] max-md:w-[100%] max-md:justify-start max-md:pl-[82px] max-md:py-3">
                         {orderItem.qty}
                       </div>
-                      <div className="flex justify-center items-center w-[15%]">
+                      <div className="flex justify-center items-center w-[15%] max-md:w-[100%] max-md:justify-start max-md:pl-[82px] max-md:text-sm">
                         {(orderItem.price * orderItem.qty).toLocaleString()}원
                       </div>
                     </div>
                   ))}
                 </div>
-                <div className="flex-[1] flex justify-center items-center flex-col">
+                <div className="flex-[1] flex justify-center items-center flex-col max-md:flex-auto max-md:w-[100%] max-md:py-5 max-md:border-t max-md:border-[#ccc]">
                   {calculateDelivery(orderItems)}
                 </div>
               </div>
             </div>
             {/* 주문 상세 정보 하단 */}
-            <div className="flex justify-between">
+            <div className="flex justify-between flex-wrap">
               {/* 주문 상세 정보 하단 왼쪽 컨텐츠 */}
-              <div className="w-[45%]">
+              <div className="w-[45%] max-md:w-[100%]">
                 <div className="mb-[70px]">
                   <div className="odd_title">주문 정보</div>
                   <div className="text-sm">
@@ -213,21 +215,23 @@ export default function OrderDetails() {
                         <div
                           key={index}
                           className={`flex border-b border-[#dfdfdf] ${
-                            index === 0 ? "pb-4" : "py-4"
-                          }`}
+                            index === 0
+                              ? "pb-4 max-md:pb-2"
+                              : "py-4 max-md:py-2"
+                          } max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px]">
+                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
                             {orderInfo.infoName}
                           </div>
                           <div
                             className={`w-[60%] leading-[45px] ${
                               orderInfo.value === "입금 대기" &&
                               "flex justify-between items-center"
-                            }`}
+                            } max-md:leading-[40px]`}
                           >
                             {orderInfo.value}{" "}
                             {orderInfo.value === "입금 대기" && (
-                              <div className="w-[100px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer hover:bg-[#6846b7] hover:text-white ease-in-out duration-300">
+                              <div className="w-[100px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs">
                                 취소 요청
                               </div>
                             )}
@@ -236,7 +240,7 @@ export default function OrderDetails() {
                       ))}
                   </div>
                 </div>
-                <div>
+                <div className="max-md:mb-10">
                   <div className="odd_title">배송지 정보</div>
                   <div className="text-sm">
                     <form action="">
@@ -255,7 +259,7 @@ export default function OrderDetails() {
                             readOnly
                           />
                           <div
-                            className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer hover:bg-[#6846b7] hover:text-white ease-in-out duration-300"
+                            className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
                             onClick={onPostClick}
                           >
                             검색하기
@@ -264,7 +268,7 @@ export default function OrderDetails() {
                         {post && (
                           <div
                             id="wrap"
-                            className="border border-[#333] w-[420px] h-[402px] my-[10px] fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
+                            className="border border-[#333] w-[420px] h-[402px] my-[10px] fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-md:w-[calc(100%-1.5rem)]"
                           >
                             <img
                               src="//t1.daumcdn.net/postcode/resource/images/close.png"
@@ -278,7 +282,7 @@ export default function OrderDetails() {
                       </div>
                       <div className="odd_input_box">
                         <div className="odd_label">주소</div>
-                        <div className="mb-3">
+                        <div className="mb-3 max-md:mb-2">
                           <input
                             type="text"
                             className="odd_input read-only:bg-[#f9f9f9]"
@@ -328,7 +332,7 @@ export default function OrderDetails() {
                 </div>
               </div>
               {/* 주문 상세 정보 하단 오른쪽 컨텐츠 */}
-              <div className="w-[45%]">
+              <div className="w-[45%] max-md:w-[100%]">
                 <div>
                   <div className="odd_title">결제 정보</div>
                   <div className="text-sm">
@@ -337,13 +341,17 @@ export default function OrderDetails() {
                         <div
                           key={index}
                           className={`flex border-b border-[#dfdfdf] ${
-                            index === 0 ? "pb-4" : "py-4"
-                          }`}
+                            index === 0
+                              ? "pb-4 max-md:pb-2"
+                              : "py-4 max-md:py-2"
+                          } max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px]">
+                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
                             {paymentInfo.infoName}
                           </div>
-                          <div className={`w-[60%] leading-[45px]`}>
+                          <div
+                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                          >
                             {paymentInfo.value}
                           </div>
                         </div>
@@ -374,6 +382,21 @@ export default function OrderDetails() {
           padding: 10px;
           width: 100%;
           height: 45px;
+        }
+        @media not all and (min-width: 768px) {
+          .odd_title {
+            font-size: 18px;
+            margin-bottom: 30px;
+          }
+          .odd_input_box {
+            margin-bottom: 12px;
+          }
+          .odd_label {
+            font-size: 12px;
+          }
+          .odd_input {
+            height: 40px;
+          }
         }
       `}</style>
     </>

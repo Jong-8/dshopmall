@@ -11,7 +11,7 @@ export default function ProductQtyBox({
 }: ProductQtyBoxProps) {
   return (
     <div className="py-2">
-      <div className="flex items-center mb-2">
+      <div className="flex items-center">
         <div className="w-[calc(100%-20px)] text-ellipsis whitespace-pre overflow-hidden">
           {item.name}
         </div>
@@ -25,7 +25,7 @@ export default function ProductQtyBox({
           </div>
         )}
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mt-2">
         <QtyBox
           qty={qty}
           onQtyChange={onQtyChange}

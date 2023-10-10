@@ -4,6 +4,8 @@ import Header from "@components/Layout/Header";
 import { useState, useEffect } from "react";
 import { cartItems } from "../services/dummy/dummy";
 import CartList from "@components/Cart/CartList";
+import { store } from "@stores/index";
+import { useCount } from "./../stores/count.store";
 
 export default function Cart() {
   const [totalPrice, setTotalPrice] = useState(0);
@@ -22,6 +24,8 @@ export default function Cart() {
     setTotalPrice(itemTotalPrice);
   }, []);
 
+  const counts = store.count.useCount();
+
   return (
     <>
       <Header title="장바구니" description="장바구니" />
@@ -31,6 +35,10 @@ export default function Cart() {
             <div className="text-2xl font-bold tracking-wider mb-10 max-md:text-lg max-md:mb-8">
               장바구니 ({count})
             </div>
+            {/* <div>count : {counts.count}</div>
+            <button onClick={() => counts.setCount(counts.count + 1)}>
+              더하기
+            </button> */}
           </div>
           <div>
             {count > 0 ? (

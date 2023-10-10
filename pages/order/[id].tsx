@@ -3,6 +3,7 @@ import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
 import { useState } from "react";
+import Payment from "@components/Order/Payment";
 
 export default function Order() {
   const [post, setPost] = useState(false);
@@ -39,33 +40,35 @@ export default function Order() {
     <>
       <Header title="주문하기" description="주문하기" />
       <ContentLayout>
-        <div className="max-w-[660px] m-auto pt-[60px] pb-[70px]">
+        <div className="max-w-[660px] m-auto pt-[60px] pb-[70px] max-md:pt-10 max-md:pb-0">
           <form action="">
             {/* 주문 상품 */}
             <div className="od_box">
               <div className="od_title">주문 상품</div>
               <div>
-                <div className="flex justify-between border-b border-[#e0e0e0] pb-10">
-                  <div className="w-[160px] rounded-lg overflow-hidden">
+                <div className="flex justify-between border-b border-[#e0e0e0] pb-10 max-md:pb-6">
+                  <div className="w-[160px] rounded-lg overflow-hidden max-md:w-[80px]">
                     <img
                       src="https://www.935.co.kr/upload/product/thumb_20230418161252037400.JPG"
                       alt=""
                       className="w-[100%]"
                     />
                   </div>
-                  <div className="w-[450px] flex flex-col justify-between">
+                  <div className="w-[450px] flex flex-col justify-between max-md:w-[calc(100%-80px)]">
                     <div>
-                      <div className="font-bold mb-1">
+                      <div className="font-bold mb-1 max-md:text-sm">
                         9:35 발라또 퍼플 세럼
                       </div>
-                      <div className="text-sm text-[#888]">옵션 없음</div>
+                      <div className="text-sm text-[#888] max-md:text-xs">
+                        옵션 없음
+                      </div>
                     </div>
-                    <div>1개 / 57,000원</div>
+                    <div className="max-md:text-sm">1개 / 57,000원</div>
                   </div>
                 </div>
-                <div className="pt-[30px] flex justify-between items-center">
+                <div className="pt-[30px] flex justify-between items-center max-md:text-sm max-md:pt-6">
                   <div className="font-bold">상품합계</div>
-                  <div className="font-bold text-2xl text-[#7c34d2]">
+                  <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg">
                     57,000원
                   </div>
                 </div>
@@ -118,7 +121,7 @@ export default function Order() {
             <div className="od_box">
               <div className="od_title">배송지</div>
               <div>
-                <div className="flex mb-5">
+                <div className="flex mb-5 max-md:mb-3">
                   <div className="relative">
                     <input
                       type="radio"
@@ -128,7 +131,7 @@ export default function Order() {
                     />{" "}
                     <label
                       htmlFor="basicAddr"
-                      className="flex items-center group opacity-50 peer-checked:font-bold peer-checked:opacity-100"
+                      className="flex items-center group opacity-50 peer-checked:font-bold peer-checked:opacity-100 max-md:text-sm"
                     >
                       <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-1 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
                       기본 배송지
@@ -143,14 +146,14 @@ export default function Order() {
                     />{" "}
                     <label
                       htmlFor="newAddr"
-                      className="flex items-center group opacity-50 peer-checked:font-bold peer-checked:opacity-100"
+                      className="flex items-center group opacity-50 peer-checked:font-bold peer-checked:opacity-100 max-md:text-sm"
                     >
                       <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-1 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
                       신규 입력
                     </label>
                   </div>
                 </div>
-                <div className="border-b border-[#e0e0e0] pb-8">
+                <div className="border-b border-[#e0e0e0] pb-8 max-md:pb-6">
                   <div className="od_input_box">
                     <div className="od_label">이름</div>
                     <div>
@@ -166,7 +169,7 @@ export default function Order() {
                         readOnly
                       />
                       <div
-                        className="w-[100px] h-[56px] ml-3 text-center leading-[56px] text-[#7a1cea] border border-[#7a1cea] rounded-[3px] cursor-pointer"
+                        className="w-[100px] h-[56px] ml-3 text-center leading-[56px] text-[#7a1cea] border border-[#7a1cea] rounded-[3px] cursor-pointer max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
                         onClick={onPostClick}
                       >
                         검색하기
@@ -189,7 +192,7 @@ export default function Order() {
                   </div>
                   <div className="od_input_box">
                     <div className="od_label">주소</div>
-                    <div className="mb-3">
+                    <div className="mb-3 max-md:mb-2">
                       <input
                         type="text"
                         className="od_input read-only:bg-[#f9f9f9]"
@@ -225,23 +228,23 @@ export default function Order() {
                       />
                     </div>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center max-md:text-xs">
                     <input
                       type="checkbox"
                       id="setAddr"
-                      className="mr-1 w-[15px] h-[15px] accent-[#7a1cea]"
+                      className="mr-1 w-[15px] h-[15px] accent-[#7a1cea] max-md:w-[12px] max-md:h-[12px]"
                     />{" "}
                     <label htmlFor="setAddr">기본 배송지로 설정하기</label>
                   </div>
                 </div>
-                <div className="pt-8">
+                <div className="pt-8 max-md:pt-6">
                   <div className="od_input_box">
                     <div className="od_label">배송 시 요청 사항</div>
                     <div>
                       <input type="text" className="od_input" />
                     </div>
                   </div>
-                  <div className="mt-6">
+                  <div className="mt-6 max-md:mt-4 max-md:text-xs">
                     제주 및 도서 산간 지역의 배송은 추가 배송비가 발생할 수
                     있습니다.
                   </div>
@@ -259,30 +262,30 @@ export default function Order() {
                     </div>
                     <div className="flex justify-between">
                       <input type="text" className="od_input" />
-                      <div className="w-[100px] h-[56px] ml-3 text-center leading-[56px] text-[#7a1cea] border border-[#7a1cea] rounded-[3px]">
+                      <div className="w-[100px] h-[56px] ml-3 text-center leading-[56px] text-[#7a1cea] border border-[#7a1cea] rounded-[3px] max-md:h-[40px] max-md:leading-[40px] max-md:text-xs">
                         전액 사용
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="py-5 border-b border-[#e0e0e0]">
-                  <div className="flex justify-between py-4">
+                <div className="py-5 border-b border-[#e0e0e0] max-md:py-3 max-md:text-sm">
+                  <div className="flex justify-between py-4 max-md:py-2">
                     <div>상품 합계</div>
                     <div>57,000원</div>
                   </div>
-                  <div className="flex justify-between py-4">
+                  <div className="flex justify-between py-4 max-md:py-2">
                     <div>배송비</div>
                     <div>3,000원</div>
                   </div>
-                  <div className="flex justify-between py-4">
+                  <div className="flex justify-between py-4 max-md:py-2">
                     <div>총 할인 DR</div>
                     <div>0 DR</div>
                   </div>
                 </div>
                 <div>
-                  <div className="pt-[30px] flex justify-between items-center">
+                  <div className="pt-[30px] flex justify-between items-center max-md:text-sm max-md:pt-6">
                     <div className="font-bold">상품합계</div>
-                    <div className="font-bold text-2xl text-[#7c34d2]">
+                    <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg">
                       60,000원
                     </div>
                   </div>
@@ -292,72 +295,23 @@ export default function Order() {
             {/* 결제 방법 */}
             <div className="od_box">
               <div className="od_title">결제 방법</div>
-              <div className="grid grid-cols-2 gap-3">
-                <div className="relative">
-                  <input
-                    type="radio"
-                    name="payment"
-                    id="creditCard"
-                    className="w-0 h-0 absolute top-0 left-0 peer"
-                    defaultChecked={true}
-                  />{" "}
-                  <label
-                    htmlFor="creditCard"
-                    className="flex items-center group opacity-50 border border-[#e0e0e0] rounded-md py-4 px-5 peer-checked:font-bold peer-checked:opacity-100"
-                  >
-                    <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-2 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
-                    신용/체크카드
-                  </label>
-                </div>
-                <div className="relative">
-                  <input
-                    type="radio"
-                    name="payment"
-                    id="accountTransfer"
-                    className="w-0 h-0 absolute top-0 left-0 peer"
-                  />{" "}
-                  <label
-                    htmlFor="accountTransfer"
-                    className="flex items-center group opacity-50 border border-[#e0e0e0] rounded-md py-4 px-5 peer-checked:font-bold peer-checked:opacity-100"
-                  >
-                    <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-2 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
-                    계좌이체
-                  </label>
-                </div>
-                <div className="relative">
-                  <input
-                    type="radio"
-                    name="payment"
-                    id="virtualAccount"
-                    className="w-0 h-0 absolute top-0 left-0 peer"
-                  />{" "}
-                  <label
-                    htmlFor="virtualAccount"
-                    className="flex items-center group opacity-50 border border-[#e0e0e0] rounded-md py-4 px-5 peer-checked:font-bold peer-checked:opacity-100"
-                  >
-                    <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-2 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
-                    가상계좌
-                  </label>
-                </div>
-                <div className="relative">
-                  <input
-                    type="radio"
-                    name="payment"
-                    id="withoutBankbook"
-                    className="w-0 h-0 absolute top-0 left-0 peer"
-                  />{" "}
-                  <label
-                    htmlFor="withoutBankbook"
-                    className="flex items-center group opacity-50 border border-[#e0e0e0] rounded-md py-4 px-5 peer-checked:font-bold peer-checked:opacity-100"
-                  >
-                    <span className="relative block w-4 h-4 rounded-[50%] border border-[#aeaeae] mr-2 after:hidden after:absolute after:top-[50%] after:left-[50%] after:translate-x-[-50%] after:translate-y-[-50%] after:w-[10px] after:h-[10px] after:rounded-[50%] after:bg-[#7a1cea] peer-checked:group-[]:after:block"></span>{" "}
-                    무통장 입금
-                  </label>
-                </div>
+              <div className="grid grid-cols-2 gap-3 max-md:gap-2">
+                <Payment
+                  id="creditCard"
+                  label="신용/체크카드"
+                  defaultChecked={true}
+                />
+                <Payment id="accountTransfer" label="계좌이체" defaultChecked />
+                <Payment id="virtualAccount" label="가상계좌" defaultChecked />
+                <Payment
+                  id="withoutBankbook"
+                  label="무통장 입금"
+                  defaultChecked
+                />
               </div>
             </div>
-            <div className="sticky bottom-0 pb-4">
-              <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl">
+            <div className="sticky bottom-0 pb-4 max-md:pb-0">
+              <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[58px] max-md:leading-[58px] max-md:text-base">
                 60,000원 결제하기
               </button>
             </div>
@@ -389,6 +343,25 @@ export default function Order() {
           padding: 10px;
           width: 100%;
           height: 56px;
+        }
+        @media not all and (min-width: 768px) {
+          .od_title {
+            font-size: 18px;
+            margin-bottom: 15px;
+          }
+          .od_box {
+            border-bottom: 12px solid #f9f9f9;
+            padding: 20px 12px;
+          }
+          .od_input_box {
+            margin-bottom: 12px;
+          }
+          .od_label {
+            font-size: 12px;
+          }
+          .od_input {
+            height: 40px;
+          }
         }
       `}</style>
     </>
