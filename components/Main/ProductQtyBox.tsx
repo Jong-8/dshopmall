@@ -12,20 +12,20 @@ export default function ProductQtyBox({
   return (
     <div className="py-2">
       <div className="flex items-center">
-        <div className="w-[calc(100%-20px)] text-ellipsis whitespace-pre overflow-hidden">
+        <div className="w-[calc(100%-20px)] text-ellipsis whitespace-pre overflow-hidden max-md:text-sm">
           {item.name}
         </div>
         {/* 선택옵션 있을시 노출 */}
         {item.optionId > 0 && (
           <div
-            className="w-5 cursor-pointer text-[#888] flex justify-center"
+            className="w-5 cursor-pointer text-[#888] flex justify-center max-md:text-sm"
             onClick={onDeleteClick}
           >
             <AiOutlineClose />
           </div>
         )}
       </div>
-      <div className="flex justify-between items-center mt-2">
+      <div className="flex justify-between items-center mt-2 max-md:mt-1">
         <QtyBox
           qty={qty}
           onQtyChange={onQtyChange}

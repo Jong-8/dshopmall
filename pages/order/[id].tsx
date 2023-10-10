@@ -68,7 +68,7 @@ export default function Order() {
                 </div>
                 <div className="pt-[30px] flex justify-between items-center max-md:text-sm max-md:pt-6">
                   <div className="font-bold">상품합계</div>
-                  <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg">
+                  <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg max-md:font-jamsilRegular">
                     57,000원
                   </div>
                 </div>
@@ -301,12 +301,20 @@ export default function Order() {
                   label="신용/체크카드"
                   defaultChecked={true}
                 />
-                <Payment id="accountTransfer" label="계좌이체" defaultChecked />
-                <Payment id="virtualAccount" label="가상계좌" defaultChecked />
+                <Payment
+                  id="accountTransfer"
+                  label="계좌이체"
+                  defaultChecked={false}
+                />
+                <Payment
+                  id="virtualAccount"
+                  label="가상계좌"
+                  defaultChecked={false}
+                />
                 <Payment
                   id="withoutBankbook"
                   label="무통장 입금"
-                  defaultChecked
+                  defaultChecked={false}
                 />
               </div>
             </div>

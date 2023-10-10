@@ -503,7 +503,11 @@ export default function Item() {
                         </div>
                       </div>
                       {/* 모바일 버튼 */}
-                      <div className="fixed bottom-0 left-0 w-[100%] z-[99] rounded-t-[12px] overflow-hidden shadow-line bg-white md:hidden">
+                      <div
+                        className={`fixed bottom-0 left-0 w-[100%] z-[99] rounded-t-[12px] overflow-hidden bg-white md:hidden ${
+                          mobileBtn && "shadow-line"
+                        }`}
+                      >
                         {/* 모바일 버튼 상단 */}
                         <div>
                           {/* 모바일 버튼 쇼하이드 버튼 */}
@@ -519,7 +523,7 @@ export default function Item() {
                           {mobileBtn && item.isSelectOption && (
                             <div className="px-3 bg-white">
                               <div
-                                className={`flex border px-5 py-3 ${
+                                className={`flex border px-3 py-3 ${
                                   open
                                     ? "border-[#7862a2] text-[#7862a2]"
                                     : "border-[#bbb]"
@@ -634,7 +638,7 @@ export default function Item() {
                             )}
                             {/* 버튼 */}
                             <div className="flex w-[100%] justify-between pb-3 px-3">
-                              <div className="mr-3 w-[49%]">
+                              <div className="mr-2 w-[49%]">
                                 <Link href={`/order/${item.id}`}>
                                   <a>
                                     <Button
