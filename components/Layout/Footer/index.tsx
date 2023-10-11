@@ -33,8 +33,8 @@ export default function Footer() {
               <span className="px-1 max-lg:hidden">|</span>
             </p>
             <p className="max-lg:w-[100%]">
-              전화: 02-2088-1850 <span className="px-1">|</span> 이메일:
-              contact@designershop.io
+              사업자등록번호: 743-86-02152<span className="px-1">|</span>{" "}
+              이메일: contact@designershop.io
             </p>
           </div>
           <div className="flex justify-center flex-wrap">
@@ -42,9 +42,18 @@ export default function Footer() {
               주소: 서울특별시 강남구 강남대로 324 역삼디오슈페리움 1층
               <span className="px-1 max-lg:hidden">|</span>
             </p>
+            <p className="max-lg:w-[100%]">통신판매: 0000-서울강남-00000</p>
+          </div>
+        </div>
+        <div className="text-center">
+          <div className="flex justify-center flex-wrap">
             <p className="max-lg:w-[100%]">
-              사업자등록번호: 743-86-02152 <span className="px-1">|</span>{" "}
-              통신판매: 0000-서울강남-00000
+              고객센터: 02-2088-1850{" "}
+              <span className="px-1 max-lg:hidden">|</span>
+            </p>
+            <p className="max-lg:w-[100%]">
+              운영시간: 평일 10:00am ~ 6:00pm <span className="px-1">|</span>
+              점심시간: 12:00pm ~ 1:00pm{" "}
             </p>
           </div>
         </div>

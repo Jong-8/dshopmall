@@ -212,7 +212,7 @@ export default function Header({ title, description }: HeaderProps) {
           <div className="flex flex-wrap flex-1 justify-end">
             <Link href={"/login"}>
               <a
-                className={`mr-2 text-[24px] hover:text-[#6846b7] ${
+                className={`mr-2 text-[24px] md:hover:text-[#6846b7] ${
                   router.pathname === "/login" ? "active" : ""
                 }`}
               >
@@ -221,7 +221,7 @@ export default function Header({ title, description }: HeaderProps) {
             </Link>
             <Link href={"/cart"}>
               <a
-                className={`text-[20px] hover:text-[#6846b7] ${
+                className={`text-[20px] md:hover:text-[#6846b7] ${
                   router.pathname === "/cart" ? "active" : ""
                 }`}
               >

@@ -1,4 +1,5 @@
 /* 상품 리스트 */
+/* 메인의 전체 상품 리스트를 받아오는 api */
 const itemList = [
   {
     id: 1,
@@ -99,13 +100,16 @@ const itemList = [
 ];
 
 /* 카테고리 리스트 */
+/* 메인의 카테고리 리스트를 받아오는 api */
 const categories = ["all", "cosmetics", "etc"];
 
 /* 선택옵션 리스트 */
+/* 상품상세페이지에서 해당 상품의 선택옵션을 받아오는 api */
 const selectOptions = [
   {
-    id: 1,
+    id: 1, // 상품id
     options: [
+      // 선택옵션 리스트
       {
         optionId: 1,
         title: "화장품명1",
@@ -157,6 +161,7 @@ const selectOptions = [
 ];
 
 /* 카트에 담긴 상품리스트 */
+/* 카트에 담긴 상품리스트를 받아오는 api - 회원ID로 셀렉 */
 const cartItems = [
   {
     id: 1,
@@ -170,7 +175,7 @@ const cartItems = [
       selectOptionAddPrice: 1000,
     },
     qty: 1,
-    stock: 3,
+    stock: 3, // 선택옵션이 있으면 해당 선택옵션 재고, 없으면 상품 재고
   },
   {
     id: 2,
