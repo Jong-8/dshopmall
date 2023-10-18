@@ -219,21 +219,15 @@ export default function Mypage() {
                       마케팅 정보 수신 동의
                     </div>
                     <div className="flex">
-                      <div className="flex items-center mr-4 max-md:text-xs">
+                      <div className="flex items-center max-md:text-xs">
                         <input
                           type="checkbox"
                           id="agreeEmail"
                           className="mr-2 w-[14px] h-[14px] accent-[#7a1cea] max-md:w-3 max-md:h-3"
                         />{" "}
-                        <label htmlFor="agreeEmail">이메일</label>
-                      </div>
-                      <div className="flex items-center max-md:text-xs">
-                        <input
-                          type="checkbox"
-                          id="agreeMessage"
-                          className="mr-2 w-[14px] h-[14px] accent-[#7a1cea] max-md:w-3 max-md:h-3"
-                        />{" "}
-                        <label htmlFor="agreeMessage">문자 메세지</label>
+                        <label htmlFor="agreeEmail">
+                          이메일 및 SMS 마케팅 정보 수신에 동의합니다.
+                        </label>
                       </div>
                     </div>
                   </div>

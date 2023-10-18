@@ -9,10 +9,6 @@ type LoginProps = {
   id: string;
   password: string;
 };
-const dummyLogin: LoginProps = {
-  id: "tester",
-  password: "1234",
-};
 export default function Login() {
   const [values, setValues] = useState<LoginProps>({
     id: "",
@@ -26,10 +22,6 @@ export default function Login() {
     //if(res.statusCode === 2000) {
     //  /* 정상 반환시 비즈니스 로직*/
     //} else alert(res.message);
-
-    // if (dummyLogin.id === id && dummyLogin.password === password) {
-    //   alert("로그인 성공");
-    // } else alert("비밀번호가 올바르지않습니다.");
   };
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

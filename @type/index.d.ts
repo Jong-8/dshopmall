@@ -29,6 +29,7 @@ declare global {
     type?: ButtonHTMLAttributes<HTMLButtonElement>;
     theme?: string;
     name?: string;
+    onClick?(e: MouseEvent<HTMLButtonElement>): void;
   }
 
   interface InputProps {
@@ -115,11 +116,16 @@ declare global {
     id: string;
     label: string;
     defaultChecked: boolean;
+    onChange(e: ChangeEvent<HTMLInputElement>): void;
   }
 
   interface AddrRadioProps {
     id: string;
     label: string;
     defaultChecked: boolean;
+  }
+
+  interface Window {
+    IMP?: any;
   }
 }

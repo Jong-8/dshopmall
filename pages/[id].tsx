@@ -3,13 +3,13 @@ import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, MouseEvent, BaseSyntheticEvent } from "react";
 import { itemList, selectOptions } from "../services/dummy/dummy";
 import Button from "@components/Member/Button";
-import Link from "next/link";
 import ProductQtyBox from "@components/Main/ProductQtyBox";
 import { BsChevronDown } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
+import { store } from "@stores/index";
 
 type optionProps =
   | {
@@ -56,6 +56,7 @@ export default function Item() {
   const router = useRouter();
   const [mainThumbnail, setMainThumbnail] = useState("");
   const [mobileBtn, setMobileBtn] = useState(false);
+  const buyItem = store.buy.useBuy();
 
   useEffect(() => {
     //if (item) return;
@@ -328,9 +329,28 @@ export default function Item() {
     }
   };
 
-  const onItemSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onItemSubmit = (
+    e: BaseSyntheticEvent<MouseEvent<EventTarget & HTMLButtonElement>>
+  ) => {
     e.preventDefault();
-    //const { buy, cart } = e.target.elements;
+    if (item?.isSelectOption && selectedOptions?.length === 0) {
+      alert("선택옵션을 선택해주세요.");
+      return false;
+    }
+    if (e.target.name === "buy") {
+      // 바로구매시
+      buyItem.setItem([
+        {
+          id: item?.id,
+          name: item?.title,
+          thumbnail: item?.thumbnailUrl,
+          options: selectedOptions,
+        },
+      ]);
+      router.push("/order");
+    } else {
+      // 장바구니시
+    }
   };
   return (
     <div>
@@ -369,7 +389,7 @@ export default function Item() {
                   </div>
                   {/* 상품 설명 */}
                   <div className="w-[40%] max-md:w-[100%]">
-                    <form action="" onSubmit={onItemSubmit}>
+                    <form action="">
                       {/* 상품명 */}
                       <div className="text-[38px] leading-[1.2em] mb-4 break-keep max-md:text-[24px] max-md:mb-2 max-md:font-jamsilRegular">
                         {item.title}
@@ -481,16 +501,13 @@ export default function Item() {
                       {/* 버튼 */}
                       <div className="flex w-[100%] max-md:hidden">
                         <div className="mr-5 w-[40%]">
-                          <Link href={`/order/${item.id}`}>
-                            <a>
-                              <Button
-                                text="구매하기"
-                                type=""
-                                width="w-[160px] max-lg:w-[100%]"
-                                name="buy"
-                              />
-                            </a>
-                          </Link>
+                          <Button
+                            text="구매하기"
+                            type=""
+                            width="w-[160px] max-lg:w-[100%]"
+                            name="buy"
+                            onClick={onItemSubmit}
+                          />
                         </div>
                         <div className="w-[40%]">
                           <Button
@@ -499,6 +516,7 @@ export default function Item() {
                             width="w-[160px] max-lg:w-[100%]"
                             theme="white"
                             name="cart"
+                            onClick={onItemSubmit}
                           />
                         </div>
                       </div>
@@ -639,18 +657,14 @@ export default function Item() {
                             {/* 버튼 */}
                             <div className="flex w-[100%] justify-between pb-3 px-3">
                               <div className="mr-2 w-[49%]">
-                                <Link href={`/order/${item.id}`}>
-                                  <a>
-                                    <Button
-                                      text="구매하기"
-                                      type=""
-                                      width="w-[160px] max-lg:w-[100%]"
-                                      height="h-[54px] max-md:h-[48px]"
-                                      fontSize="text-sm"
-                                      name="buy"
-                                    />
-                                  </a>
-                                </Link>
+                                <Button
+                                  text="구매하기"
+                                  type=""
+                                  width="w-[160px] max-lg:w-[100%]"
+                                  height="h-[54px] max-md:h-[48px]"
+                                  fontSize="text-sm"
+                                  name="buy"
+                                />
                               </div>
                               <div className="w-[49%]">
                                 <Button

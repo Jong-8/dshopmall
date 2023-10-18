@@ -12,6 +12,7 @@ export default function Signup() {
     name: "",
     phone: "",
     email: "",
+    code: "",
   });
   const [chks, setChks] = useState({
     allChk: 0,
@@ -19,7 +20,7 @@ export default function Signup() {
     requiredChk2: 0,
     selectChk: 0,
   });
-  const { id, password, passwordConfirm, name, phone, email } = values;
+  const { id, password, passwordConfirm, name, phone, email, code } = values;
   const { allChk, requiredChk1, requiredChk2, selectChk } = chks;
 
   const onSignupSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -27,6 +28,14 @@ export default function Signup() {
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValues({
+      ...values,
+      [name]: value,
+    });
+  };
+
+  const onCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({
       ...values,
@@ -126,6 +135,13 @@ export default function Signup() {
             type="text"
             value={email}
             onChange={onChange}
+          />
+          <Input
+            title="추천코드"
+            name="code"
+            type="text"
+            value={code}
+            onChange={onCodeChange}
           />
         </div>
         <div className="max-md:text-xs">
