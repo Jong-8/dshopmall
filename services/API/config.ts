@@ -3,9 +3,6 @@ const LOCAL_IP = "172.30.1.8";
 const DEV_PORT = "5050";
 const VERSION = "v1";
 
-const BASE_URI =
-  process.env.NODE_ENV === "production"
-    ? `https://v2-api.designershop.kr/${VERSION}/`
-    : `http://${LOCAL_IP}:${DEV_PORT}` + `/${VERSION}`;
+const BASE_URI = "https://v2-api.designershop.kr/shop/v1/";
 
 export { LOCAL_IP, DEV_PORT, VERSION, BASE_URI };
