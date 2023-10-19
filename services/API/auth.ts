@@ -5,7 +5,6 @@ const helper = apiHelper();
 
 interface Login {
   token: string;
-
   designerProcess: number;
 }
 
