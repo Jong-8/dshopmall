@@ -30,7 +30,7 @@ export const apiHelper = () => {
     data?: any,
     config?: AxiosRequestConfig
   ): Promise<APIResponse<T>> => {
-    console.log(BASE_URI);
+    //console.log(BASE_URI);
     try {
       const response = await client.post<APIResponse<T>>(url, data, config);
       return response.data;

@@ -21,7 +21,7 @@ export default function Login() {
     const res = await API.auth.login(id, password);
     if (res.statusCode === 2000) {
       /* 정상 반환시 비즈니스 로직*/
-      console.log("로그인 성공");
+      console.log(res.result);
     } else alert(res.message);
   };
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
