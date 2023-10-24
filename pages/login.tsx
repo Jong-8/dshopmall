@@ -3,25 +3,55 @@ import Button from "@components/Member/Button";
 import Input from "@components/Member/Input";
 import API from "@services/API";
 import Link from "next/link";
-import { useState, FormEvent, ChangeEvent } from "react";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
+import { useRouter } from "next/router";
+import { useCookies } from "react-cookie";
+import { store } from "@stores";
 
 type LoginProps = {
   id: string;
   password: string;
 };
 export default function Login() {
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "token",
+    "cartItems",
+    "cartCount",
+  ]);
+  const { setToken, setCartCount } = store.auth.useToken();
+  const { setCart } = store.cart.useCart();
+  const router = useRouter();
   const [values, setValues] = useState<LoginProps>({
     id: "",
     password: "",
   });
   const { id, password } = values;
+
   const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const res = await API.auth.login(id, password);
     if (res.statusCode === 2000) {
       /* 정상 반환시 비즈니스 로직*/
-      console.log(res.result);
+      const cartItems = await API.cart.cart(res.result.token);
+      if (cartItems.statusCode === 2000) {
+        setCart(cartItems.result.cartItems);
+        setCartCount(cartItems.result.cartItems.length);
+        setCookie("cartItems", cartItems.result.cartItems, {
+          path: "/",
+        });
+        setCookie("cartCount", cartItems.result.cartItems.length, {
+          path: "/",
+        });
+      } else alert(cartItems.message);
+
+      //console.log(res.result);
+      //console.log(cartItems.result);
+
+      setToken(res.result.token, res.result.user);
+      setCookie("token", res.result.token, {
+        path: "/",
+      });
+      router.replace(router.query.url ? `/${router.query.url}` : "/");
     } else alert(res.message);
   };
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {

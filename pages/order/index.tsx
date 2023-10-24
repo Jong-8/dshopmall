@@ -5,13 +5,35 @@ import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import Payment from "@components/Order/Payment";
 import AddrRadio from "@components/Order/AddrRadio";
-import { store } from "@stores/index";
+import useOrder from "@hooks/useOrder";
+import API from "@services/API";
 
 let IMP: any;
 if (typeof window !== "undefined") {
   IMP = window.IMP; // 생략 가능
   IMP.init("imp15801485"); // 예: imp00000000
 }
+
+type optionProps = {
+  optionDetailCounter: number;
+  name: string | "";
+  qty: number | 1;
+  price: number | 0;
+  itemPrice: number | 0;
+  stock: number | 0;
+};
+
+type optionsProps = {
+  optionCounter: number;
+  selectOptions: optionProps[];
+};
+
+type buyItemProps = {
+  counter: number;
+  name: string;
+  thumbnail: string;
+  options: optionsProps;
+};
 
 const bankList = [
   "선택하세요",
@@ -40,9 +62,6 @@ const bankList = [
 ];
 
 export default function Order() {
-  const myPoint = 10000;
-  const buyItemStore = store.buy.useBuy();
-  const buyItems = buyItemStore.item;
   const [userInfo, setUserInfo] = useState<{
     userName: string;
     userPhone1: string;
@@ -79,8 +98,6 @@ export default function Order() {
   });
   const [post, setPost] = useState(false);
   const [point, setPoint] = useState<number | undefined>(undefined);
-  const [totalItemsPrice, setTotalItemsPrice] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(0);
   const [payment, setPayment] = useState("creditCard");
   const [deposit, setDeposit] = useState({
     depositor: "",
@@ -108,18 +125,7 @@ export default function Order() {
     refundAccountHolder,
     refundAccount,
   } = deposit;
-
-  useEffect(() => {
-    let itemsPrice = 0;
-    buyItems.map((buyItem) => {
-      buyItem.options &&
-        buyItem.options.map((option) => {
-          itemsPrice = itemsPrice + option.price * option.qty;
-        });
-    });
-    setTotalItemsPrice(itemsPrice);
-    setTotalPrice(itemsPrice >= 100000 ? itemsPrice : itemsPrice + 3000);
-  }, [buyItems]);
+  const order = useOrder();
 
   const onUserInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -200,13 +206,15 @@ export default function Order() {
     const { name, value } = e.target;
     const usePoint = Number(value);
 
-    if (usePoint > myPoint) {
-      alert(`사용 가능하신 DR포인트는 ${myPoint.toLocaleString()}DR 입니다.`);
+    if (order.myPoint && usePoint > order.myPoint) {
+      alert(
+        `사용 가능하신 DR포인트는 ${order.myPoint.toLocaleString()}DR 입니다.`
+      );
       return false;
     }
 
     setPoint(usePoint);
-    setTotalPrice(totalItemsPrice - usePoint);
+    order.setTotalPrice(order.totalItemsPrice - usePoint);
   };
 
   const onBankbookChange = (
@@ -221,8 +229,8 @@ export default function Order() {
   };
 
   const onUseTotalPointClick = () => {
-    setPoint(myPoint);
-    setTotalPrice(totalItemsPrice - myPoint);
+    setPoint(order.myPoint);
+    order.myPoint && order.setTotalPrice(order.totalItemsPrice - order.myPoint);
   };
 
   const onPaymentChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -247,43 +255,68 @@ export default function Order() {
   };
 
   const handlePay = async () => {
-    IMP.request_pay(
-      {
-        pg: "kcp.A52CY", //테스트인경우 kcp.T0000
-        pay_method: "card",
-        merchant_uid: createUid(), //상점에서 생성한 고유 주문번호
-        name:
-          buyItems.length > 1
-            ? `${buyItems[0].name} 외 ${buyItems.length - 1}건`
-            : buyItems[0].name, // 제품명
-        amount: totalPrice, //결제 금액
-        company: "디샵몰", //해당 파라미터 설정시 통합결제창에 해당 상호명이 노출됩니다.
-        buyer_email: userEmail, // 주문자 이메일
-        buyer_name: userName, // 주문자명
-        buyer_tel: `${userPhone1}-${userPhone2}-${userPhone3}`, // 주문자 연락처
-        buyer_addr: `${address}, ${detailed}`, // 주문자 주소
-        buyer_postcode: zipcode, // 주문자 우편번호
-        language: "ko", // en 설정시 영문으로 출력되면 해당 파라미터 생략시 한국어 default
-        m_redirect_url: `http://localhost:3000/orderDetails/${createUid()}`,
-        auth_mode: "key-in", // 키인결제(일회성 결제)이용시 설정
-      },
-      (rsp?: any) => {
-        // callback
-        if (rsp.success) {
-          // 결제 성공 시 로직
-        } else {
-          // 결제 실패 시 로직
-          if (rsp.error_code)
-            alert(
-              `결제가 실패하였습니다.\n에러 내용 : ${rsp.error_msg}.\n관리자에게 문의해주시기 바랍니다.`
-            );
+    order.buyItems &&
+      IMP.request_pay(
+        {
+          pg: "kcp.A52CY", //테스트인경우 kcp.T0000
+          pay_method: "card",
+          merchant_uid: createUid(), //상점에서 생성한 고유 주문번호
+          name:
+            order.buyItems.length > 1
+              ? `${order.buyItems[0].name} 외 ${order.buyItems.length - 1}건`
+              : order.buyItems[0].name, // 제품명
+          amount: order.totalPrice, //결제 금액
+          company: "디샵몰", //해당 파라미터 설정시 통합결제창에 해당 상호명이 노출됩니다.
+          buyer_email: userEmail, // 주문자 이메일
+          buyer_name: userName, // 주문자명
+          buyer_tel: `${userPhone1}-${userPhone2}-${userPhone3}`, // 주문자 연락처
+          buyer_addr: `${address}, ${detailed}`, // 주문자 주소
+          buyer_postcode: zipcode, // 주문자 우편번호
+          language: "ko", // en 설정시 영문으로 출력되면 해당 파라미터 생략시 한국어 default
+          m_redirect_url: `http://localhost:3000/orderDetails/${createUid()}`,
+          auth_mode: "key-in", // 키인결제(일회성 결제)이용시 설정
+        },
+        (rsp?: any) => {
+          // callback
+          if (rsp.success) {
+            // 결제 성공 시 로직
+          } else {
+            // 결제 실패 시 로직
+            if (rsp.error_code)
+              alert(
+                `결제가 실패하였습니다.\n에러 내용 : ${rsp.error_msg}.\n관리자에게 문의해주시기 바랍니다.`
+              );
+          }
         }
-      }
-    );
+      );
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const datas = {
+      items: order.buyItemsData ?? [],
+      guest_name: userName,
+      guest_phone: `${userPhone1}${userPhone2}${userPhone3}`,
+      deliveryInfo: {
+        name: addrName,
+        zipcode: zipcode,
+        address: address,
+        detailed: detailed,
+        phone: `${addrPhone1}${addrPhone2}${addrPhone3}`,
+        requests: requests,
+      },
+      point: point ?? 0,
+      refund_holder: refundAccountHolder ?? "",
+      refund_bank: refundBank ?? "",
+      refund_account: refundAccount ?? "",
+      refund_tel: depositor ?? "",
+    };
+
+    const res = await API.order.payPrepare(order.auth.token, datas);
+    if (res.statusCode === 2000) {
+    } else alert(res.message);
+
     if (payment !== "withoutBankbook") {
       handlePay();
     }
@@ -298,49 +331,57 @@ export default function Order() {
             <div className="od_box">
               <div className="od_title">주문 상품</div>
               <div>
-                {buyItems.map((buyItem, index) => (
+                {order.buyItems?.map((buyItem: buyItemProps, index: number) => (
                   <div key={index}>
-                    {buyItem.options?.map((option, index) => (
-                      <div key={index}>
-                        <div className="flex justify-between pb-5 max-md:pb-6">
-                          <div className="w-[160px] rounded-lg overflow-hidden max-md:w-[80px]">
-                            <a href={`/${buyItem.id}`} target="_blank">
-                              <img
-                                src={buyItem.thumbnail}
-                                alt=""
-                                className="w-[100%]"
-                              />
-                            </a>
-                          </div>
-                          <div className="w-[450px] flex flex-col justify-between py-3 max-md:w-[calc(100%-80px)]">
-                            <div>
-                              <div className="font-bold mb-1 max-md:text-sm">
-                                <a href={`/${buyItem.id}`} target="_blank">
-                                  {buyItem.name}
-                                </a>
-                              </div>
-                              <div className="text-sm text-[#888] max-md:text-xs">
-                                <div>
-                                  {option.optionId === 0
-                                    ? "옵션 없음"
-                                    : option.name}
+                    {buyItem.options.selectOptions?.map(
+                      (option: optionProps, index: number) => (
+                        <div key={index}>
+                          <div className="flex justify-between pb-5 max-md:pb-6">
+                            <div className="w-[160px] rounded-lg overflow-hidden max-md:w-[80px]">
+                              <a href={`/${buyItem.counter}`} target="_blank">
+                                <img
+                                  src={buyItem.thumbnail}
+                                  alt=""
+                                  className="w-[100%]"
+                                />
+                              </a>
+                            </div>
+                            <div className="w-[450px] flex flex-col justify-between py-3 max-md:w-[calc(100%-80px)]">
+                              <div>
+                                <div className="font-bold mb-1 max-md:text-sm">
+                                  <a
+                                    href={`/${buyItem.counter}`}
+                                    target="_blank"
+                                  >
+                                    {buyItem.name}
+                                  </a>
+                                </div>
+                                <div className="text-sm text-[#888] max-md:text-xs">
+                                  <div>
+                                    {option.optionDetailCounter === 0
+                                      ? "옵션 없음"
+                                      : option?.name}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                            <div className="max-md:text-sm">
-                              {option.qty}개 /{" "}
-                              {(option.price * option.qty).toLocaleString()}원
+                              <div className="max-md:text-sm">
+                                {option?.qty}개 /{" "}
+                                {(
+                                  option?.itemPrice * option?.qty
+                                ).toLocaleString()}
+                                원
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    )}
                   </div>
                 ))}
                 <div className="pt-[30px] flex justify-between items-center border-t border-[#e0e0e0] mt-5 max-md:text-sm max-md:pt-6">
                   <div className="font-bold">상품합계</div>
                   <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg max-md:font-jamsilRegular">
-                    {totalItemsPrice.toLocaleString()}원
+                    {order.totalItemsPrice.toLocaleString()}원
                   </div>
                 </div>
               </div>
@@ -566,7 +607,7 @@ export default function Order() {
                 <div className="border-b border-[#e0e0e0]">
                   <div className="od_input_box">
                     <div className="od_label">
-                      DR포인트 (보유 포인트 {myPoint.toLocaleString()}원)
+                      DR포인트 (보유 포인트 {order.myPoint?.toLocaleString()}원)
                     </div>
                     <div className="flex justify-between">
                       <input
@@ -589,11 +630,11 @@ export default function Order() {
                 <div className="py-5 border-b border-[#e0e0e0] max-md:py-3 max-md:text-sm">
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>상품 합계</div>
-                    <div>{totalItemsPrice.toLocaleString()}원</div>
+                    <div>{order.totalItemsPrice.toLocaleString()}원</div>
                   </div>
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>배송비</div>
-                    <div>{totalItemsPrice >= 100000 ? 0 : "3,000"}원</div>
+                    <div>{order.totalItemsPrice >= 100000 ? 0 : "3,000"}원</div>
                   </div>
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>총 할인 DR</div>
@@ -604,7 +645,7 @@ export default function Order() {
                   <div className="pt-[30px] flex justify-between items-center max-md:text-sm max-md:pt-6">
                     <div className="font-bold">상품합계</div>
                     <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg max-md:font-jamsilRegular">
-                      {totalPrice.toLocaleString()}원
+                      {order.totalPrice.toLocaleString()}원
                     </div>
                   </div>
                 </div>
@@ -705,7 +746,7 @@ export default function Order() {
             </div>
             <div className="sticky bottom-0 pb-4 max-md:pb-0">
               <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[58px] max-md:leading-[58px] max-md:text-lg">
-                {totalPrice.toLocaleString()}원 결제하기
+                {order.totalPrice.toLocaleString()}원 결제하기
               </button>
             </div>
           </form>
@@ -760,3 +801,9 @@ export default function Order() {
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

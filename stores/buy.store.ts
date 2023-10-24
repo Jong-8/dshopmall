@@ -1,7 +1,7 @@
 import { create } from "zustand";
 type optionProps =
   | {
-      optionId: number;
+      optionDetailCounter: number;
       name: string | "";
       qty: number | 1;
       price: number | 0;

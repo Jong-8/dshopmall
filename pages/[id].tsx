@@ -1,19 +1,20 @@
 import ContentLayout from "@components/Layout/ContentLayout";
 import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
-import axios from "axios";
-import { useRouter } from "next/router";
 import { useState, useEffect, MouseEvent, BaseSyntheticEvent } from "react";
-import { itemList, selectOptions } from "../services/dummy/dummy";
 import Button from "@components/Member/Button";
 import ProductQtyBox from "@components/Main/ProductQtyBox";
 import { BsChevronDown } from "react-icons/bs";
 import { IoIosArrowDown } from "react-icons/io";
 import { store } from "@stores/index";
+import useItem from "@hooks/useItem";
+import { useRouter } from "next/router";
+import { useCookies } from "react-cookie";
+import API from "@services/API";
 
 type optionProps =
   | {
-      optionId: number;
+      optionDetailCounter: number;
       name: string | "";
       qty: number | 1;
       price: number | 0;
@@ -22,87 +23,57 @@ type optionProps =
   | undefined;
 
 export default function Item() {
-  const [item, setItem] = useState<
-    | {
-        id: number;
-        title: string;
-        price: number;
-        thumbnailUrl: string;
-        stock: number;
-        isSelectOption: boolean;
-        images: string[];
-        description: string;
-      }
-    | undefined
-  >();
   const [qty, setQty] = useState(0);
+  const [seller, setSeller] = useState("");
   const [totalPrice, setTotalPrice] = useState(0);
-  const [isSelect, setIsSelect] = useState(false);
-  const [selectOptionList, setSelectOptionList] = useState<
-    | {
-        optionId: number;
-        title: string;
-        price: number;
-        stock: number;
-      }[]
-    | undefined
-  >();
   const [selectedOptions, setSelectedOptions] = useState<optionProps>();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState(0);
   const [cancelBox, setCancelBox] = useState(false);
   const [deliveryBox, setDeliveryBox] = useState(false);
   const [returnBox, setReturnBox] = useState(false);
-  const router = useRouter();
   const [mainThumbnail, setMainThumbnail] = useState("");
   const [mobileBtn, setMobileBtn] = useState(false);
-  const buyItem = store.buy.useBuy();
+  const router = useRouter();
+  const item = useItem(Number(router.query.id));
+  const shopInfo = store.shop.useShopInfo();
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "buyItem",
+    "cartItems",
+    "buyItemsData",
+  ]);
+  const auth = store.auth.useToken();
 
   useEffect(() => {
-    //if (item) return;
-    //axios
-    //  .get(`https://jsonplaceholder.typicode.com/photos/${router.query.id}`)
-    //  .then((res) => {
-    //    //console.log(res.data);
-    //    setItem(res.data);
-    //  });
-    // 상품 선택 - API에서 가지고 오는 걸로 변경
-    const itemInfo = itemList.find((item) => {
-      return item.id === Number(router.query.id);
-    });
     // 아이템 정보가 있으면
-    if (itemInfo) {
-      // 아이템 설정
-      setItem(itemInfo);
+    if (item.item) {
       // 아이템 선택옵션이 없으면 수량 1개, 총 상품 금액, 수량선택 버튼 설정 및 노출
-      if (!itemInfo.isSelectOption) {
+      if (!item.item.isSelectOption) {
         setQty(1);
-        setTotalPrice(itemInfo.price);
-        setIsSelect(true);
+        setTotalPrice(item.item.price);
+        item.setIsSelect(true);
         setSelectedOptions([
           {
-            optionId: 0,
-            name: itemInfo?.title ?? "",
+            optionDetailCounter: 0,
+            name: item.item?.title ?? "",
             qty: 1,
-            price: itemInfo?.price ?? 0,
-            stock: itemInfo?.stock ?? 0,
+            price: item.item?.price ?? 0,
+            stock: item.item?.stock ?? 0,
           },
         ]);
       } else {
+        item.setIsSelect(false);
         setSelectedOptions([]);
       }
+
       // 아이템 대표 이미지
-      setMainThumbnail(itemInfo.thumbnailUrl);
+      setMainThumbnail(item.item.thumbnailUrl);
     }
-    // 해당 상품 선택옵션 가져오기
-    const selectList = selectOptions.find((selectOption) => {
-      return selectOption.id === Number(router.query.id);
-    });
-    // 상품 선택옵션이 있으면 선택옵션 리스트 설정
-    if (selectList) {
-      setSelectOptionList(selectList.options);
+
+    if (router.query.seller) {
+      //setSeller(router.query.seller);
     }
-  }, []);
+  }, [item.item]);
 
   const onImgClick = (url: string) => {
     setMainThumbnail(url);
@@ -123,7 +94,11 @@ export default function Item() {
   const checkTotalPrice = (array: optionProps) => {
     let totalPrice = 0;
     array?.map((option) => {
-      totalPrice += option.price * option.qty;
+      if (item.item && item.item.isSelectOption) {
+        totalPrice += (option.price + item.item.price) * option.qty;
+      } else {
+        totalPrice += option.price * option.qty;
+      }
     });
     return totalPrice;
   };
@@ -133,13 +108,13 @@ export default function Item() {
     let overStock = false;
     let nextQty = 0;
     let selectedOption: {
-      optionId: number;
+      optionDetailCounter: number;
       name: string | "";
       qty: number | 1;
       price: number | 0;
       stock: number | 0;
     } = {
-      optionId: 0,
+      optionDetailCounter: 0,
       name: "",
       qty: 0,
       price: 0,
@@ -148,7 +123,7 @@ export default function Item() {
     let selected: optionProps = [];
     // 선택한 옵션이 존재하는지 확인
     selected = selectedOptions?.map((selectedOption) => {
-      if (selectedOption.optionId === id) {
+      if (selectedOption.optionDetailCounter === id) {
         // 선택한 옵션이 이미 있을때 isOption = true로 변경
         isOption = true;
         // 선택한 옵션의 수량 + 1
@@ -168,13 +143,15 @@ export default function Item() {
 
     if (!isOption) {
       // 선택한 옵션이 없을때
-      const option = selectOptionList?.find((selectOption) => {
-        return selectOption.optionId === id;
-      });
+      const option = item.selectOptionList?.options?.find(
+        (selectOption: ShopItemSelectOptDetailType) => {
+          return selectOption.optionDetailCounter === id;
+        }
+      );
       // 선택한 옵션의 수량 = 1
       nextQty = 1;
       selectedOption = {
-        optionId: option?.optionId ?? 0,
+        optionDetailCounter: option?.optionDetailCounter ?? 0,
         name: option?.title ?? "",
         price: option?.price ?? 0,
         qty: nextQty,
@@ -184,7 +161,7 @@ export default function Item() {
       // 선택된 옵션 추가
       setSelectedOptions(selected);
       // 선택된 옵션이 없었다면 선택 옵션 버튼 창 true
-      selectedOptions?.length === 0 && setIsSelect(true);
+      selectedOptions?.length === 0 && item.setIsSelect(true);
     } else {
       // 선택한 옵션이 있으면 수량 +1 해서 선택 옵션 변경
       setSelectedOptions(selected);
@@ -209,7 +186,7 @@ export default function Item() {
     const value = Number(e.target.value);
     if (value > 0) {
       const newSelectedOptions = selectedOptions?.map((selectedOption) => {
-        if (selectedOption.optionId === Number(id)) {
+        if (selectedOption.optionDetailCounter === Number(id)) {
           if (selectedOption.stock && selectedOption.stock < value) {
             // 바뀐 수량이 재고보다 많으면
             overStock = true;
@@ -221,6 +198,7 @@ export default function Item() {
           return selectedOption;
         }
       });
+
       setSelectedOptions(newSelectedOptions);
       // 선택한 옵션의 재고가 부족할때 알림창
       overStock && alert("재고가 부족합니다.");
@@ -238,7 +216,7 @@ export default function Item() {
   const onMinusClick = (id: number) => {
     let overStock = false;
     const newSelectedOptions = selectedOptions?.map((selectedOption) => {
-      if (selectedOption.optionId === Number(id)) {
+      if (selectedOption.optionDetailCounter === Number(id)) {
         const value = selectedOption.qty - 1;
         if (value > 0) {
           return { ...selectedOption, qty: value };
@@ -249,6 +227,7 @@ export default function Item() {
         return selectedOption;
       }
     });
+
     setSelectedOptions(newSelectedOptions);
 
     // 총 주문 수량
@@ -263,7 +242,7 @@ export default function Item() {
   const onPlusClick = (id: number) => {
     let overStock = false;
     const newSelectedOptions = selectedOptions?.map((selectedOption) => {
-      if (selectedOption.optionId === Number(id)) {
+      if (selectedOption.optionDetailCounter === Number(id)) {
         const value = selectedOption.qty + 1;
         if (selectedOption.stock < value) {
           // 바뀐 수량이 재고보다 많으면
@@ -276,6 +255,7 @@ export default function Item() {
         return selectedOption;
       }
     });
+
     setSelectedOptions(newSelectedOptions);
     // 선택한 옵션의 재고가 부족할때 알림창
     overStock && alert("재고가 부족합니다.");
@@ -291,14 +271,15 @@ export default function Item() {
 
   const onDeleteClick = (id: number) => {
     const newSelectedOptions = selectedOptions?.filter((selectedOption) => {
-      return selectedOption.optionId !== Number(id);
+      return selectedOption.optionDetailCounter !== Number(id);
     });
+
     setSelectedOptions(newSelectedOptions);
 
     // 총 주문 수량
     const totalQty = checkQty(newSelectedOptions);
     setQty(totalQty);
-    totalQty === 0 && setIsSelect(false);
+    totalQty === 0 && item.setIsSelect(false);
 
     // 총 상품 금액
     const totalPrice = checkTotalPrice(newSelectedOptions);
@@ -329,34 +310,111 @@ export default function Item() {
     }
   };
 
+  const addCart = async (items: ShopCartAddRequest, token?: string) => {
+    if (token) {
+      const res = await API.cart.addCart(token, items);
+      if (res.statusCode === 2000) {
+        console.log(res.result);
+      } else alert(res.message);
+    }
+  };
+
   const onItemSubmit = (
     e: BaseSyntheticEvent<MouseEvent<EventTarget & HTMLButtonElement>>
   ) => {
     e.preventDefault();
-    if (item?.isSelectOption && selectedOptions?.length === 0) {
+
+    if (item.item?.isSelectOption && selectedOptions?.length === 0) {
       alert("선택옵션을 선택해주세요.");
       return false;
     }
+
     if (e.target.name === "buy") {
       // 바로구매시
-      buyItem.setItem([
-        {
-          id: item?.id,
-          name: item?.title,
-          thumbnail: item?.thumbnailUrl,
-          options: selectedOptions,
-        },
-      ]);
+      const newSelectedOptions = selectedOptions?.map((selectedOption) => {
+        if (item.item) {
+          return {
+            ...selectedOption,
+            itemPrice: item.item.isSelectOption
+              ? selectedOption.price + item.item?.price
+              : selectedOption.price,
+          };
+        }
+      });
+
+      const buyItemsData = selectedOptions?.map((selectedOption) => {
+        if (item.item) {
+          return {
+            itemCounter: item.item?.counter,
+            optionCounter: item.selectOptionList?.optionCounter,
+            optionDetailCounter: selectedOption.optionDetailCounter,
+            qty: selectedOption.qty,
+          };
+        }
+      });
+
+      setCookie(
+        "buyItem",
+        [
+          {
+            counter: item.item?.counter,
+            name: item.item?.title,
+            thumbnail: item.item?.thumbnailUrl,
+            options: {
+              optionCounter: item.selectOptionList?.optionCounter,
+              selectOptions: newSelectedOptions,
+            },
+          },
+        ],
+        { path: "/" }
+      );
+
+      setCookie("buyItemsData", buyItemsData, { path: "/" });
       router.push("/order");
     } else {
       // 장바구니시
+      if (auth.token) {
+        // 회원이면
+        // 상품 옵션이 있으면
+        if (item.item && item.item.isSelectOption) {
+          selectedOptions?.map((selectedOption) => {
+            if (item.item && item.selectOptionList) {
+              const itemInfos = {
+                itemCounter: item.item.counter,
+                optionCounter: item.selectOptionList.optionCounter,
+                optionDetailCounter: selectedOption.optionDetailCounter,
+                qty: selectedOption.qty,
+                seller: seller ? seller : "",
+              };
+              addCart(itemInfos, auth.token);
+            }
+          });
+        } else {
+          if (item.item && selectedOptions) {
+            const itemInfos = {
+              itemCounter: item.item.counter,
+              optionCounter: 0,
+              optionDetailCounter: 0,
+              qty: selectedOptions[0].qty,
+              seller: seller ? seller : "",
+            };
+            addCart(itemInfos, auth.token);
+          }
+        }
+
+        if (
+          confirm("장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?")
+        ) {
+          router.push("/cart");
+        }
+      }
     }
   };
   return (
     <div>
-      {item && (
+      {item.item && (
         <>
-          <Header title={item.title} description={item.title} />
+          <Header title={item.item?.title} description={item.item?.title} />
           <ContentLayout>
             <div className="pt-[60px] px-5 max-md:pt-10 max-md:px-3">
               <div className="px-4 max-md:px-0">
@@ -366,25 +424,27 @@ export default function Item() {
                     <div className="w-[100%] pt-[100%] relative mb-5">
                       <img
                         src={mainThumbnail}
-                        alt={item.title}
+                        alt={item.item?.title}
                         className="w-[100%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"
                       />
                     </div>
                     <div className="grid grid-cols-4 gap-5 max-md:grid-cols-6 max-md:gap-2">
-                      {item.images &&
-                        item.images.map((image: string, index: number) => (
-                          <div
-                            key={index}
-                            className="cursor-pointer"
-                            onClick={() => onImgClick(image)}
-                          >
-                            <img
-                              src={image}
-                              alt={item.title}
-                              className="w-[100%]"
-                            />
-                          </div>
-                        ))}
+                      {item.item?.images &&
+                        item.item?.images.map(
+                          (image: string, index: number) => (
+                            <div
+                              key={index}
+                              className="cursor-pointer"
+                              onClick={() => onImgClick(image)}
+                            >
+                              <img
+                                src={image}
+                                alt={item.item?.title}
+                                className="w-[100%]"
+                              />
+                            </div>
+                          )
+                        )}
                     </div>
                   </div>
                   {/* 상품 설명 */}
@@ -392,11 +452,12 @@ export default function Item() {
                     <form action="">
                       {/* 상품명 */}
                       <div className="text-[38px] leading-[1.2em] mb-4 break-keep max-md:text-[24px] max-md:mb-2 max-md:font-jamsilRegular">
-                        {item.title}
+                        {item.item?.title}
                       </div>
                       {/* 상품 가격 */}
                       <div className="text-[22px] mb-8 max-md:text-[16px] max-md:mb-6">
-                        {item.price && item.price.toLocaleString()}원
+                        {item.item?.price && item.item?.price.toLocaleString()}
+                        원
                       </div>
                       {/* 배송비 */}
                       <div className="mb-6">
@@ -409,7 +470,7 @@ export default function Item() {
                         </dl>
                       </div>
                       {/* 선택 옵션 */}
-                      {item.isSelectOption && (
+                      {item.item?.isSelectOption && (
                         <div className="pb-6 relative max-md:hidden">
                           <div
                             className={`flex border px-5 py-3 ${
@@ -426,53 +487,71 @@ export default function Item() {
                           </div>
                           {open && (
                             <div className="border border-[#bbb] px-5 py-2 rounded-b-md absolute bg-white w-[100%] text-sm mt-[-1px]">
-                              {selectOptionList &&
-                                selectOptionList.map((selectOption) => (
-                                  <div
-                                    key={selectOption.optionId}
-                                    onClick={() =>
-                                      selectOption.stock > 0
-                                        ? onSelectOptionClick(
-                                            selectOption.optionId
-                                          )
-                                        : undefined
-                                    }
-                                    className={`cursor-pointer flex py-2 justify-between ${
-                                      selectOption.stock === 0 && "opacity-40"
-                                    }`}
-                                  >
-                                    <div>{selectOption.title}</div>
-                                    <div>
-                                      {selectOption.price.toLocaleString()}원
+                              {item.selectOptionList &&
+                                item.selectOptionList.options.map(
+                                  (
+                                    selectOption: ShopItemSelectOptDetailType
+                                  ) => (
+                                    <div
+                                      key={selectOption.optionDetailCounter}
+                                      onClick={() =>
+                                        selectOption.stock > 0
+                                          ? onSelectOptionClick(
+                                              selectOption.optionDetailCounter
+                                            )
+                                          : undefined
+                                      }
+                                      className={`cursor-pointer flex py-2 justify-between ${
+                                        selectOption.stock === 0 && "opacity-40"
+                                      }`}
+                                    >
+                                      <div>{selectOption.title}</div>
+                                      <div>
+                                        {item.item &&
+                                          (
+                                            item.item.price + selectOption.price
+                                          ).toLocaleString()}
+                                        원
+                                      </div>
                                     </div>
-                                  </div>
-                                ))}
+                                  )
+                                )}
                             </div>
                           )}
                         </div>
                       )}
                       {/* 수량 */}
                       {/* 아이템 정보에서 선택옵션 선택시 노출 */}
-                      {isSelect && (
+                      {item.isSelect && (
                         <div className="border-t border-[#dfdfdf] max-md:hidden">
                           <div className="py-4">
                             {selectedOptions &&
                               selectedOptions.length > 0 &&
                               selectedOptions.map((selectedOption, index) => (
                                 <ProductQtyBox
-                                  item={selectedOption}
+                                  item={item.item}
+                                  option={selectedOption}
                                   qty={selectedOption.qty}
                                   onQtyChange={(e) =>
-                                    onQtyChange(e, selectedOption.optionId)
+                                    onQtyChange(
+                                      e,
+                                      selectedOption.optionDetailCounter
+                                    )
                                   }
                                   onMinusClick={() =>
-                                    onMinusClick(selectedOption.optionId)
+                                    onMinusClick(
+                                      selectedOption.optionDetailCounter
+                                    )
                                   }
                                   onPlusClick={() =>
-                                    onPlusClick(selectedOption.optionId)
+                                    onPlusClick(
+                                      selectedOption.optionDetailCounter
+                                    )
                                   }
                                   onDeleteClick={() =>
-                                    onDeleteClick(selectedOption.optionId)
+                                    onDeleteClick(
+                                      selectedOption.optionDetailCounter
+                                    )
                                   }
                                   key={index}
                                 />
@@ -538,7 +617,7 @@ export default function Item() {
                             </div>
                           </div>
                           {/* 선택 옵션 */}
-                          {mobileBtn && item.isSelectOption && (
+                          {mobileBtn && item.item?.isSelectOption && (
                             <div className="px-3 bg-white">
                               <div
                                 className={`flex border px-3 py-3 ${
@@ -555,15 +634,18 @@ export default function Item() {
                               </div>
                               {open && (
                                 <div className="pb-2 w-[100%] text-sm max-h-[400px]">
-                                  {selectOptionList &&
-                                    selectOptionList.map(
-                                      (selectOption, index) => (
+                                  {item.selectOptionList &&
+                                    item.selectOptionList.options.map(
+                                      (
+                                        selectOption: ShopItemSelectOptDetailType,
+                                        index: number
+                                      ) => (
                                         <div
-                                          key={selectOption.optionId}
+                                          key={selectOption.optionDetailCounter}
                                           onClick={() =>
                                             selectOption.stock > 0
                                               ? onSelectOptionClick(
-                                                  selectOption.optionId
+                                                  selectOption.optionDetailCounter
                                                 )
                                               : undefined
                                           }
@@ -592,7 +674,7 @@ export default function Item() {
                           <>
                             {/* 수량 */}
                             {/* 아이템 정보에서 선택옵션 선택시 노출 */}
-                            {mobileBtn && isSelect && (
+                            {mobileBtn && item.isSelect && (
                               <div className="bg-white">
                                 <div className="pt-2 px-3">
                                   {selectedOptions &&
@@ -600,25 +682,28 @@ export default function Item() {
                                     selectedOptions.map(
                                       (selectedOption, index) => (
                                         <ProductQtyBox
-                                          item={selectedOption}
+                                          item={item.item}
+                                          option={selectedOption}
                                           qty={selectedOption.qty}
                                           onQtyChange={(e) =>
                                             onQtyChange(
                                               e,
-                                              selectedOption.optionId
+                                              selectedOption.optionDetailCounter
                                             )
                                           }
                                           onMinusClick={() =>
                                             onMinusClick(
-                                              selectedOption.optionId
+                                              selectedOption.optionDetailCounter
                                             )
                                           }
                                           onPlusClick={() =>
-                                            onPlusClick(selectedOption.optionId)
+                                            onPlusClick(
+                                              selectedOption.optionDetailCounter
+                                            )
                                           }
                                           onDeleteClick={() =>
                                             onDeleteClick(
-                                              selectedOption.optionId
+                                              selectedOption.optionDetailCounter
                                             )
                                           }
                                           key={index}
@@ -711,7 +796,9 @@ export default function Item() {
                     {tab === 0 ? (
                       <div className="flex justify-center">
                         <div
-                          dangerouslySetInnerHTML={{ __html: item.description }}
+                          dangerouslySetInnerHTML={{
+                            __html: item.item?.description,
+                          }}
                         />
                       </div>
                     ) : (
@@ -738,6 +825,7 @@ export default function Item() {
                             } overflow-hidden px-7 bg-[#fbfbfb] tracking-tighter max-md:px-5 max-md:text-xs`}
                           >
                             <div className="py-5 max-md:py-4 max-md:leading-5">
+                              {shopInfo.shopInfo.cancel}
                               <div className="">1. 주문취소 가능시점</div>
                               <div className="text-[#888]">
                                 회원은 상품 주문 및 결제 완료 후 주문을 취소할
@@ -767,6 +855,7 @@ export default function Item() {
                             } overflow-hidden px-7 bg-[#fbfbfb] tracking-tighter max-md:px-5 max-md:text-xs`}
                           >
                             <div className="py-5 max-md:py-4 max-md:leading-5">
+                              {shopInfo.shopInfo.delivery}
                               <div>1. 배송업체</div>
                               <div className="text-[#888]">CJ 대한통운</div>
                               <div>2. 배송비</div>
@@ -822,6 +911,7 @@ export default function Item() {
                             } overflow-hidden px-7 bg-[#fbfbfb] tracking-tighter max-md:px-5 max-md:text-xs`}
                           >
                             <div className="py-5 max-md:py-4 max-md:leading-5">
+                              {shopInfo.shopInfo.returnInfo}
                               <div>1. 반품 기준</div>
                               <div className="text-[#888]">
                                 ① 미개봉, 미사용 상태(QR 스티커가 뜯어지지 않은
@@ -914,3 +1004,9 @@ export default function Item() {
     </div>
   );
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

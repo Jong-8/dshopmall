@@ -1,11 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useRef, FormEvent, ChangeEvent } from "react";
+import { useState, useRef, FormEvent, ChangeEvent, useEffect } from "react";
 import { GoSearch, GoX } from "react-icons/go";
 import { FiMenu } from "react-icons/fi";
 import { BsCart2, BsPerson } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
+import useAuth from "@hooks/useAuth";
+import { store } from "@stores";
+import { useCookies } from "react-cookie";
 
 export default function Header({ title, description }: HeaderProps) {
   const [menu, setMenu] = useState<boolean>(false);
@@ -17,6 +20,21 @@ export default function Header({ title, description }: HeaderProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const menuBgRef = useRef<HTMLDivElement>(null);
+  const auth = store.auth.useToken();
+  const [cookies, setCookie, removeCookie] = useCookies(["cartCount"]);
+  const [cartCount, setCartCount] = useState(0);
+
+  useAuth();
+
+  useEffect(() => {
+    if (auth.token) {
+      setCartCount(auth.cartCount);
+    } else {
+      if (cookies.cartCount) {
+        setCartCount(cookies.cartCount);
+      }
+    }
+  }, [auth.token, auth.cartCount, cookies.cartCount]);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -119,7 +137,7 @@ export default function Header({ title, description }: HeaderProps) {
           <div>
             <Link href={"/"}>
               <a className="block w-[300px] text-center h-[76px] leading-[76px] text-[36px] bg-[#333] text-white font-black">
-                ADAMMALL
+                DSHOPMALL
               </a>
             </Link>
           </div>
@@ -139,24 +157,48 @@ export default function Header({ title, description }: HeaderProps) {
               >
                 Search
               </a>
-              <Link href={"/login"}>
-                <a
-                  className={`mr-7 text-[15px] hover:text-[#6846b7] ${
-                    router.pathname === "/login" ? "active" : ""
-                  }`}
-                >
-                  Log In
-                </a>
-              </Link>
-              <Link href={"/cart"}>
-                <a
-                  className={`text-[15px] hover:text-[#6846b7] ${
-                    router.pathname === "/cart" ? "active" : ""
-                  }`}
-                >
-                  Cart
-                </a>
-              </Link>
+              {auth.user.username ? (
+                <Link href={"/mypage"}>
+                  <a
+                    className={`mr-7 text-[15px] hover:text-[#6846b7] ${
+                      router.pathname === "/mypage" ? "active" : ""
+                    }`}
+                  >
+                    Mypage
+                  </a>
+                </Link>
+              ) : (
+                <Link href={"/login"}>
+                  <a
+                    className={`mr-7 text-[15px] hover:text-[#6846b7] ${
+                      router.pathname === "/login" ? "active" : ""
+                    }`}
+                  >
+                    Log In
+                  </a>
+                </Link>
+              )}
+              {auth.user.username ? (
+                <Link href={"/cart"}>
+                  <a
+                    className={`text-[15px] hover:text-[#6846b7] ${
+                      router.pathname === "/cart" ? "active" : ""
+                    }`}
+                  >
+                    Cart({cartCount})
+                  </a>
+                </Link>
+              ) : (
+                <Link href={"/login?url=cart"}>
+                  <a
+                    className={`text-[15px] hover:text-[#6846b7] ${
+                      router.pathname === "/cart" ? "active" : ""
+                    }`}
+                  >
+                    Cart({cartCount})
+                  </a>
+                </Link>
+              )}
             </div>
             <div
               ref={searchRef}
@@ -205,7 +247,7 @@ export default function Header({ title, description }: HeaderProps) {
           <div>
             <Link href={"/"}>
               <a className="block w-[180px] text-center h-[42px] leading-[42px] text-[20px] bg-[#333] text-white font-black">
-                ADAMMALL
+                DSHOPMALL
               </a>
             </Link>
           </div>
@@ -314,3 +356,9 @@ export default function Header({ title, description }: HeaderProps) {
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

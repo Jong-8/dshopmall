@@ -3,16 +3,21 @@ import Button from "@components/Member/Button";
 import Input from "@components/Member/Input";
 import Verification from "@components/Member/Verification";
 import { useState, FormEvent, ChangeEvent } from "react";
+import { useRouter } from "next/router";
+import API from "@services/API";
+import { store } from "@stores/index";
+import { useCookies } from "react-cookie";
 
 export default function Signup() {
   const [values, setValues] = useState({
     id: "",
     password: "",
     passwordConfirm: "",
-    name: "",
+    userName: "",
     phone: "",
     email: "",
     code: "",
+    imp_uid: "",
   });
   const [chks, setChks] = useState({
     allChk: 0,
@@ -20,11 +25,63 @@ export default function Signup() {
     requiredChk2: 0,
     selectChk: 0,
   });
-  const { id, password, passwordConfirm, name, phone, email, code } = values;
+  const [checkCode, setCheckCode] = useState({
+    isCode: false,
+    chkCode: false,
+    codeMessage: "",
+  });
+  const router = useRouter();
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const { setToken } = store.auth.useToken();
+  const {
+    id,
+    password,
+    passwordConfirm,
+    userName,
+    phone,
+    email,
+    code,
+    imp_uid,
+  } = values;
   const { allChk, requiredChk1, requiredChk2, selectChk } = chks;
+  const { isCode, chkCode, codeMessage } = checkCode;
 
-  const onSignupSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSignupSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!userName) {
+      alert("본인인증 후 가입하실 수 있습니다.");
+      return false;
+    }
+
+    if (isCode && !chkCode) {
+      alert("잘못된 추천코드입니다.");
+      return false;
+    }
+
+    if (!requiredChk1 || !requiredChk2) {
+      alert("필수 동의항목을 모두 동의해주시기 바랍니다.");
+      return false;
+    }
+
+    const infos = {
+      username: id,
+      password: password,
+      email: email,
+      code: code,
+      marketing: selectChk === 1 ? true : false,
+      imp_uid: imp_uid,
+    };
+
+    const res = await API.auth.signup(infos);
+    if (res.statusCode === 2000) {
+      /* 정상 반환시 비즈니스 로직*/
+      setToken(res.result.token, res.result.user);
+      setCookie("token", res.result.token, {
+        path: "/",
+      });
+      router.replace("/");
+    } else alert(res.message);
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -35,12 +92,52 @@ export default function Signup() {
     });
   };
 
-  const onCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const onVeriChange = (userName: string, phone: string, imp_uid: string) => {
+    setValues({
+      ...values,
+      userName,
+      phone,
+      imp_uid,
+    });
+  };
+
+  const onCodeChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    if (value.length > 7) {
+      return false;
+    }
+
     setValues({
       ...values,
       [name]: value,
     });
+
+    const code = async (code: ShopCheckCodeRequest) => {
+      const res = await API.auth.checkCode(code);
+      if (res.statusCode === 2000) {
+        setCheckCode({
+          isCode: true,
+          chkCode: true,
+          codeMessage: "추천 가능한 코드입니다.",
+        });
+      } else {
+        if (!code.code) {
+          setCheckCode({
+            isCode: false,
+            chkCode: false,
+            codeMessage: "",
+          });
+        } else {
+          setCheckCode({
+            isCode: true,
+            chkCode: false,
+            codeMessage: res.message,
+          });
+        }
+      }
+    };
+    code({ code: value });
   };
 
   const onAllChkChange = () => {
@@ -107,13 +204,18 @@ export default function Signup() {
     <SubLayout title="회원가입">
       <form action="" onSubmit={onSignupSubmit}>
         <div>
-          <Verification name={name} phone={phone} onChange={onChange} />
+          <Verification
+            name={userName}
+            phone={phone}
+            onVeriChange={onVeriChange}
+          />
           <Input
             title="아이디 *"
             name="id"
             type="text"
             value={id}
             onChange={onChange}
+            required={true}
           />
           <Input
             title="비밀번호 *"
@@ -121,6 +223,7 @@ export default function Signup() {
             type="password"
             value={password}
             onChange={onChange}
+            required={true}
           />
           <Input
             title="비밀번호 확인 *"
@@ -128,6 +231,7 @@ export default function Signup() {
             type="password"
             value={passwordConfirm}
             onChange={onChange}
+            required={true}
           />
           <Input
             title="이메일"
@@ -142,6 +246,7 @@ export default function Signup() {
             type="text"
             value={code}
             onChange={onCodeChange}
+            text={codeMessage}
           />
         </div>
         <div className="max-md:text-xs">

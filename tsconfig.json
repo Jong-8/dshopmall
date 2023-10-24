@@ -23,10 +23,18 @@
       "@utils/*": ["utils/*"],
       "@utils": ["utils"],
       "@stores/*": ["stores/*"],
-      "@stores": ["stores"]
+      "@stores": ["stores"],
+      "@hooks/*": ["hooks/*"],
+      "@hooks": ["hooks"]
     },
     "typeRoots": [".@type"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "index.d.ts"],
-  "exclude": ["node_modules", ".next", "storybook", "coverage", "storybook-static"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "storybook",
+    "coverage",
+    "storybook-static"
+  ]
 }

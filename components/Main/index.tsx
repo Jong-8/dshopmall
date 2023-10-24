@@ -1,55 +1,22 @@
 import ContentTitle from "@components/Layout/ContentTitle";
-import axios from "axios";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { categories, itemList } from "../../services/dummy/dummy";
+import { useState } from "react";
+import useItems from "@hooks/useItems";
 
 export default function Main() {
-  const [datas, setDatas] = useState([
-    {
-      id: 0,
-      title: "",
-      price: 0,
-      category: "",
-      thumbnailUrl: "",
-      stock: 0,
-      isSelectOption: false,
-      images: [""],
-      description: "",
-    },
-  ]);
+  const items = useItems();
   const [tabs, setTabs] = useState("all");
-
-  useEffect(() => {
-    //axios.get("https://jsonplaceholder.typicode.com/photos").then((res) => {
-    //  setDatas(res.data);
-    //});
-    itemList && setDatas(itemList);
-  }, []);
 
   const onTabClick = (category: string) => {
     setTabs(category);
-    //axios.get("https://jsonplaceholder.typicode.com/photos").then((res) => {
-    //  const datas = res.data;
-    //  const newDatas = datas.filter((data) => {
-    //    if (category === "all") {
-    //      return data;
-    //    } else if (category === "cosmetics") {
-    //      return data.albumId === 1;
-    //    } else {
-    //      return data.albumId === 2;
-    //    }
-    //  });
-    //  setDatas(newDatas);
-    //});
-    const newDatas = itemList.filter((data) => {
+    const newDatas = items.originItems?.filter((item) => {
       if (category !== "all") {
-        return data.category === category;
+        return item.category === category;
       } else {
-        return data;
+        return item;
       }
     });
-    setDatas(newDatas);
+    items.setItems(newDatas);
   };
 
   return (
@@ -57,36 +24,55 @@ export default function Main() {
       <ContentTitle title="shop" />
       <div className="w-[100%] p-4 max-md:p-3">
         <div className="flex justify-center uppercase max-md:text-xs">
-          {categories.map((category, index) => (
+          <div
+            className={`mx-3 cursor-pointer ${
+              tabs === "all" && "text-[#6846b7]"
+            }`}
+            onClick={() => onTabClick("all")}
+          >
+            ALL
+          </div>
+          {items.categories?.map((category, index) => (
             <div
               key={index}
               className={`mx-3 cursor-pointer ${
-                category === tabs && "text-[#6846b7]"
+                category.name === tabs && "text-[#6846b7]"
               }`}
-              onClick={() => onTabClick(category)}
+              onClick={() => onTabClick(category.name)}
             >
-              {category}
+              {category.name}
             </div>
           ))}
         </div>
-        {datas.length === 0 && (
+        {items.items?.length === 0 && (
           <div className="text-center py-[20%]">
-            <img src="/img/loading.gif" alt="" className="m-auto" />
+            <div>판매중인 제품이 없습니다.</div>
           </div>
         )}
         <div className="grid grid-cols-2 gap-2.5 p-5 max-md:p-0 max-md:py-3">
-          {datas.map((data) => (
-            <div key={data.id} className="w-[100%] group">
-              <Link href={`/${data.id}`}>
+          {items.items?.map((item) => (
+            <div key={item.counter} className="w-[100%] group">
+              <Link href={`/${item.counter}`}>
                 <a className="block relative">
                   <img
-                    src={data.thumbnailUrl}
-                    alt={data.title}
+                    src={item.thumbnailUrl}
+                    alt={item.title}
                     className="w-[100%] object-contain "
                   />
                   <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden md:group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg">
-                    <div>{data.title}</div>
-                    <div>{data.price.toLocaleString()}원</div>
+                    <div>{item.title}</div>
+                    {item.regularPrice ? (
+                      <div className="flex">
+                        <div className="text-red-500 mr-2">
+                          {item.price.toLocaleString()}원
+                        </div>
+                        <div className="line-through">
+                          {item.regularPrice.toLocaleString()}원
+                        </div>
+                      </div>
+                    ) : (
+                      <div>{item.price.toLocaleString()}원</div>
+                    )}
                   </div>
                 </a>
               </Link>

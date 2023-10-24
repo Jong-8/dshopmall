@@ -1,6 +1,48 @@
 import Link from "next/link";
+import { store } from "@stores/index";
+import { useCookies } from "react-cookie";
+import API from "@services/API";
+import { useEffect } from "react";
 
 export default function Footer() {
+  const [cookies, setCookies, removeCookies] = useCookies(["shopInfo"]);
+  const shopInfo = store.shop.useShopInfo();
+  const {
+    company,
+    ceo,
+    manager,
+    companyNumber,
+    email,
+    address,
+    businessNumber,
+    tel,
+    operatingTime,
+    lunchTime,
+  } = shopInfo.shopInfo;
+
+  const shopInfoApi = async () => {
+    const res = await API.shopInfo.shopInfo();
+    if (res.statusCode === 2000) {
+      shopInfo.setShopInfo(res.result);
+      setCookies("shopInfo", res.result, {
+        path: "/",
+      });
+    } else alert(res.message);
+  };
+
+  useEffect(() => {
+    if (!shopInfo.shopInfo.company) {
+      // 회사정보가 store에 없을 때
+      if (cookies.shopInfo) {
+        // 쿠키에 회사정보가 있다면 store에 저장
+        shopInfo.setShopInfo(cookies.shopInfo);
+      } else {
+        // 쿠키에 회사정보가 없다면 api로 불러와서 저장
+        shopInfoApi();
+      }
+    }
+  }, [shopInfo.shopInfo, cookies.shopInfo]);
+
   return (
     <footer>
       <div className="max-w-[1800px] px-[90px] pt-10 pb-5 m-auto max-lg:px-3 max-md:text-xs">
@@ -27,33 +69,32 @@ export default function Footer() {
         <div className="text-center py-4 leading-7 break-keep max-md:leading-5">
           <div className="flex justify-center flex-wrap">
             <p className="max-lg:w-[100%]">
-              상호: 디샵몰 <span className="px-1">|</span>
-              대표: 박제일 <span className="px-1">|</span>
-              개인정보관리책임자: 박제일{" "}
+              상호: {company} <span className="px-1">|</span>
+              대표: {ceo} <span className="px-1">|</span>
+              개인정보관리책임자: {manager}{" "}
               <span className="px-1 max-lg:hidden">|</span>
             </p>
             <p className="max-lg:w-[100%]">
-              사업자등록번호: 743-86-02152<span className="px-1">|</span>{" "}
-              이메일: contact@designershop.io
+              사업자등록번호: {companyNumber}
+              <span className="px-1">|</span> 이메일: {email}
             </p>
           </div>
           <div className="flex justify-center flex-wrap">
             <p className="max-lg:w-[100%]">
-              주소: 서울특별시 강남구 강남대로 324 역삼디오슈페리움 1층
+              주소: {address}
               <span className="px-1 max-lg:hidden">|</span>
             </p>
-            <p className="max-lg:w-[100%]">통신판매: 0000-서울강남-00000</p>
+            <p className="max-lg:w-[100%]">통신판매: 2021-서울강남-05787</p>
           </div>
         </div>
         <div className="text-center">
           <div className="flex justify-center flex-wrap">
             <p className="max-lg:w-[100%]">
-              고객센터: 02-2088-1850{" "}
-              <span className="px-1 max-lg:hidden">|</span>
+              고객센터: {tel} <span className="px-1 max-lg:hidden">|</span>
             </p>
             <p className="max-lg:w-[100%]">
-              운영시간: 평일 10:00am ~ 6:00pm <span className="px-1">|</span>
-              점심시간: 12:00pm ~ 1:00pm{" "}
+              운영시간: {operatingTime} <span className="px-1">|</span>
+              점심시간: {lunchTime}{" "}
             </p>
           </div>
         </div>

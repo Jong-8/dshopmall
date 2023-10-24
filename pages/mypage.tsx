@@ -2,9 +2,13 @@ import ContentLayout from "@components/Layout/ContentLayout";
 import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import Button from "@components/Member/Button";
 import Link from "next/link";
+import { useCookies } from "react-cookie";
+import { store } from "@stores/index";
+import { useRouter } from "next/router";
+import API from "@services/API";
 
 const orderList = [
   {
@@ -33,11 +37,75 @@ const orderList = [
 export default function Mypage() {
   const [orderHistory, setOrderHistory] = useState(orderList);
   const [accumulation, setAccumulation] = useState([]);
+  const [userInfos, setUserInfos] = useState({
+    name: "",
+    email: "",
+    phone1: "",
+    phone2: "",
+    phone3: "",
+    code: "",
+    deliveryInfo: {
+      zipcode: "",
+      address: "",
+      detailed: "",
+    },
+    marketing: false,
+  });
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const { token, user, setToken } = store.auth.useToken();
+  const router = useRouter();
   const [post, setPost] = useState(false);
+
+  const { name, email, phone1, phone2, phone3, code, deliveryInfo, marketing } =
+    userInfos;
+
+  const phoneForm = (num: string, type: number) => {
+    let result = "";
+    if (num.length == 11) {
+      if (type === 1) {
+        result = num.substr(0, 3);
+      } else if (type === 2) {
+        result = num.substr(3, 4);
+      } else {
+        result = num.substr(7);
+      }
+    } else {
+    }
+    return result;
+  };
 
   useEffect(() => {
     setOrderHistory(orderList);
-  }, []);
+    setUserInfos({
+      ...userInfos,
+      name: user.name,
+      phone1: phoneForm(user.phone, 1),
+      phone2: phoneForm(user.phone, 2),
+      phone3: phoneForm(user.phone, 3),
+      code: user.code,
+      email: user.email,
+      deliveryInfo: {
+        zipcode: user.deliveryInfo.zipcode,
+        address: user.deliveryInfo.address,
+        detailed: user.deliveryInfo.detailed,
+      },
+      marketing: user.marketing,
+    });
+  }, [
+    user.email,
+    user.deliveryInfo.zipcode,
+    user.deliveryInfo.address,
+    user.deliveryInfo.detailed,
+    user.marketing,
+  ]);
+
+  const onInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserInfos({
+      ...userInfos,
+      [name]: e.target.type === "checkbox" ? e.target.checked : value,
+    });
+  };
 
   const onPostClick = () => {
     setPost(true);
@@ -59,7 +127,15 @@ export default function Mypage() {
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
 
-    console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    //console.log(data); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    setUserInfos({
+      ...userInfos,
+      deliveryInfo: {
+        ...userInfos.deliveryInfo,
+        zipcode: data.zonecode,
+        address: fullAddress,
+      },
+    });
     setPost(false);
   };
 
@@ -68,8 +144,84 @@ export default function Mypage() {
     setPost(false);
   };
 
-  const onInfoSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onDeliveryInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserInfos({
+      ...userInfos,
+      deliveryInfo: {
+        ...userInfos.deliveryInfo,
+        [name]: value,
+      },
+    });
+  };
+
+  const onLogoutClick = () => {
+    removeCookie("token");
+    setToken("", {
+      username: "",
+      role: "",
+      name: "",
+      phone: "",
+      email: "",
+      mycode: "",
+      code: "",
+      profile: "",
+      marketing: false,
+      point: 0,
+      deliveryInfo: {
+        name: "",
+        zipcode: "",
+        address: "",
+        detailed: "",
+        phone: "",
+        requests: "",
+      },
+    });
+    router.replace("/");
+  };
+
+  const onUnsubscribeClick = async () => {
+    const confirmUnsubscribe = confirm("회원을 탈퇴하시겠습니까?");
+    if (confirmUnsubscribe) {
+      const res = await API.auth.unsubscribe(cookies.token);
+      //console.log(cookies.token);
+      if (res.statusCode === 2000) {
+        alert("회원이 탈퇴되었습니다. 감사합니다.");
+        router.replace("/");
+      } else alert(res.message);
+    }
+  };
+
+  const onInfoSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    let infos = {};
+    if (!deliveryInfo.zipcode) {
+      infos = {
+        email: email,
+        marketing: marketing,
+      };
+    } else {
+      infos = {
+        email: email,
+        marketing: marketing,
+        deliveryInfo: {
+          zipcode: deliveryInfo.zipcode,
+          address: deliveryInfo.address,
+          detailed: deliveryInfo.detailed ? deliveryInfo.detailed : "-",
+          name: "-",
+          phone: "-",
+          requests: "-",
+        },
+      };
+    }
+    console.log(infos);
+
+    const res = await API.auth.modify(cookies.token, infos);
+    if (res.statusCode === 2000) {
+      alert("회원 정보가 변경되었습니다.");
+      router.push("/mypage");
+    } else alert(res.message);
   };
   return (
     <>
@@ -130,20 +282,37 @@ export default function Mypage() {
             <div className="w-[45%] max-md:w-[100%] max-md:mb-10">
               <div className="my_title">회원 정보</div>
               <div className="my-5 flex justify-end text-sm max-md:text-xs max-md:my-3">
-                <div className="text-[#999]">로그아웃</div>
+                <div
+                  className="text-[#999] cursor-pointer"
+                  onClick={onLogoutClick}
+                >
+                  로그아웃
+                </div>
               </div>
               <div className="text-sm">
-                <form action="" onSubmit={onInfoSubmit}>
+                <form onSubmit={onInfoSubmit}>
                   <div className="my_input_box">
                     <div className="my_label">이메일</div>
                     <div>
-                      <input type="text" className="my_input" />
+                      <input
+                        type="text"
+                        name="email"
+                        className="my_input"
+                        value={email}
+                        onChange={onInfoChange}
+                      />
                     </div>
                   </div>
                   <div className="my_input_box">
                     <div className="my_label">이름</div>
                     <div>
-                      <input type="text" className="my_input" />
+                      <input
+                        type="text"
+                        name="name"
+                        className="my_input"
+                        value={name}
+                        readOnly={true}
+                      />
                     </div>
                   </div>
                   <div className="my_input_box">
@@ -151,23 +320,32 @@ export default function Mypage() {
                     <div className="flex justify-between items-center">
                       <input
                         type="number"
+                        name="phone1"
                         className="my_input"
                         minLength={3}
                         maxLength={3}
+                        value={phone1}
+                        readOnly={true}
                       />
                       <div className="px-3">-</div>
                       <input
                         type="number"
+                        name="phone2"
                         className="my_input"
                         minLength={3}
                         maxLength={4}
+                        value={phone2}
+                        readOnly={true}
                       />
                       <div className="px-3">-</div>
                       <input
                         type="number"
+                        name="phone3"
                         className="my_input"
                         minLength={4}
                         maxLength={4}
+                        value={phone3}
+                        readOnly={true}
                       />
                     </div>
                   </div>
@@ -176,8 +354,10 @@ export default function Mypage() {
                     <div className="flex justify-between">
                       <input
                         type="text"
+                        name="zipcode"
                         className="my_input read-only:bg-[#f9f9f9]"
                         readOnly
+                        value={deliveryInfo.zipcode}
                       />
                       <div
                         className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
@@ -206,14 +386,34 @@ export default function Mypage() {
                     <div className="mb-3 max-md:mb-2">
                       <input
                         type="text"
+                        name="address"
                         className="my_input read-only:bg-[#f9f9f9]"
                         readOnly
+                        value={deliveryInfo.address}
                       />
                     </div>
                     <div>
-                      <input type="text" className="my_input" />
+                      <input
+                        type="text"
+                        name="detailed"
+                        className="my_input"
+                        value={deliveryInfo.detailed}
+                        onChange={onDeliveryInfoChange}
+                      />
                     </div>
                   </div>
+                  {/* <div className="my_input_box">
+                    <div className="my_label">추천코드</div>
+                    <div>
+                      <input
+                        type="text"
+                        name="code"
+                        className="my_input"
+                        value={code}
+                        onChange={onInfoChange}
+                      />
+                    </div>
+                  </div> */}
                   <div className="my_input_box">
                     <div className="mb-3 max-md:text-xs">
                       마케팅 정보 수신 동의
@@ -222,8 +422,11 @@ export default function Mypage() {
                       <div className="flex items-center max-md:text-xs">
                         <input
                           type="checkbox"
+                          name="marketing"
                           id="agreeEmail"
                           className="mr-2 w-[14px] h-[14px] accent-[#7a1cea] max-md:w-3 max-md:h-3"
+                          checked={marketing}
+                          onChange={onInfoChange}
                         />{" "}
                         <label htmlFor="agreeEmail">
                           이메일 및 SMS 마케팅 정보 수신에 동의합니다.
@@ -237,7 +440,12 @@ export default function Mypage() {
                         비밀번호 변경하기
                       </div>
                     </Link>
-                    <div>탈퇴하기</div>
+                    <div
+                      onClick={onUnsubscribeClick}
+                      className="cursor-pointer"
+                    >
+                      탈퇴하기
+                    </div>
                   </div>
                   <div className="text-center">
                     <Button text="변경 사항 저장하기" type="submit" />
