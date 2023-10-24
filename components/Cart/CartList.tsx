@@ -5,8 +5,8 @@ import { store } from "@stores/index";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect, FormEvent, ChangeEvent } from "react";
-import { useCookies } from "react-cookie";
 import { AiOutlineClose } from "react-icons/ai";
+import { useCookies } from "react-cookie";
 
 export default function CartList() {
   const [totalPrice, setTotalPrice] = useState(0);
