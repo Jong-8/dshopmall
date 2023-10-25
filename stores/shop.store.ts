@@ -20,6 +20,9 @@ export const useShopInfo = create<Props>((set, get) => ({
     cancel: "",
     delivery: "",
     returnInfo: "",
+    bankName: "",
+    bankNumber: "",
+    bankHolder: "",
   },
   setShopInfo: (shopInfo: ShopInfoResponse) => {
     set(() => ({ shopInfo }));

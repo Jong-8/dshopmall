@@ -193,37 +193,40 @@ declare global {
   };
 
   type ShopOrderDetailRequest = {
-    merchant_uid: string;
+    merchant_uid: string | string[] | undefined;
   };
 
   type ShopOrderDeliveryRequest = {
     deliveryInfo: DeliveryInfoType;
-    merchant_uid: string;
+    merchant_uid: string | string[] | undefined;
   };
 
   type ShopOrderGuestRequest = {
-    name: string;
-    merchant_uid: string;
-    phone: string;
+    name: string | string[] | undefined;
+    merchant_uid: string | string[] | undefined;
+    phone: string | string[] | undefined;
   };
 
   type ShopOrderDeliveryGuestRequest = {
     name: string;
-    merchant_uid: string;
+    merchant_uid: string | string[] | undefined;
     phone: string;
     deliveryInfo: DeliveryInfoType;
   };
 
   type ShopPayPrepareRequest = {
-    items: ShopPayItemType[];
+    //items: ShopPayItemType[];
+    items: string;
     guest_name?: string;
     guest_phone?: string;
-    deliveryInfo: DeliveryInfoType;
+    //deliveryInfo: DeliveryInfoType;
+    deliveryInfo: string;
     point: number;
     refund_holder?: string;
     refund_bank?: string;
     refund_account?: string;
     refund_tel?: string;
+    companyBank?: boolean;
   };
 
   type ShopPayCompleteRequest = {
@@ -254,6 +257,9 @@ declare global {
     cancel: string;
     delivery: string;
     returnInfo: string;
+    bankName: string;
+    bankNumber: string;
+    bankHolder: string;
   };
 
   type ShopPortOneCertiResponse = {
@@ -425,12 +431,12 @@ declare global {
   }
 
   type DeliveryInfoType = {
-    name: string;
-    zipcode: string;
-    address: string;
-    detailed: string;
-    phone: string;
-    requests: string;
+    name: string | undefined;
+    zipcode: string | undefined;
+    address: string | undefined;
+    detailed: string | undefined;
+    phone: string | undefined;
+    requests: string | undefined;
   };
 
   type ShopUserType = {
@@ -445,6 +451,21 @@ declare global {
     marketing: boolean;
     point: number;
     deliveryInfo: DeliveryInfoType;
+  };
+
+  type mypageUserType = {
+    username: string | undefined;
+    email: string | undefined;
+    phone1: string | undefined;
+    phone2: string | undefined;
+    phone3: string | undefined;
+    code: string | undefined;
+    deliveryInfo: {
+      zipcode: string | undefined;
+      address: string | undefined;
+      detailed: string | undefined;
+    };
+    marketing: boolean;
   };
 
   type ShopOrderType = {

@@ -7,6 +7,8 @@ import Payment from "@components/Order/Payment";
 import AddrRadio from "@components/Order/AddrRadio";
 import useOrder from "@hooks/useOrder";
 import API from "@services/API";
+import { useRouter } from "next/router";
+import { store } from "@stores/index";
 
 let IMP: any;
 if (typeof window !== "undefined") {
@@ -19,7 +21,6 @@ type optionProps = {
   name: string | "";
   qty: number | 1;
   price: number | 0;
-  itemPrice: number | 0;
   stock: number | 0;
 };
 
@@ -62,19 +63,6 @@ const bankList = [
 ];
 
 export default function Order() {
-  const [userInfo, setUserInfo] = useState<{
-    userName: string;
-    userPhone1: string;
-    userPhone2: string;
-    userPhone3: string;
-    userEmail: string;
-  }>({
-    userName: "",
-    userPhone1: "",
-    userPhone2: "",
-    userPhone3: "",
-    userEmail: "",
-  });
   const [addressInfo, setAddressInfo] = useState<{
     addrName: string;
     zipcode: string;
@@ -101,12 +89,15 @@ export default function Order() {
   const [payment, setPayment] = useState("creditCard");
   const [deposit, setDeposit] = useState({
     depositor: "",
-    depositAccount: "입금 계좌",
     refundBank: "",
     refundAccountHolder: "",
     refundAccount: "",
   });
-  const { userName, userPhone1, userPhone2, userPhone3, userEmail } = userInfo;
+  const router = useRouter();
+  const order = useOrder();
+  const shopInfo = store.shop.useShopInfo();
+  const { userName, userPhone1, userPhone2, userPhone3, userEmail } =
+    order.userInfo;
   const {
     addrName,
     zipcode,
@@ -118,14 +109,7 @@ export default function Order() {
     requests,
     setBasic,
   } = addressInfo;
-  const {
-    depositor,
-    depositAccount,
-    refundBank,
-    refundAccountHolder,
-    refundAccount,
-  } = deposit;
-  const order = useOrder();
+  const { depositor, refundBank, refundAccountHolder, refundAccount } = deposit;
 
   const onUserInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -138,8 +122,8 @@ export default function Order() {
       if (num.length > 4) return false;
     }
 
-    setUserInfo({
-      ...userInfo,
+    order.setUserInfo({
+      ...order.userInfo,
       [name]: value,
     });
   };
@@ -213,8 +197,13 @@ export default function Order() {
       return false;
     }
 
+    if (usePoint > order.totalItemsPrice + order.deliveryCost) {
+      alert("상품 합계 금액보다 DR포인트를 많이 사용하실 수 없습니다.");
+      return false;
+    }
+
     setPoint(usePoint);
-    order.setTotalPrice(order.totalItemsPrice - usePoint);
+    order.setTotalPrice(order.totalItemsPrice + order.deliveryCost - usePoint);
   };
 
   const onBankbookChange = (
@@ -229,6 +218,14 @@ export default function Order() {
   };
 
   const onUseTotalPointClick = () => {
+    if (
+      order.myPoint &&
+      order.myPoint > order.totalItemsPrice + order.deliveryCost
+    ) {
+      alert("상품 합계 금액보다 DR포인트를 많이 사용하실 수 없습니다.");
+      return false;
+    }
+
     setPoint(order.myPoint);
     order.myPoint && order.setTotalPrice(order.totalItemsPrice - order.myPoint);
   };
@@ -254,24 +251,38 @@ export default function Order() {
     return uid;
   };
 
-  const handlePay = async () => {
+  const payComplete = async (
+    datas: ShopPayCompleteRequest,
+    userInfos: { name: string; phone: string }
+  ) => {
+    const res = await API.order.payComplete(datas);
+    if (res.statusCode === 2000) {
+      alert("결제가 완료되었습니다.");
+      let url = "";
+      if (order.auth.token) {
+        url = `/orderDetails/${res.result.orderInfo.merchant_uid}`;
+      } else {
+        url = `/orderDetails/${res.result.orderInfo.merchant_uid}?name=${userInfos.name}&phone=${userInfos.phone}`;
+      }
+      router.push(url);
+    } else alert(res.message);
+  };
+
+  const handlePay = async (prepareDatas: ShopPayPrepareResponse) => {
     order.buyItems &&
       IMP.request_pay(
         {
-          pg: "kcp.A52CY", //테스트인경우 kcp.T0000
+          pg: "html5_inicis.MOI4305641", //테스트인경우 kcp.T0000
           pay_method: "card",
-          merchant_uid: createUid(), //상점에서 생성한 고유 주문번호
-          name:
-            order.buyItems.length > 1
-              ? `${order.buyItems[0].name} 외 ${order.buyItems.length - 1}건`
-              : order.buyItems[0].name, // 제품명
-          amount: order.totalPrice, //결제 금액
+          merchant_uid: prepareDatas.merchant_uid, //상점에서 생성한 고유 주문번호
+          name: prepareDatas.name, // 제품명
+          amount: prepareDatas.amount, //결제 금액
           company: "디샵몰", //해당 파라미터 설정시 통합결제창에 해당 상호명이 노출됩니다.
-          buyer_email: userEmail, // 주문자 이메일
-          buyer_name: userName, // 주문자명
-          buyer_tel: `${userPhone1}-${userPhone2}-${userPhone3}`, // 주문자 연락처
-          buyer_addr: `${address}, ${detailed}`, // 주문자 주소
-          buyer_postcode: zipcode, // 주문자 우편번호
+          buyer_email: prepareDatas.buyer_email ?? "", // 주문자 이메일
+          buyer_name: prepareDatas.buyer_name, // 주문자명
+          buyer_tel: prepareDatas.buyer_tel, // 주문자 연락처
+          buyer_addr: prepareDatas.buyer_addr, // 주문자 주소
+          buyer_postcode: prepareDatas.buyer_postcode, // 주문자 우편번호
           language: "ko", // en 설정시 영문으로 출력되면 해당 파라미터 생략시 한국어 default
           m_redirect_url: `http://localhost:3000/orderDetails/${createUid()}`,
           auth_mode: "key-in", // 키인결제(일회성 결제)이용시 설정
@@ -280,6 +291,16 @@ export default function Order() {
           // callback
           if (rsp.success) {
             // 결제 성공 시 로직
+            payComplete(
+              {
+                imp_uid: rsp.imp_uid,
+                merchant_uid: prepareDatas.merchant_uid,
+              },
+              {
+                name: userName,
+                phone: `${userPhone1}${userPhone2}${userPhone3}`,
+              }
+            );
           } else {
             // 결제 실패 시 로직
             if (rsp.error_code)
@@ -295,31 +316,42 @@ export default function Order() {
     e.preventDefault();
 
     const datas = {
-      items: order.buyItemsData ?? [],
+      items: JSON.stringify(order.buyItemsData) ?? [],
       guest_name: userName,
       guest_phone: `${userPhone1}${userPhone2}${userPhone3}`,
-      deliveryInfo: {
+      deliveryInfo: JSON.stringify({
         name: addrName,
         zipcode: zipcode,
         address: address,
         detailed: detailed,
         phone: `${addrPhone1}${addrPhone2}${addrPhone3}`,
         requests: requests,
-      },
+      }),
       point: point ?? 0,
       refund_holder: refundAccountHolder ?? "",
       refund_bank: refundBank ?? "",
       refund_account: refundAccount ?? "",
       refund_tel: depositor ?? "",
+      companyBank: payment === "withoutBankbook",
     };
 
     const res = await API.order.payPrepare(order.auth.token, datas);
     if (res.statusCode === 2000) {
-    } else alert(res.message);
-
-    if (payment !== "withoutBankbook") {
-      handlePay();
-    }
+      if (payment !== "withoutBankbook") {
+        handlePay(res.result);
+      } else {
+        payComplete(
+          {
+            imp_uid: "imp15801485",
+            merchant_uid: res.result.merchant_uid,
+          },
+          {
+            name: userName,
+            phone: `${userPhone1}${userPhone2}${userPhone3}`,
+          }
+        );
+      }
+    } else alert(res.statusCode + " " + res.message);
   };
   return (
     <>
@@ -366,9 +398,7 @@ export default function Order() {
                               </div>
                               <div className="max-md:text-sm">
                                 {option?.qty}개 /{" "}
-                                {(
-                                  option?.itemPrice * option?.qty
-                                ).toLocaleString()}
+                                {(option?.price * option?.qty).toLocaleString()}
                                 원
                               </div>
                             </div>
@@ -661,7 +691,7 @@ export default function Order() {
                   defaultChecked={true}
                   onChange={onPaymentChange}
                 />
-                <Payment
+                {/* <Payment
                   id="accountTransfer"
                   label="계좌이체"
                   defaultChecked={false}
@@ -672,7 +702,7 @@ export default function Order() {
                   label="가상계좌"
                   defaultChecked={false}
                   onChange={onPaymentChange}
-                />
+                /> */}
                 <Payment
                   id="withoutBankbook"
                   label="무통장 입금"
@@ -701,7 +731,7 @@ export default function Order() {
                         type="text"
                         className="od_input"
                         name="depositAccount"
-                        value={depositAccount}
+                        value={`${order.bank.bankName}(${order.bank.bankNumber}) 예금주 : ${order.bank.bankHolder}`}
                         readOnly
                       />
                     </div>

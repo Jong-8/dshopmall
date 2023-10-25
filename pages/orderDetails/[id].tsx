@@ -2,108 +2,41 @@ import ContentLayout from "@components/Layout/ContentLayout";
 import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import Button from "@components/Member/Button";
 import Link from "next/link";
-
-const orderItems = [
-  {
-    id: 1,
-    name: "9:35 발라또 퍼플 세럼",
-    thumbnailUrl:
-      "https://www.935.co.kr/upload/product/thumb_20230418161252037400.JPG",
-    option: "9:35 발라또 퍼플 세럼 + 소량",
-    qty: 1,
-    price: 59000,
-  },
-  {
-    id: 2,
-    name: "9:35 발라또 퍼플 오일미스트",
-    thumbnailUrl:
-      "https://www.935.co.kr/upload/product/thumb_20230418161839810305.JPG",
-    option: "",
-    qty: 1,
-    price: 66000,
-  },
-];
-
-const orderInfos = [
-  {
-    infoName: "주문번호",
-    value: "0000000000000",
-  },
-  {
-    infoName: "주문 일자",
-    value: "2023.09.14 09:10:11",
-  },
-  {
-    infoName: "주문 상태",
-    value: "입금 대기",
-  },
-  {
-    infoName: "배송 정보",
-    value: "-",
-  },
-];
-
-const paymentInfos = [
-  {
-    infoName: "상품 합계",
-    value: "125,000원",
-  },
-  {
-    infoName: "배송비",
-    value: "무료",
-  },
-  {
-    infoName: "결제 금액",
-    value: "125,000원",
-  },
-  {
-    infoName: "주문자",
-    value: "홍길동",
-  },
-  {
-    infoName: "결제 방법",
-    value: "무통장 입금",
-  },
-  {
-    infoName: "입금 계좌",
-    value: "신한은행(00000000000000) 디샵몰",
-  },
-  {
-    infoName: "입금 기한",
-    value: "2023.09.15 23:59:59",
-  },
-  {
-    infoName: "입금자",
-    value: "홍길동",
-  },
-  {
-    infoName: "환불 계좌",
-    value: "신한은행(00000000000000) 홍길동",
-  },
-];
+import API from "@services/API";
+import useOrderDetail from "@hooks/useOrderDetail";
 
 export default function OrderDetails() {
   const [post, setPost] = useState(false);
+  const orderDetail = useOrderDetail();
 
-  const calculateDelivery = (
-    arr: {
-      id: number;
-      name: string;
-      thumbnailUrl: string;
-      option: string;
-      qty: number;
-      price: number;
-    }[]
-  ) => {
+  const calculateDelivery = (arr: ShopOrderDetailItemType[]) => {
     let deliveryFee = 0;
-    arr.map((orderItem: any) => {
+    arr?.map((orderItem: any) => {
       deliveryFee += orderItem.price * orderItem.qty;
     });
 
     return deliveryFee > 100000 ? "무료" : "3,000원";
+  };
+
+  const onDeliveryInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (name === "phone1") {
+      let num = value.toString();
+      if (num.length > 3) return false;
+    } else if (name === "phone2" || name === "phone3") {
+      let num = value.toString();
+      if (num.length > 4) return false;
+    }
+
+    orderDetail.deliveryInfo &&
+      orderDetail.setDeliveryInfo({
+        ...orderDetail.deliveryInfo,
+        [name]: value,
+      });
   };
 
   const onPostClick = () => {
@@ -127,6 +60,12 @@ export default function OrderDetails() {
     }
 
     //console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
+    orderDetail.deliveryInfo &&
+      orderDetail.setDeliveryInfo({
+        ...orderDetail.deliveryInfo,
+        zipcode: data.zonecode,
+        address: fullAddress,
+      });
     setPost(false);
   };
 
@@ -134,6 +73,30 @@ export default function OrderDetails() {
     // iframe을 넣은 element를 안보이게 한다.
     setPost(false);
   };
+
+  const onDeliveryInfoSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const datas = {
+      deliveryInfo: {
+        name: orderDetail.deliveryInfo?.userName,
+        zipcode: orderDetail.deliveryInfo?.zipcode,
+        address: orderDetail.deliveryInfo?.address,
+        detailed: orderDetail.deliveryInfo?.detailed,
+        phone: `${orderDetail.deliveryInfo?.phone1}${orderDetail.deliveryInfo?.phone2}${orderDetail.deliveryInfo?.phone3}`,
+        requests: orderDetail.deliveryInfo?.requests,
+      },
+      merchant_uid: orderDetail.merchantUid,
+    };
+    const res = await API.order.orderDeliveryChange(
+      datas,
+      orderDetail.auth.token ?? ""
+    );
+    if (res.statusCode === 2000) {
+      alert("배송지 정보 변경 사항이 저장되었습니다.");
+      orderDetail.router.reload();
+    } else alert(res.message);
+  };
+
   return (
     <>
       <Header title="주문 상세 정보" description="주문 상세 정보" />
@@ -157,7 +120,7 @@ export default function OrderDetails() {
               {/* 주문 상품 리스트 */}
               <div className="flex border-b border-[#ccc] text-sm max-md:border-t max-md:flex-wrap">
                 <div className="flex-[4] max-md:flex-auto max-md:w-[100%]">
-                  {orderItems.map((orderItem, index) => (
+                  {orderDetail.orderItems?.map((orderItem, index) => (
                     <div
                       className={`py-5 flex ${
                         index > 0 && "border-t border-[#ccc]"
@@ -166,7 +129,7 @@ export default function OrderDetails() {
                     >
                       <div className="flex w-[70%] max-md:w-[100%]">
                         <div className="w-[16%] max-md:w-[70px]">
-                          <Link href={`/${orderItem.id}`}>
+                          <Link href={`/${orderItem.counter}`}>
                             <img
                               src={orderItem.thumbnailUrl}
                               alt={orderItem.name}
@@ -176,14 +139,13 @@ export default function OrderDetails() {
                         </div>
                         <div className="pl-[4%] max-md:pl-3 max-md:w-[calc(100%-70px)]">
                           <div className="pt-6 max-md:pt-4 max-md:text-sm max-md:mb-1">
-                            <Link href={`/${orderItem.id}`}>
+                            <Link href={`/${orderItem.counter}`}>
                               {orderItem.name}
                             </Link>
                           </div>
                           {orderItem.option && (
                             <div className="text-xs">
-                              {`
-                              선택옵션 : 
+                              {` 
                               ${orderItem.option}`}
                             </div>
                           )}
@@ -199,7 +161,8 @@ export default function OrderDetails() {
                   ))}
                 </div>
                 <div className="flex-[1] flex justify-center items-center flex-col max-md:flex-auto max-md:w-[100%] max-md:py-5 max-md:border-t max-md:border-[#ccc]">
-                  {calculateDelivery(orderItems)}
+                  {orderDetail.orderItems &&
+                    calculateDelivery(orderDetail.orderItems)}
                 </div>
               </div>
             </div>
@@ -210,44 +173,81 @@ export default function OrderDetails() {
                 <div className="mb-[70px]">
                   <div className="odd_title">주문 정보</div>
                   <div className="text-sm">
-                    {orderInfos &&
-                      orderInfos.map((orderInfo, index) => (
-                        <div
-                          key={index}
-                          className={`flex border-b border-[#dfdfdf] ${
-                            index === 0
-                              ? "pb-4 max-md:pb-2"
-                              : "py-4 max-md:py-2"
-                          } max-md:text-xs`}
-                        >
-                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
-                            {orderInfo.infoName}
+                    <div
+                      className={`flex border-b border-[#dfdfdf] pb-4 max-md:pb-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        주문번호
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px]  max-md:leading-[40px]`}
+                      >
+                        {orderDetail.orderInfos?.merchant_uid}
+                      </div>
+                    </div>
+                    <div
+                      className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        주문 일자
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                      >
+                        {orderDetail.orderInfos &&
+                          new Date(
+                            orderDetail.orderInfos?.date
+                          ).toLocaleDateString()}
+                      </div>
+                    </div>
+                    <div
+                      className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        주문 상태
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px] ${
+                          orderDetail.orderInfos?.state === "입금 대기" &&
+                          "flex justify-between items-center"
+                        } max-md:leading-[40px]`}
+                      >
+                        {orderDetail.orderInfos?.state}{" "}
+                        {orderDetail.orderInfos?.state === "입금 대기" && (
+                          <div className="w-[100px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs">
+                            취소 요청
                           </div>
-                          <div
-                            className={`w-[60%] leading-[45px] ${
-                              orderInfo.value === "입금 대기" &&
-                              "flex justify-between items-center"
-                            } max-md:leading-[40px]`}
-                          >
-                            {orderInfo.value}{" "}
-                            {orderInfo.value === "입금 대기" && (
-                              <div className="w-[100px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs">
-                                취소 요청
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                        )}
+                      </div>
+                    </div>
+                    <div
+                      className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        배송 정보
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                      >
+                        {orderDetail.orderInfos?.deliveryState}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div className="max-md:mb-10">
                   <div className="odd_title">배송지 정보</div>
                   <div className="text-sm">
-                    <form action="">
+                    <form action="" onSubmit={onDeliveryInfoSubmit}>
                       <div className="odd_input_box">
                         <div className="odd_label">이름</div>
                         <div>
-                          <input type="text" className="odd_input" />
+                          <input
+                            type="text"
+                            className="odd_input"
+                            name="userName"
+                            value={orderDetail.deliveryInfo?.userName}
+                            onChange={onDeliveryInfoChange}
+                          />
                         </div>
                       </div>
                       <div className="odd_input_box">
@@ -256,6 +256,7 @@ export default function OrderDetails() {
                           <input
                             type="text"
                             className="odd_input read-only:bg-[#f9f9f9]"
+                            value={orderDetail.deliveryInfo?.zipcode}
                             readOnly
                           />
                           <div
@@ -286,11 +287,18 @@ export default function OrderDetails() {
                           <input
                             type="text"
                             className="odd_input read-only:bg-[#f9f9f9]"
+                            value={orderDetail.deliveryInfo?.address}
                             readOnly
                           />
                         </div>
                         <div>
-                          <input type="text" className="odd_input" />
+                          <input
+                            type="text"
+                            className="odd_input"
+                            name="detailed"
+                            value={orderDetail.deliveryInfo?.detailed}
+                            onChange={onDeliveryInfoChange}
+                          />
                         </div>
                       </div>
                       <div className="odd_input_box">
@@ -299,6 +307,9 @@ export default function OrderDetails() {
                           <input
                             type="number"
                             className="odd_input"
+                            name="phone1"
+                            value={orderDetail.deliveryInfo?.phone1}
+                            onChange={onDeliveryInfoChange}
                             minLength={3}
                             maxLength={3}
                           />
@@ -306,6 +317,9 @@ export default function OrderDetails() {
                           <input
                             type="number"
                             className="odd_input"
+                            name="phone2"
+                            value={orderDetail.deliveryInfo?.phone2}
+                            onChange={onDeliveryInfoChange}
                             minLength={3}
                             maxLength={4}
                           />
@@ -313,6 +327,9 @@ export default function OrderDetails() {
                           <input
                             type="number"
                             className="odd_input"
+                            name="phone3"
+                            value={orderDetail.deliveryInfo?.phone3}
+                            onChange={onDeliveryInfoChange}
                             minLength={4}
                             maxLength={4}
                           />
@@ -321,7 +338,13 @@ export default function OrderDetails() {
                       <div className="odd_input_box">
                         <div className="odd_label">배송 시 요청 사항</div>
                         <div>
-                          <input type="text" className="odd_input" />
+                          <input
+                            type="text"
+                            className="odd_input"
+                            name="requests"
+                            value={orderDetail.deliveryInfo?.requests}
+                            onChange={onDeliveryInfoChange}
+                          />
                         </div>
                       </div>
                       <div className="text-center mt-10">
@@ -336,26 +359,113 @@ export default function OrderDetails() {
                 <div>
                   <div className="odd_title">결제 정보</div>
                   <div className="text-sm">
-                    {paymentInfos &&
-                      paymentInfos.map((paymentInfo, index) => (
+                    <div
+                      className={`flex border-b border-[#dfdfdf] pb-4 max-md:pb-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        상품 합계
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                      >
+                        {orderDetail.paymentInfos?.price.toLocaleString()}원
+                      </div>
+                    </div>
+                    <div
+                      className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        배송비
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                      >
+                        {orderDetail.paymentInfos?.deliveryCost &&
+                        orderDetail.paymentInfos?.deliveryCost > 0
+                          ? orderDetail.paymentInfos?.deliveryCost.toLocaleString() +
+                            "원"
+                          : "무료"}
+                      </div>
+                    </div>
+                    <div
+                      className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        결제 금액
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                      >
+                        {`${orderDetail.paymentInfos?.paymentPrice.toLocaleString()}원`}
+                      </div>
+                    </div>
+                    <div
+                      className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                    >
+                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                        결제 방법
+                      </div>
+                      <div
+                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                      >
+                        {orderDetail.paymentInfos?.payment}
+                      </div>
+                    </div>
+                    {orderDetail.paymentInfos?.payment === "무통장입금" && (
+                      <>
                         <div
-                          key={index}
-                          className={`flex border-b border-[#dfdfdf] ${
-                            index === 0
-                              ? "pb-4 max-md:pb-2"
-                              : "py-4 max-md:py-2"
-                          } max-md:text-xs`}
+                          className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                         >
                           <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
-                            {paymentInfo.infoName}
+                            입금 계좌
                           </div>
                           <div
                             className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
                           >
-                            {paymentInfo.value}
+                            {orderDetail.paymentInfos?.payment}
                           </div>
                         </div>
-                      ))}
+                        <div
+                          className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                        >
+                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                            입금 기한
+                          </div>
+                          <div
+                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                          >
+                            {`${
+                              orderDetail.orderInfos &&
+                              new Date(
+                                orderDetail.orderInfos?.date + 24 * 3600000
+                              ).toLocaleDateString()
+                            } 23:59:59`}
+                          </div>
+                        </div>
+                        <div
+                          className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                        >
+                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                            입금자
+                          </div>
+                          <div
+                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                          ></div>
+                        </div>
+                        <div
+                          className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                        >
+                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                            환불 계좌
+                          </div>
+                          <div
+                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                          >
+                            {`${orderDetail.paymentInfos?.refund_bank}(${orderDetail.paymentInfos?.refund_account}) ${orderDetail.paymentInfos?.refund_holder}`}
+                          </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -402,3 +512,9 @@ export default function OrderDetails() {
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

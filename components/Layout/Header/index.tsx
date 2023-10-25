@@ -195,7 +195,7 @@ export default function Header({ title, description }: HeaderProps) {
                       router.pathname === "/cart" ? "active" : ""
                     }`}
                   >
-                    Cart({cartCount})
+                    Cart{cartCount > 0 && `(${cartCount})`}
                   </a>
                 </Link>
               )}

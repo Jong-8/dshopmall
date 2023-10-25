@@ -14,6 +14,8 @@ export default function CartList() {
   const [items, setItems] = useState<ShopCartType[]>();
   const router = useRouter();
   const [cookies, setCookie, removeCookie] = useCookies([
+    "buyItem",
+    "buyItemsData",
     "cartItems",
     "cartCount",
   ]);
@@ -23,7 +25,7 @@ export default function CartList() {
   const calculateTotal = (arr: ShopCartType[]) => {
     let totalPrice = 0;
     arr.map((item: ShopCartType) => {
-      totalPrice += (item.price + item.selectOption.optionPrice) * item.qty;
+      totalPrice += item.selectOption.optionPrice * item.qty;
     });
     return totalPrice;
   };
@@ -161,14 +163,14 @@ export default function CartList() {
 
     const value = qty + 1;
 
-    console.log(stock);
+    //console.log(stock);
     if (value > stock) {
       alert("재고가 부족합니다");
-      console.log(value);
-      //changeQty(stock, cartId);
+      //console.log(value);
+      changeQty(stock, cartId);
     } else {
-      console.log(value);
-      //changeQty(value, cartId);
+      //console.log(value);
+      changeQty(value, cartId);
     }
   };
 
@@ -187,6 +189,43 @@ export default function CartList() {
 
   const onCartSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const buyItem = items?.map((item) => {
+      if (item) {
+        return {
+          counter: item?.itemCounter,
+          name: item?.title,
+          thumbnail: item?.thumbnailUrl,
+          options: {
+            optionCounter: item.selectOption?.optionCounter,
+            selectOptions: [
+              {
+                optionDetailCounter: item.selectOption?.optionDetailCounter,
+                name: item.selectOption?.optionDetailTitle,
+                qty: item.qty,
+                price: item.selectOption?.optionPrice,
+              },
+            ],
+          },
+        };
+      }
+    });
+
+    const buyItemsData = items?.map((item) => {
+      if (item) {
+        return {
+          counter: item?.counter,
+          itemCounter: item?.itemCounter,
+          optionCounter: item.selectOption?.optionCounter,
+          optionDetailCounter: item.selectOption?.optionDetailCounter,
+          qty: item.qty,
+        };
+      }
+    });
+
+    setCookie("buyItem", buyItem, { path: "/" });
+    setCookie("buyItemsData", buyItemsData, { path: "/" });
+    router.push("/order");
   };
   return (
     <div>
@@ -230,7 +269,9 @@ export default function CartList() {
                           {`
                       ${item.selectOption.optionTitle} : 
                       ${item.selectOption.optionDetailTitle} (+
-                      ${item.selectOption.optionPrice.toLocaleString()}
+                      ${(
+                        item.selectOption.optionPrice - item.price
+                      ).toLocaleString()}
                       원)`}
                         </div>
                       )}
@@ -281,8 +322,7 @@ export default function CartList() {
                   </div>
                   <div className="flex justify-center items-center w-[15%] max-md:w-[100%] max-md:justify-start max-md:pl-[82px] max-md:text-sm">
                     {(
-                      (item.price + item.selectOption.optionPrice) *
-                      item.qty
+                      item.selectOption.optionPrice * item.qty
                     ).toLocaleString()}
                     원
                   </div>

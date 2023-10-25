@@ -8,7 +8,6 @@ type optionProps = {
   name: string | "";
   qty: number | 1;
   price: number | 0;
-  itemPrice: number | 0;
   stock: number | 0;
 };
 
@@ -29,19 +28,53 @@ export default function useOrder() {
     "buyItem",
     "buyItemsData",
   ]);
+  const [userInfo, setUserInfo] = useState<{
+    userName: string;
+    userPhone1: string;
+    userPhone2: string;
+    userPhone3: string;
+    userEmail: string;
+  }>({
+    userName: "",
+    userPhone1: "",
+    userPhone2: "",
+    userPhone3: "",
+    userEmail: "",
+  });
   const [myPoint, setMyPoint] = useState<number | undefined>(undefined);
   const [buyItems, setBuyItems] = useState<buyItemProps[]>();
   const [buyItemsData, setBuyItemsData] = useState<ShopPayItemType[]>();
   const [totalItemsPrice, setTotalItemsPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [deliveryCost, setDeliveryCost] = useState(0);
+  const [bank, setBank] = useState({
+    bankName: "",
+    bankNumber: "",
+    bankHolder: "",
+  });
   const auth = store.auth.useToken();
+  const shopInfo = store.shop.useShopInfo();
+
+  const phoneForm = (num: string, type: number) => {
+    let result = "";
+    if (num.length == 11) {
+      if (type === 1) {
+        result = num.substr(0, 3);
+      } else if (type === 2) {
+        result = num.substr(3, 4);
+      } else {
+        result = num.substr(7);
+      }
+    } else {
+    }
+    return result;
+  };
 
   const orderInit = () => {
     let totalItemsPrice = 0;
-    let price = 0;
     cookies.buyItem.map((buyItem: buyItemProps) => {
       buyItem.options.selectOptions.map((option: optionProps) => {
-        totalItemsPrice = totalItemsPrice + option.itemPrice * option?.qty;
+        totalItemsPrice = totalItemsPrice + option.price * option?.qty;
       });
     });
     setBuyItems(cookies.buyItem);
@@ -50,24 +83,44 @@ export default function useOrder() {
     setTotalPrice(
       totalItemsPrice >= 100000 ? totalItemsPrice : totalItemsPrice + 3000
     );
+    setDeliveryCost(totalItemsPrice >= 100000 ? 0 : 3000);
   };
 
   useEffect(() => {
     orderInit();
     if (auth.token) {
       setMyPoint(auth.user.point);
+      setUserInfo({
+        userName: auth.user.name,
+        userPhone1: phoneForm(auth.user.phone, 1),
+        userPhone2: phoneForm(auth.user.phone, 2),
+        userPhone3: phoneForm(auth.user.phone, 3),
+        userEmail: auth.user.email,
+      });
     } else {
       setMyPoint(0);
     }
-  }, []);
+
+    if (shopInfo.shopInfo) {
+      setBank({
+        bankName: shopInfo.shopInfo.bankName,
+        bankNumber: shopInfo.shopInfo.bankNumber,
+        bankHolder: shopInfo.shopInfo.bankHolder,
+      });
+    }
+  }, [auth.token, shopInfo.shopInfo]);
 
   return {
+    userInfo,
+    setUserInfo,
     buyItems,
     buyItemsData,
     totalItemsPrice,
     totalPrice,
     setTotalPrice,
+    deliveryCost,
     myPoint,
     auth,
+    bank,
   };
 }

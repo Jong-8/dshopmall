@@ -33,12 +33,7 @@ export default function ProductQtyBox({
           onMinusClick={onMinusClick}
           onPlusClick={onPlusClick}
         />
-        <div>
-          {option.price && item && item.isSelectOption
-            ? (item.price + option.price).toLocaleString()
-            : item?.price.toLocaleString()}
-          원
-        </div>
+        <div>{option.price?.toLocaleString()}원</div>
       </div>
     </div>
   );

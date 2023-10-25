@@ -41,7 +41,7 @@ export default function Footer() {
         shopInfoApi();
       }
     }
-  }, [shopInfo.shopInfo, cookies.shopInfo]);
+  }, [shopInfo.shopInfo.company, shopInfo.shopInfo, cookies.shopInfo]);
 
   return (
     <footer>

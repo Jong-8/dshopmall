@@ -6,105 +6,25 @@ import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import Button from "@components/Member/Button";
 import Link from "next/link";
 import { useCookies } from "react-cookie";
-import { store } from "@stores/index";
 import { useRouter } from "next/router";
 import API from "@services/API";
-
-const orderList = [
-  {
-    id: 1,
-    date: "23.09.20",
-    name: "화장품명1",
-    price: 72000,
-    state: "입금 대기",
-  },
-  {
-    id: 2,
-    date: "23.09.18",
-    name: "화장품명2",
-    price: 90000,
-    state: "배송 준비",
-  },
-  {
-    id: 3,
-    date: "23.09.15",
-    name: "화장품명2",
-    price: 90000,
-    state: "주문 완료",
-  },
-];
+import useMypage from "@hooks/useMypage";
 
 export default function Mypage() {
-  const [orderHistory, setOrderHistory] = useState(orderList);
-  const [accumulation, setAccumulation] = useState([]);
-  const [userInfos, setUserInfos] = useState({
-    name: "",
-    email: "",
-    phone1: "",
-    phone2: "",
-    phone3: "",
-    code: "",
-    deliveryInfo: {
-      zipcode: "",
-      address: "",
-      detailed: "",
-    },
-    marketing: false,
-  });
-  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-  const { token, user, setToken } = store.auth.useToken();
+  //const [accumulation, setAccumulation] = useState([]);
+  const [cookies, setCookie, removeCookie] = useCookies(["token", "cartCount"]);
   const router = useRouter();
   const [post, setPost] = useState(false);
-
-  const { name, email, phone1, phone2, phone3, code, deliveryInfo, marketing } =
-    userInfos;
-
-  const phoneForm = (num: string, type: number) => {
-    let result = "";
-    if (num.length == 11) {
-      if (type === 1) {
-        result = num.substr(0, 3);
-      } else if (type === 2) {
-        result = num.substr(3, 4);
-      } else {
-        result = num.substr(7);
-      }
-    } else {
-    }
-    return result;
-  };
-
-  useEffect(() => {
-    setOrderHistory(orderList);
-    setUserInfos({
-      ...userInfos,
-      name: user.name,
-      phone1: phoneForm(user.phone, 1),
-      phone2: phoneForm(user.phone, 2),
-      phone3: phoneForm(user.phone, 3),
-      code: user.code,
-      email: user.email,
-      deliveryInfo: {
-        zipcode: user.deliveryInfo.zipcode,
-        address: user.deliveryInfo.address,
-        detailed: user.deliveryInfo.detailed,
-      },
-      marketing: user.marketing,
-    });
-  }, [
-    user.email,
-    user.deliveryInfo.zipcode,
-    user.deliveryInfo.address,
-    user.deliveryInfo.detailed,
-    user.marketing,
-  ]);
+  const mypage = useMypage();
 
   const onInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserInfos({
-      ...userInfos,
-      [name]: e.target.type === "checkbox" ? e.target.checked : value,
-    });
+
+    mypage.userInfos &&
+      mypage.setUserInfos({
+        ...mypage.userInfos,
+        [name]: e.target.type === "checkbox" ? e.target.checked : value,
+      });
   };
 
   const onPostClick = () => {
@@ -128,14 +48,15 @@ export default function Mypage() {
     }
 
     //console.log(data); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
-    setUserInfos({
-      ...userInfos,
-      deliveryInfo: {
-        ...userInfos.deliveryInfo,
-        zipcode: data.zonecode,
-        address: fullAddress,
-      },
-    });
+    mypage.userInfos &&
+      mypage.setUserInfos({
+        ...mypage.userInfos,
+        deliveryInfo: {
+          ...mypage.userInfos.deliveryInfo,
+          zipcode: data.zonecode,
+          address: fullAddress,
+        },
+      });
     setPost(false);
   };
 
@@ -146,18 +67,20 @@ export default function Mypage() {
 
   const onDeliveryInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserInfos({
-      ...userInfos,
-      deliveryInfo: {
-        ...userInfos.deliveryInfo,
-        [name]: value,
-      },
-    });
+
+    mypage.userInfos &&
+      mypage.setUserInfos({
+        ...mypage.userInfos,
+        deliveryInfo: {
+          ...mypage.userInfos.deliveryInfo,
+          [name]: value,
+        },
+      });
   };
 
   const onLogoutClick = () => {
     removeCookie("token");
-    setToken("", {
+    mypage.setToken("", {
       username: "",
       role: "",
       name: "",
@@ -177,6 +100,8 @@ export default function Mypage() {
         requests: "",
       },
     });
+    mypage.setCartCount(0);
+    removeCookie("cartCount");
     router.replace("/");
   };
 
@@ -196,26 +121,27 @@ export default function Mypage() {
     e.preventDefault();
 
     let infos = {};
-    if (!deliveryInfo.zipcode) {
+    if (!mypage.userInfos?.deliveryInfo.zipcode) {
       infos = {
-        email: email,
-        marketing: marketing,
+        email: mypage.userInfos?.email,
+        marketing: mypage.userInfos?.marketing,
       };
     } else {
       infos = {
-        email: email,
-        marketing: marketing,
+        email: mypage.userInfos?.email,
+        marketing: mypage.userInfos?.marketing,
         deliveryInfo: {
-          zipcode: deliveryInfo.zipcode,
-          address: deliveryInfo.address,
-          detailed: deliveryInfo.detailed ? deliveryInfo.detailed : "-",
+          zipcode: mypage.userInfos?.deliveryInfo.zipcode,
+          address: mypage.userInfos?.deliveryInfo.address,
+          detailed: mypage.userInfos?.deliveryInfo.detailed
+            ? mypage.userInfos?.deliveryInfo.detailed
+            : "-",
           name: "-",
           phone: "-",
           requests: "-",
         },
       };
     }
-    console.log(infos);
 
     const res = await API.auth.modify(cookies.token, infos);
     if (res.statusCode === 2000) {
@@ -236,18 +162,23 @@ export default function Mypage() {
               <div className="mb-[70px] max-md:mb-10">
                 <div className="my_title">주문 내역</div>
                 <div>
-                  {orderHistory.length > 0 ? (
+                  {mypage.orderList && mypage.orderList.length > 0 ? (
                     <>
-                      <div className="grid grid-cols-[20%_40%_20%_20%] border-b border-b-[#ddd] text-sm pb-3 max-md:text-xs">
+                      <div className="grid grid-cols-[22%_40%_22%_16%] border-b border-b-[#ddd] text-sm pb-3 max-md:text-xs">
                         <div>주문일자</div>
                         <div>상품 정보</div>
                         <div className="text-right">가격</div>
                         <div className="text-right">상태</div>
                       </div>
-                      {orderHistory.map((order) => (
-                        <Link href={`/orderDetails/${order.id}`} key={order.id}>
-                          <div className="grid grid-cols-[20%_40%_20%_20%] border-b border-b-[#ddd] text-sm py-4 items-center cursor-pointer max-md:text-xs max-md:py-3">
-                            <div>{order.date}</div>
+                      {mypage.orderList?.map((order, index) => (
+                        <Link
+                          href={`/orderDetails/${order.merchant_uid}`}
+                          key={index}
+                        >
+                          <div className="grid grid-cols-[22%_40%_22%_16%] border-b border-b-[#ddd] text-sm py-4 items-center cursor-pointer max-md:text-xs max-md:py-3">
+                            <div>
+                              {new Date(order.date).toLocaleDateString()}
+                            </div>
                             <div>{order.name}</div>
                             <div className="text-right">
                               {order.price.toLocaleString()}원
@@ -265,7 +196,7 @@ export default function Mypage() {
                 </div>
               </div>
               {/* 적립금 내역 */}
-              <div>
+              {/* <div>
                 <div className="my_title">적립금 내역</div>
                 <div>
                   {accumulation.length > 0 ? (
@@ -276,7 +207,7 @@ export default function Mypage() {
                     </div>
                   )}
                 </div>
-              </div>
+              </div> */}
             </div>
             {/* 마이페이지 오른쪽 컨텐츠 */}
             <div className="w-[45%] max-md:w-[100%] max-md:mb-10">
@@ -298,7 +229,7 @@ export default function Mypage() {
                         type="text"
                         name="email"
                         className="my_input"
-                        value={email}
+                        value={mypage.userInfos?.email}
                         onChange={onInfoChange}
                       />
                     </div>
@@ -308,9 +239,9 @@ export default function Mypage() {
                     <div>
                       <input
                         type="text"
-                        name="name"
+                        name="username"
                         className="my_input"
-                        value={name}
+                        value={mypage.userInfos?.username}
                         readOnly={true}
                       />
                     </div>
@@ -324,7 +255,7 @@ export default function Mypage() {
                         className="my_input"
                         minLength={3}
                         maxLength={3}
-                        value={phone1}
+                        value={mypage.userInfos?.phone1}
                         readOnly={true}
                       />
                       <div className="px-3">-</div>
@@ -334,7 +265,7 @@ export default function Mypage() {
                         className="my_input"
                         minLength={3}
                         maxLength={4}
-                        value={phone2}
+                        value={mypage.userInfos?.phone2}
                         readOnly={true}
                       />
                       <div className="px-3">-</div>
@@ -344,7 +275,7 @@ export default function Mypage() {
                         className="my_input"
                         minLength={4}
                         maxLength={4}
-                        value={phone3}
+                        value={mypage.userInfos?.phone3}
                         readOnly={true}
                       />
                     </div>
@@ -357,7 +288,7 @@ export default function Mypage() {
                         name="zipcode"
                         className="my_input read-only:bg-[#f9f9f9]"
                         readOnly
-                        value={deliveryInfo.zipcode}
+                        value={mypage.userInfos?.deliveryInfo.zipcode}
                       />
                       <div
                         className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
@@ -389,7 +320,7 @@ export default function Mypage() {
                         name="address"
                         className="my_input read-only:bg-[#f9f9f9]"
                         readOnly
-                        value={deliveryInfo.address}
+                        value={mypage.userInfos?.deliveryInfo.address}
                       />
                     </div>
                     <div>
@@ -397,7 +328,7 @@ export default function Mypage() {
                         type="text"
                         name="detailed"
                         className="my_input"
-                        value={deliveryInfo.detailed}
+                        value={mypage.userInfos?.deliveryInfo.detailed}
                         onChange={onDeliveryInfoChange}
                       />
                     </div>
@@ -425,7 +356,7 @@ export default function Mypage() {
                           name="marketing"
                           id="agreeEmail"
                           className="mr-2 w-[14px] h-[14px] accent-[#7a1cea] max-md:w-3 max-md:h-3"
-                          checked={marketing}
+                          checked={mypage.userInfos?.marketing}
                           onChange={onInfoChange}
                         />{" "}
                         <label htmlFor="agreeEmail">
@@ -495,3 +426,9 @@ export default function Mypage() {
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};

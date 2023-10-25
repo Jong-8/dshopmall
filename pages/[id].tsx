@@ -94,11 +94,7 @@ export default function Item() {
   const checkTotalPrice = (array: optionProps) => {
     let totalPrice = 0;
     array?.map((option) => {
-      if (item.item && item.item.isSelectOption) {
-        totalPrice += (option.price + item.item.price) * option.qty;
-      } else {
-        totalPrice += option.price * option.qty;
-      }
+      totalPrice += option.price * option.qty;
     });
     return totalPrice;
   };
@@ -314,8 +310,11 @@ export default function Item() {
     if (token) {
       const res = await API.cart.addCart(token, items);
       if (res.statusCode === 2000) {
-        console.log(res.result);
-      } else alert(res.message);
+        //console.log(res.result);
+      } else {
+        alert(res.message);
+        return false;
+      }
     }
   };
 
@@ -331,16 +330,6 @@ export default function Item() {
 
     if (e.target.name === "buy") {
       // 바로구매시
-      const newSelectedOptions = selectedOptions?.map((selectedOption) => {
-        if (item.item) {
-          return {
-            ...selectedOption,
-            itemPrice: item.item.isSelectOption
-              ? selectedOption.price + item.item?.price
-              : selectedOption.price,
-          };
-        }
-      });
 
       const buyItemsData = selectedOptions?.map((selectedOption) => {
         if (item.item) {
@@ -362,7 +351,7 @@ export default function Item() {
             thumbnail: item.item?.thumbnailUrl,
             options: {
               optionCounter: item.selectOptionList?.optionCounter,
-              selectOptions: newSelectedOptions,
+              selectOptions: selectedOptions,
             },
           },
         ],
@@ -507,11 +496,7 @@ export default function Item() {
                                     >
                                       <div>{selectOption.title}</div>
                                       <div>
-                                        {item.item &&
-                                          (
-                                            item.item.price + selectOption.price
-                                          ).toLocaleString()}
-                                        원
+                                        {selectOption.price.toLocaleString()}원
                                       </div>
                                     </div>
                                   )
