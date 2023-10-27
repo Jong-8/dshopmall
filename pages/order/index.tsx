@@ -288,7 +288,7 @@ export default function Order() {
           buyer_addr: prepareDatas.buyer_addr, // 주문자 주소
           buyer_postcode: prepareDatas.buyer_postcode, // 주문자 우편번호
           language: "ko", // en 설정시 영문으로 출력되면 해당 파라미터 생략시 한국어 default
-          m_redirect_url: `http://localhost:3000/orderDetails/${createUid()}`,
+          m_redirect_url: `http://dshopmall.co.kr/order`,
           auth_mode: "key-in", // 키인결제(일회성 결제)이용시 설정
         },
         (rsp?: any) => {
