@@ -2,6 +2,7 @@ export default function AddrRadio({
   id,
   label,
   defaultChecked,
+  onChange,
 }: AddrRadioProps) {
   return (
     <div className="relative mr-3 max-md:mr-2">
@@ -11,6 +12,7 @@ export default function AddrRadio({
         id={id}
         className="w-0 h-0 absolute top-0 left-0 peer"
         defaultChecked={defaultChecked}
+        onChange={onChange}
       />{" "}
       <label
         htmlFor={id}

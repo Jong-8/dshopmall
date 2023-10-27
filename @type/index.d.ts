@@ -123,6 +123,7 @@ declare global {
     id: string;
     label: string;
     defaultChecked: boolean;
+    onChange(e: ChangeEvent<HTMLInputElement>): void;
   }
 
   interface Window {
@@ -184,12 +185,12 @@ declare global {
   };
 
   type ShopCartChangeRequest = {
-    counter: number;
+    counter: number | string;
     qty: number;
   };
 
   type ShopCartRemoveRequest = {
-    counter: number;
+    counter: number | string;
   };
 
   type ShopOrderDetailRequest = {
@@ -227,6 +228,7 @@ declare global {
     refund_account?: string;
     refund_tel?: string;
     companyBank?: boolean;
+    companyBankDeposit?: string;
   };
 
   type ShopPayCompleteRequest = {
@@ -235,9 +237,9 @@ declare global {
   };
 
   type ShopPayCancelRequest = {
-    merchant_uid: string;
-    guest_name?: string;
-    guest_phone?: string;
+    merchant_uid: string | string[] | undefined;
+    guest_name?: string | string[] | undefined;
+    guest_phone?: string | string[] | undefined;
     reason: string;
   };
 
@@ -405,7 +407,7 @@ declare global {
   };
 
   type ShopCartType = {
-    counter: number;
+    counter: number | string;
     itemCounter: number;
     title: string;
     price: number;
@@ -492,6 +494,7 @@ declare global {
     state: string;
     deliveryState: string;
     deliveryLink: string;
+    cancelReason?: string;
   };
 
   type ShopPaymentInfoType = {
@@ -508,6 +511,7 @@ declare global {
     refund_account?: string;
     refund_holder?: string;
     refund_tel?: string;
+    companyBankDeposit?: string;
   };
 
   type ShopPayItemType = {

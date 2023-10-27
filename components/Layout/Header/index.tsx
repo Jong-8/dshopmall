@@ -22,19 +22,8 @@ export default function Header({ title, description }: HeaderProps) {
   const menuBgRef = useRef<HTMLDivElement>(null);
   const auth = store.auth.useToken();
   const [cookies, setCookie, removeCookie] = useCookies(["cartCount"]);
-  const [cartCount, setCartCount] = useState(0);
 
   useAuth();
-
-  useEffect(() => {
-    if (auth.token) {
-      setCartCount(auth.cartCount);
-    } else {
-      if (cookies.cartCount) {
-        setCartCount(cookies.cartCount);
-      }
-    }
-  }, [auth.token, auth.cartCount, cookies.cartCount]);
 
   const handleClickOutside = (e: MouseEvent) => {
     if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
@@ -124,7 +113,7 @@ export default function Header({ title, description }: HeaderProps) {
                 DSHOP
               </a>
             </Link>
-            <Link href={"/live"}>
+            {/* <Link href={"/live"}>
               <a
                 className={`text-[15px] hover:text-[#6846b7] ${
                   router.pathname === "/live" ? "active" : ""
@@ -132,7 +121,7 @@ export default function Header({ title, description }: HeaderProps) {
               >
                 LIVE
               </a>
-            </Link>
+            </Link> */}
           </div>
           <div>
             <Link href={"/"}>
@@ -185,17 +174,17 @@ export default function Header({ title, description }: HeaderProps) {
                       router.pathname === "/cart" ? "active" : ""
                     }`}
                   >
-                    Cart({cartCount})
+                    Cart({auth.cartCount})
                   </a>
                 </Link>
               ) : (
-                <Link href={"/login?url=cart"}>
+                <Link href={"/cart"}>
                   <a
                     className={`text-[15px] hover:text-[#6846b7] ${
                       router.pathname === "/cart" ? "active" : ""
                     }`}
                   >
-                    Cart{cartCount > 0 && `(${cartCount})`}
+                    Cart{cookies.cartCount > 0 && `(${cookies.cartCount})`}
                   </a>
                 </Link>
               )}
@@ -336,9 +325,9 @@ export default function Header({ title, description }: HeaderProps) {
               <Link href={"/dshop"}>
                 <div>dshop</div>
               </Link>
-              <Link href={"/live"}>
+              {/* <Link href={"/live"}>
                 <div>live</div>
-              </Link>
+              </Link> */}
             </div>
           </div>
           <div

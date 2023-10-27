@@ -8,9 +8,18 @@ export default function useAuth() {
     "token",
     "cartItems",
     "cartCount",
+    "guestCartItems",
   ]);
   const auth = store.auth.useToken();
   const cart = store.cart.useCart();
+
+  const calculateCount = (arr: ShopCartType[]) => {
+    let totalCount = 0;
+    arr.map((item: ShopCartType) => {
+      totalCount += item.qty;
+    });
+    return totalCount;
+  };
 
   const tokenLogin = async (token: string) => {
     const res = await API.auth.tokenLogin(token);
@@ -27,7 +36,7 @@ export default function useAuth() {
     const cartItems = await API.cart.cart(token);
     if (cartItems.statusCode === 2000) {
       cart.setCart(cartItems.result.cartItems);
-      auth.setCartCount(cartItems.result.cartItems.length);
+      auth.setCartCount(calculateCount(cartItems.result.cartItems));
       setCookie("cartItems", cartItems.result.cartItems, {
         path: "/",
       });
@@ -41,16 +50,17 @@ export default function useAuth() {
   };
 
   useEffect(() => {
-    if (!auth.user.username) {
+    if (!auth.token) {
       // 회원 스토어에 정보가 없을때
       if (cookies.token) {
         // 쿠키 데이터가 있을때 쿠키 토큰으로 토큰로그인
         tokenLogin(cookies.token);
+      } else {
+        if (!cookies.guestCartItems) {
+          setCookie("guestCartItems", [], { path: "/" });
+          setCookie("cartCount", 0, { path: "/" });
+        }
       }
-    } else {
-      // 회원 스토어에 정보가 있을때
-      // 스토어 토큰으로 토큰로그인
-      tokenLogin(auth.token);
     }
-  }, [auth.token, auth.user.username, cookies.token]);
+  }, [auth.token, cookies.token, cookies.guestCartItems, cookies.cartCount]);
 }

@@ -9,6 +9,7 @@ import useOrder from "@hooks/useOrder";
 import API from "@services/API";
 import { useRouter } from "next/router";
 import { store } from "@stores/index";
+import { useCookies } from "react-cookie";
 
 let IMP: any;
 if (typeof window !== "undefined") {
@@ -63,27 +64,6 @@ const bankList = [
 ];
 
 export default function Order() {
-  const [addressInfo, setAddressInfo] = useState<{
-    addrName: string;
-    zipcode: string;
-    address: string;
-    detailed: string;
-    addrPhone1: string;
-    addrPhone2: string;
-    addrPhone3: string;
-    requests: string;
-    setBasic: boolean;
-  }>({
-    addrName: "",
-    zipcode: "",
-    address: "",
-    detailed: "",
-    addrPhone1: "",
-    addrPhone2: "",
-    addrPhone3: "",
-    requests: "",
-    setBasic: false,
-  });
   const [post, setPost] = useState(false);
   const [point, setPoint] = useState<number | undefined>(undefined);
   const [payment, setPayment] = useState("creditCard");
@@ -95,7 +75,12 @@ export default function Order() {
   });
   const router = useRouter();
   const order = useOrder();
-  const shopInfo = store.shop.useShopInfo();
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "isCart",
+    "cartItems",
+    "guestCartItems",
+    "cartCount",
+  ]);
   const { userName, userPhone1, userPhone2, userPhone3, userEmail } =
     order.userInfo;
   const {
@@ -108,18 +93,16 @@ export default function Order() {
     addrPhone3,
     requests,
     setBasic,
-  } = addressInfo;
+  } = order.addressInfo;
   const { depositor, refundBank, refundAccountHolder, refundAccount } = deposit;
 
   const onUserInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     if (name === "userPhone1") {
-      let num = value.toString();
-      if (num.length > 3) return false;
+      if (value.length > 3) return false;
     } else if (name === "userPhone2" || name === "userPhone3") {
-      let num = value.toString();
-      if (num.length > 4) return false;
+      if (value.length > 4) return false;
     }
 
     order.setUserInfo({
@@ -133,11 +116,9 @@ export default function Order() {
     let newValue: string | number | boolean;
 
     if (name === "addrPhone1") {
-      let num = value.toString();
-      if (num.length > 3) return false;
+      if (value.length > 3) return false;
     } else if (name === "addrPhone2" || name === "addrPhone3") {
-      let num = value.toString();
-      if (num.length > 4) return false;
+      if (value.length > 4) return false;
     }
 
     if (e.target.type === "checkbox") {
@@ -146,10 +127,36 @@ export default function Order() {
       newValue = value;
     }
 
-    setAddressInfo({
-      ...addressInfo,
+    order.setAddressInfo({
+      ...order.addressInfo,
       [name]: newValue,
     });
+  };
+
+  const onDeliverySetChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.id === "basicAddr") {
+      order.setAddressInfo({
+        ...order.addressInfo,
+        addrName: order.auth.user.deliveryInfo.name,
+        zipcode: order.auth.user.deliveryInfo.zipcode,
+        address: order.auth.user.deliveryInfo.address,
+        detailed: order.auth.user.deliveryInfo.detailed,
+        addrPhone1: order.phoneForm(order.auth.user.deliveryInfo.phone, 1),
+        addrPhone2: order.phoneForm(order.auth.user.deliveryInfo.phone, 2),
+        addrPhone3: order.phoneForm(order.auth.user.deliveryInfo.phone, 3),
+      });
+    } else {
+      order.setAddressInfo({
+        ...order.addressInfo,
+        addrName: "",
+        zipcode: "",
+        address: "",
+        detailed: "",
+        addrPhone1: "",
+        addrPhone2: "",
+        addrPhone3: "",
+      });
+    }
   };
 
   const onPostClick = () => {
@@ -173,8 +180,8 @@ export default function Order() {
     }
 
     //console.log(fullAddress); // e.g. '서울 성동구 왕십리로2길 20 (성수동1가)'
-    setAddressInfo({
-      ...addressInfo,
+    order.setAddressInfo({
+      ...order.addressInfo,
       zipcode: data.zonecode,
       address: fullAddress,
     });
@@ -234,30 +241,27 @@ export default function Order() {
     setPayment(e.target.value);
   };
 
-  const createUid = () => {
-    const timeYear = new Date().getFullYear();
-    const timeMonth = new Date().getMonth() + 1;
-    const timeDate = new Date().getDate();
-    const timeHourStamp = new Date().getHours() * 3600000;
-    const timeMinuteStamp = new Date().getMinutes() * 60000;
-    const timeSecondStamp = new Date().getSeconds() * 1000;
-    const timeStamp = new Date().getTime();
-    const timeStamp3 = Number(timeStamp.toString().slice(-3));
-    const uid = `DS${timeYear}${timeMonth
-      .toString()
-      .padStart(2, "0")}${timeDate}_${
-      timeHourStamp + timeMinuteStamp + timeSecondStamp + timeStamp3
-    }`;
-    return uid;
-  };
-
   const payComplete = async (
     datas: ShopPayCompleteRequest,
     userInfos: { name: string; phone: string }
   ) => {
     const res = await API.order.payComplete(datas);
     if (res.statusCode === 2000) {
-      alert("결제가 완료되었습니다.");
+      alert(
+        payment !== "withoutBankbook"
+          ? "결제가 완료되었습니다."
+          : "입금 확인 후 결제가 완료됩니다."
+      );
+
+      // 장바구니 쿠키, store 비우기
+      if (cookies.isCart) {
+        setCookie("cartItems", [], { path: "/" });
+        order.auth.setCartCount(0);
+        setCookie("guestCartItems", [], { path: "/" });
+        setCookie("cartCount", 0, { path: "/" });
+      }
+
+      // 회원, 게스트 url 설정
       let url = "";
       if (order.auth.token) {
         url = `/orderDetails/${res.result.orderInfo.merchant_uid}`;
@@ -331,8 +335,9 @@ export default function Order() {
       refund_holder: refundAccountHolder ?? "",
       refund_bank: refundBank ?? "",
       refund_account: refundAccount ?? "",
-      refund_tel: depositor ?? "",
+      refund_tel: "",
       companyBank: payment === "withoutBankbook",
+      companyBankDeposit: depositor ?? "",
     };
 
     const res = await API.order.payPrepare(order.auth.token, datas);
@@ -378,7 +383,7 @@ export default function Order() {
                                 />
                               </a>
                             </div>
-                            <div className="w-[450px] flex flex-col justify-between py-3 max-md:w-[calc(100%-80px)]">
+                            <div className="w-[450px] flex flex-col justify-between py-5 max-md:w-[calc(100%-80px)]">
                               <div>
                                 <div className="font-bold mb-1 max-md:text-sm">
                                   <a
@@ -436,7 +441,7 @@ export default function Order() {
                   <div className="od_label">연락처</div>
                   <div className="flex justify-between items-center">
                     <input
-                      type="number"
+                      type="text"
                       className="od_input"
                       minLength={3}
                       maxLength={3}
@@ -446,7 +451,7 @@ export default function Order() {
                     />
                     <div className="px-3">-</div>
                     <input
-                      type="number"
+                      type="text"
                       className="od_input"
                       minLength={3}
                       maxLength={4}
@@ -456,7 +461,7 @@ export default function Order() {
                     />
                     <div className="px-3">-</div>
                     <input
-                      type="number"
+                      type="text"
                       className="od_input"
                       minLength={4}
                       maxLength={4}
@@ -489,11 +494,13 @@ export default function Order() {
                     id="basicAddr"
                     label="기본 배송지"
                     defaultChecked={true}
+                    onChange={onDeliverySetChange}
                   />
                   <AddrRadio
                     id="newAddr"
                     label="신규 입력"
                     defaultChecked={false}
+                    onChange={onDeliverySetChange}
                   />
                 </div>
                 <div className="border-b border-[#e0e0e0] pb-8 max-md:pb-6">
@@ -568,7 +575,7 @@ export default function Order() {
                     <div className="od_label">연락처</div>
                     <div className="flex justify-between items-center">
                       <input
-                        type="number"
+                        type="text"
                         className="od_input"
                         minLength={3}
                         maxLength={3}
@@ -578,7 +585,7 @@ export default function Order() {
                       />
                       <div className="px-3">-</div>
                       <input
-                        type="number"
+                        type="text"
                         className="od_input"
                         minLength={3}
                         maxLength={4}
@@ -588,7 +595,7 @@ export default function Order() {
                       />
                       <div className="px-3">-</div>
                       <input
-                        type="number"
+                        type="text"
                         className="od_input"
                         minLength={4}
                         maxLength={4}
@@ -641,7 +648,7 @@ export default function Order() {
                     </div>
                     <div className="flex justify-between">
                       <input
-                        type="number"
+                        type="text"
                         className="od_input"
                         value={point === 0 ? "" : point}
                         name="point"
@@ -776,7 +783,8 @@ export default function Order() {
             </div>
             <div className="sticky bottom-0 pb-4 max-md:pb-0">
               <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[58px] max-md:leading-[58px] max-md:text-lg">
-                {order.totalPrice.toLocaleString()}원 결제하기
+                {order.totalPrice.toLocaleString()}원{" "}
+                {payment !== "withoutBankbook" ? "결제하기" : "진행하기"}
               </button>
             </div>
           </form>

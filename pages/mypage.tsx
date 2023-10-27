@@ -12,7 +12,12 @@ import useMypage from "@hooks/useMypage";
 
 export default function Mypage() {
   //const [accumulation, setAccumulation] = useState([]);
-  const [cookies, setCookie, removeCookie] = useCookies(["token", "cartCount"]);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "token",
+    "cartCount",
+    "cartItems",
+    "guestCartItems",
+  ]);
   const router = useRouter();
   const [post, setPost] = useState(false);
   const mypage = useMypage();
@@ -101,6 +106,8 @@ export default function Mypage() {
       },
     });
     mypage.setCartCount(0);
+    removeCookie("cartItems");
+    removeCookie("cartCount");
     removeCookie("cartCount");
     router.replace("/");
   };

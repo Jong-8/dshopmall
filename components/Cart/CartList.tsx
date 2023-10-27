@@ -17,24 +17,48 @@ export default function CartList() {
     "buyItem",
     "buyItemsData",
     "cartItems",
+    "guestCartItems",
     "cartCount",
+    "isCart",
   ]);
   const auth = store.auth.useToken();
   const cart = store.cart.useCart();
 
+  //console.log(cookies.guestCartItems);
+
+  const itemPrice = (item: ShopCartType) => {
+    const itemPrice =
+      item.selectOption?.optionPrice > 0
+        ? item.selectOption?.optionPrice
+        : item.price;
+    return itemPrice;
+  };
+
+  const calculateCount = (arr: ShopCartType[]) => {
+    let totalCount = 0;
+    arr.map((item: ShopCartType) => {
+      totalCount += item.qty;
+    });
+    return totalCount;
+  };
+
   const calculateTotal = (arr: ShopCartType[]) => {
     let totalPrice = 0;
     arr.map((item: ShopCartType) => {
-      totalPrice += item.selectOption.optionPrice * item.qty;
+      totalPrice += itemPrice(item) * item.qty;
     });
     return totalPrice;
   };
 
   const changeCart = (cartItems: ShopCartType[]) => {
-    setCookie("cartItems", cartItems, { path: "/" });
-    setCookie("cartCount", cartItems.length, { path: "/" });
+    if (auth.token) {
+      setCookie("cartItems", cartItems, { path: "/" });
+      auth.setCartCount(calculateCount(cartItems));
+    } else {
+      setCookie("guestCartItems", cartItems, { path: "/" });
+    }
+    setCookie("cartCount", calculateCount(cartItems), { path: "/" });
     cart.setCart(cartItems);
-    auth.setCartCount(cartItems.length);
     const totalPrice = calculateTotal(cartItems);
     if (totalPrice > 100000) {
       setDeliveryFee(0);
@@ -53,6 +77,12 @@ export default function CartList() {
       if (cookies.cartItems) {
         setItems(cookies.cartItems);
         totalPrice = calculateTotal(cookies.cartItems);
+      } else {
+        if (cookies.guestCartItems) {
+          setItems(cookies.guestCartItems);
+          cart.setCart(cookies.guestCartItems);
+          totalPrice = calculateTotal(cookies.guestCartItems);
+        }
       }
     }
 
@@ -62,7 +92,7 @@ export default function CartList() {
       setDeliveryFee(3000);
     }
     setTotalPrice(totalPrice);
-  }, [auth.token, cart.cartItems, cookies.cartItems]);
+  }, [auth.token, cart.cartItems, cookies.cartItems, cookies.guestCartItems]);
 
   const itemInfo = async (counter: number, optionCounter?: number) => {
     let err = "";
@@ -70,7 +100,7 @@ export default function CartList() {
 
     const item = await API.item.item(counter);
     if (item.statusCode === 2000) {
-      console.log(item.result);
+      //console.log(item.result);
       if (item.result.selectOptions) {
         item.result.selectOptions.options.filter((option) => {
           if (option.optionDetailCounter === optionCounter)
@@ -84,19 +114,32 @@ export default function CartList() {
     return { err, stock };
   };
 
-  const changeQty = async (qty: number, counter: number) => {
+  const changeQty = async (qty: number, counter: number | string) => {
     if (auth.token) {
       const res = await API.cart.changeCart(auth.token, { counter, qty });
       if (res.statusCode === 2000) {
         changeCart(res.result.cartItems);
       } else alert(res.message);
+    } else {
+      let guestItems: ShopCartType[] = cookies.guestCartItems;
+      guestItems = guestItems.map((guestItem) => {
+        if (guestItem.counter === counter) {
+          return {
+            ...guestItem,
+            qty,
+          };
+        } else {
+          return guestItem;
+        }
+      });
+      changeCart(guestItems);
     }
   };
 
   const onQtyChange = async (
     e: ChangeEvent<HTMLInputElement>,
     itemId: number,
-    cartId: number,
+    cartId: number | string,
     optionId: number
   ) => {
     const name = e.target.name;
@@ -120,7 +163,7 @@ export default function CartList() {
 
   const onMinusClick = async (
     itemId: number,
-    cartId: number,
+    cartId: number | string,
     optionId: number
   ) => {
     const { err, stock } = await itemInfo(itemId, optionId);
@@ -147,7 +190,7 @@ export default function CartList() {
 
   const onPlusClick = async (
     itemId: number,
-    cartId: number,
+    cartId: number | string,
     optionId: number
   ) => {
     const { err, stock } = await itemInfo(itemId, optionId);
@@ -163,18 +206,15 @@ export default function CartList() {
 
     const value = qty + 1;
 
-    //console.log(stock);
     if (value > stock) {
       alert("재고가 부족합니다");
-      //console.log(value);
       changeQty(stock, cartId);
     } else {
-      //console.log(value);
       changeQty(value, cartId);
     }
   };
 
-  const onDeleteClick = async (id: number) => {
+  const onDeleteClick = async (id: number | string) => {
     const chkDelete = confirm("선택한 상품을 삭제하시겠습니까?");
     if (chkDelete) {
       if (auth.token) {
@@ -183,6 +223,14 @@ export default function CartList() {
           alert("선택한 상품 장바구니에서 삭제되었습니다.");
           changeCart(res.result.cartItems);
         } else alert(res.message);
+      } else {
+        const newGuestCartItems = cookies.guestCartItems.filter(
+          (item: ShopCartType) => {
+            return item.counter !== id;
+          }
+        );
+        setCookie("guestCartItems", newGuestCartItems, { path: "/" });
+        setCookie("cartCount", newGuestCartItems.length, { path: "/" });
       }
     }
   };
@@ -203,7 +251,10 @@ export default function CartList() {
                 optionDetailCounter: item.selectOption?.optionDetailCounter,
                 name: item.selectOption?.optionDetailTitle,
                 qty: item.qty,
-                price: item.selectOption?.optionPrice,
+                price:
+                  item.selectOption.optionCounter === 0
+                    ? item.price
+                    : item.selectOption?.optionPrice,
               },
             ],
           },
@@ -225,6 +276,7 @@ export default function CartList() {
 
     setCookie("buyItem", buyItem, { path: "/" });
     setCookie("buyItemsData", buyItemsData, { path: "/" });
+    setCookie("isCart", true, { path: "/" });
     router.push("/order");
   };
   return (
@@ -252,7 +304,7 @@ export default function CartList() {
                 >
                   <div className="flex w-[70%] max-md:w-[100%]">
                     <div className="w-[16%] max-md:w-[70px]">
-                      <Link href={`/${item.itemCounter}`}>
+                      <Link href={`/${item.itemCounter ?? "cart"}`}>
                         <img
                           src={item.thumbnailUrl}
                           alt={item.title}
@@ -260,17 +312,19 @@ export default function CartList() {
                         />
                       </Link>
                     </div>
-                    <div className="pl-[4%] relative max-md:pl-3 max-md:w-[calc(100%-70px)]">
-                      <div className="pt-6 max-md:pt-4 max-md:text-sm max-md:mb-1">
-                        <Link href={`/${item.itemCounter}`}>{item.title}</Link>
+                    <div className="pl-[4%] relative flex flex-col justify-center max-md:pl-3 max-md:w-[calc(100%-70px)]">
+                      <div className="max-md:text-sm max-md:mb-1">
+                        <Link href={`/${item.itemCounter ?? "cart"}`}>
+                          {item?.title}
+                        </Link>
                       </div>
-                      {item.selectOption.optionTitle && (
+                      {item.selectOption?.optionTitle && (
                         <div className="text-xs">
                           {`
-                      ${item.selectOption.optionTitle} : 
-                      ${item.selectOption.optionDetailTitle} (+
+                      ${item.selectOption?.optionTitle} : 
+                      ${item.selectOption?.optionDetailTitle} (+
                       ${(
-                        item.selectOption.optionPrice - item.price
+                        item.selectOption?.optionPrice - item.price
                       ).toLocaleString()}
                       원)`}
                         </div>
@@ -321,10 +375,7 @@ export default function CartList() {
                     />
                   </div>
                   <div className="flex justify-center items-center w-[15%] max-md:w-[100%] max-md:justify-start max-md:pl-[82px] max-md:text-sm">
-                    {(
-                      item.selectOption.optionPrice * item.qty
-                    ).toLocaleString()}
-                    원
+                    {(itemPrice(item) * item.qty).toLocaleString()}원
                   </div>
                 </div>
               ))}

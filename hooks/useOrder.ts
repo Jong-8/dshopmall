@@ -41,6 +41,27 @@ export default function useOrder() {
     userPhone3: "",
     userEmail: "",
   });
+  const [addressInfo, setAddressInfo] = useState<{
+    addrName: string | undefined;
+    zipcode: string | undefined;
+    address: string | undefined;
+    detailed: string | undefined;
+    addrPhone1: string | undefined;
+    addrPhone2: string | undefined;
+    addrPhone3: string | undefined;
+    requests: string;
+    setBasic: boolean;
+  }>({
+    addrName: "",
+    zipcode: "",
+    address: "",
+    detailed: "",
+    addrPhone1: "",
+    addrPhone2: "",
+    addrPhone3: "",
+    requests: "",
+    setBasic: false,
+  });
   const [myPoint, setMyPoint] = useState<number | undefined>(undefined);
   const [buyItems, setBuyItems] = useState<buyItemProps[]>();
   const [buyItemsData, setBuyItemsData] = useState<ShopPayItemType[]>();
@@ -55,9 +76,9 @@ export default function useOrder() {
   const auth = store.auth.useToken();
   const shopInfo = store.shop.useShopInfo();
 
-  const phoneForm = (num: string, type: number) => {
+  const phoneForm = (num: string | undefined, type: number) => {
     let result = "";
-    if (num.length == 11) {
+    if (num?.length == 11) {
       if (type === 1) {
         result = num.substr(0, 3);
       } else if (type === 2) {
@@ -73,7 +94,9 @@ export default function useOrder() {
   const orderInit = () => {
     let totalItemsPrice = 0;
     cookies.buyItem.map((buyItem: buyItemProps) => {
+      //console.log(buyItem);
       buyItem.options.selectOptions.map((option: optionProps) => {
+        //console.log(option);
         totalItemsPrice = totalItemsPrice + option.price * option?.qty;
       });
     });
@@ -97,6 +120,16 @@ export default function useOrder() {
         userPhone3: phoneForm(auth.user.phone, 3),
         userEmail: auth.user.email,
       });
+      setAddressInfo({
+        ...addressInfo,
+        addrName: auth.user.deliveryInfo.name,
+        zipcode: auth.user.deliveryInfo.zipcode,
+        address: auth.user.deliveryInfo.address,
+        detailed: auth.user.deliveryInfo.detailed,
+        addrPhone1: phoneForm(auth.user.deliveryInfo.phone, 1),
+        addrPhone2: phoneForm(auth.user.deliveryInfo.phone, 2),
+        addrPhone3: phoneForm(auth.user.deliveryInfo.phone, 3),
+      });
     } else {
       setMyPoint(0);
     }
@@ -113,6 +146,8 @@ export default function useOrder() {
   return {
     userInfo,
     setUserInfo,
+    addressInfo,
+    setAddressInfo,
     buyItems,
     buyItemsData,
     totalItemsPrice,
@@ -122,5 +157,6 @@ export default function useOrder() {
     myPoint,
     auth,
     bank,
+    phoneForm,
   };
 }

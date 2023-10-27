@@ -39,8 +39,11 @@ export default function Item() {
   const shopInfo = store.shop.useShopInfo();
   const [cookies, setCookie, removeCookie] = useCookies([
     "buyItem",
-    "cartItems",
     "buyItemsData",
+    "cartItems",
+    "guestCartItems",
+    "cartCount",
+    "isCart",
   ]);
   const auth = store.auth.useToken();
 
@@ -359,6 +362,7 @@ export default function Item() {
       );
 
       setCookie("buyItemsData", buyItemsData, { path: "/" });
+      setCookie("isCart", false, { path: "/" });
       router.push("/order");
     } else {
       // 장바구니시
@@ -390,12 +394,106 @@ export default function Item() {
             addCart(itemInfos, auth.token);
           }
         }
+      } else {
+        let isItem = false;
+        let guestItems: ShopCartType[] = cookies.guestCartItems;
+        let guestItemsCount = cookies.cartCount;
+        // 상품 옵션이 있으면
+        if (item.item && item.item.isSelectOption) {
+          // 선택된 옵션들 맵핑
+          selectedOptions?.map((selectedOption) => {
+            if (item.item && item.selectOptionList) {
+              // 게스트 장바구니 아이템들 체크
+              guestItems = guestItems.map((guestItem) => {
+                if (guestItem.itemCounter === item.item?.counter) {
+                  if (
+                    guestItem.selectOption.optionDetailCounter ===
+                    selectedOption.optionDetailCounter
+                  ) {
+                    // 같은 아이템이면 수량 추가
+                    isItem = true;
+                    return {
+                      ...guestItem,
+                      qty: guestItem.qty + selectedOption.qty,
+                    };
+                  } else {
+                    return guestItem;
+                  }
+                } else {
+                  return guestItem;
+                }
+              });
 
-        if (
-          confirm("장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?")
-        ) {
-          router.push("/cart");
+              if (!isItem) {
+                const itemInfos = {
+                  counter: `guestCounter-${guestItemsCount + 1}`,
+                  itemCounter: item.item.counter,
+                  title: item.item.title,
+                  price: item.item.price,
+                  thumbnailUrl: item.item.thumbnailUrl,
+                  selectOption: {
+                    optionCounter: item.selectOptionList.optionCounter,
+                    optionDetailCounter: selectedOption.optionDetailCounter,
+                    optionTitle: "선택옵션",
+                    optionDetailTitle: selectedOption.name,
+                    optionPrice: selectedOption.price,
+                  },
+                  qty: selectedOption.qty,
+                  seller: seller ? seller : "",
+                };
+                guestItems = guestItems.concat(itemInfos);
+              }
+            }
+            guestItemsCount++;
+          });
+        } else {
+          if (item.item && selectedOptions) {
+            // 게스트 장바구니 아이템들 체크
+            guestItems = guestItems.map((guestItem) => {
+              if (guestItem.itemCounter === item.item?.counter) {
+                // 같은 아이템이면 수량 추가
+                isItem = true;
+                return {
+                  ...guestItem,
+                  qty: guestItem.qty + selectedOptions[0].qty,
+                };
+              } else {
+                return guestItem;
+              }
+            });
+
+            if (!isItem) {
+              const itemInfos = {
+                counter: `guestCounter-${guestItemsCount + 1}`,
+                itemCounter: item.item.counter,
+                title: item.item.title,
+                price: item.item.price,
+                thumbnailUrl: item.item.thumbnailUrl,
+                selectOption: {
+                  optionCounter: 0,
+                  optionDetailCounter: 0,
+                  optionTitle: "",
+                  optionDetailTitle: "",
+                  optionPrice: 0,
+                },
+                qty: selectedOptions[0].qty,
+                seller: seller ? seller : "",
+              };
+              guestItems = guestItems.concat(itemInfos);
+            }
+            guestItemsCount++;
+          }
         }
+        setCookie("guestCartItems", guestItems, {
+          path: "/",
+        });
+        setCookie("cartCount", guestItemsCount, {
+          path: "/",
+        });
+      }
+
+      if (confirm("장바구니에 추가되었습니다. 장바구니로 이동하시겠습니까?")) {
+        router.push("/cart");
       }
     }
   };

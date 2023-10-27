@@ -21,7 +21,13 @@ export default function useOrderDetail() {
   const [merchantUid, setMerchantUid] = useState<
     string | string[] | undefined
   >();
+  const [bank, setBank] = useState({
+    bankName: "",
+    bankNumber: "",
+    bankHolder: "",
+  });
   const auth = store.auth.useToken();
+  const shopInfo = store.shop.useShopInfo();
   const router = useRouter();
 
   const phoneForm = (num: string | undefined, type: number) => {
@@ -77,6 +83,14 @@ export default function useOrderDetail() {
     } else {
       orderData("guest", router.query);
     }
+
+    if (shopInfo.shopInfo) {
+      setBank({
+        bankName: shopInfo.shopInfo.bankName,
+        bankNumber: shopInfo.shopInfo.bankNumber,
+        bankHolder: shopInfo.shopInfo.bankHolder,
+      });
+    }
   }, [auth.token, router.query.id]);
 
   return {
@@ -88,5 +102,6 @@ export default function useOrderDetail() {
     setDeliveryInfo,
     router,
     auth,
+    bank,
   };
 }

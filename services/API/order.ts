@@ -65,3 +65,26 @@ export const orderList = async (token: string) => {
   const res = await helper.Get<ShopOrderResponse>("/user/order", config);
   return res;
 };
+
+export const orderCancel = async (
+  type: string,
+  datas: ShopPayCancelRequest,
+  token: string
+) => {
+  const body = datas;
+  const config = apiHeader(token);
+  let res;
+  if (type === "member") {
+    res = await helper.Post<ShopOrderDetailResponse>(
+      "/user/payments/cancel",
+      body,
+      config
+    );
+  } else {
+    res = await helper.Post<ShopOrderDetailResponse>(
+      "/user/payments/cancel",
+      body
+    );
+  }
+  return res;
+};

@@ -7,10 +7,52 @@ import Button from "@components/Member/Button";
 import Link from "next/link";
 import API from "@services/API";
 import useOrderDetail from "@hooks/useOrderDetail";
+import { AiOutlineClose } from "react-icons/ai";
 
 export default function OrderDetails() {
   const [post, setPost] = useState(false);
+  const [orderCancel, setOrderCancel] = useState(false);
+  const [cancelReason, setCancelReason] = useState("");
   const orderDetail = useOrderDetail();
+
+  const onOrderCancelClick = () => {
+    setOrderCancel(true);
+  };
+
+  const onCancelReasonChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setCancelReason(e.target.value);
+  };
+
+  const onOrderCancelSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!confirm("주문을 취소하시겠습니까?")) return false;
+
+    let res;
+    if (orderDetail.auth.token) {
+      const datas = {
+        merchant_uid: orderDetail.merchantUid,
+        reason: cancelReason,
+      };
+      res = await API.order.orderCancel(
+        "member",
+        datas,
+        orderDetail.auth.token
+      );
+    } else {
+      const datas = {
+        merchant_uid: orderDetail.merchantUid,
+        guest_name: orderDetail.router.query.name,
+        guest_phone: orderDetail.router.query.phone,
+        reason: cancelReason,
+      };
+      res = await API.order.orderCancel("guest", datas, "");
+    }
+    if (res.statusCode === 2000) {
+      alert("주문이 취소되었습니다.");
+      orderDetail.router.reload();
+    } else alert(res.message);
+  };
 
   const calculateDelivery = (arr: ShopOrderDetailItemType[]) => {
     let deliveryFee = 0;
@@ -96,6 +138,8 @@ export default function OrderDetails() {
       orderDetail.router.reload();
     } else alert(res.message);
   };
+
+  console.log(orderDetail.orderInfos);
 
   return (
     <>
@@ -210,28 +254,70 @@ export default function OrderDetails() {
                         className={`w-[60%] leading-[45px] ${
                           orderDetail.orderInfos?.state === "입금 대기" &&
                           "flex justify-between items-center"
-                        } max-md:leading-[40px]`}
+                        } 
+                        ${
+                          orderDetail.orderInfos?.state === "결제 취소" &&
+                          "text-red-500"
+                        }                
+                        max-md:leading-[40px]`}
                       >
-                        {orderDetail.orderInfos?.state}{" "}
+                        {orderDetail.orderInfos?.state === "결제 취소"
+                          ? `${orderDetail.orderInfos?.state} (취소 사유 : ${orderDetail.orderInfos?.cancelReason})`
+                          : orderDetail.orderInfos?.state}{" "}
                         {orderDetail.orderInfos?.state === "입금 대기" && (
-                          <div className="w-[100px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs">
-                            취소 요청
-                          </div>
+                          <>
+                            <div
+                              className="w-[100px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
+                              onClick={onOrderCancelClick}
+                            >
+                              취소 요청
+                            </div>
+                            {orderCancel && (
+                              <div className="border border-[#333] w-[420px] my-[10px] p-4 bg-white fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-md:w-[calc(100%-1.5rem)]">
+                                <div className="text-base mb-4 flex justify-between items-center">
+                                  <div>취소사유 입력</div>
+                                  <div
+                                    onClick={() => setOrderCancel(false)}
+                                    className="cursor-pointer text-xl"
+                                  >
+                                    <AiOutlineClose />
+                                  </div>
+                                </div>
+                                <form action="" onSubmit={onOrderCancelSubmit}>
+                                  <div className="flex justify-between">
+                                    <input
+                                      type="text"
+                                      name="cancelReason"
+                                      value={cancelReason}
+                                      onChange={onCancelReasonChange}
+                                      className="border border-[d8d8d8] w-[68%] p-[10px] h-[42px]"
+                                    />
+                                    <button className="w-[30%] h-[42px] leading-[40px] border border-[#6846b7] text-[#6846b7]">
+                                      취소하기
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
-                    <div
-                      className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
-                    >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
-                        배송 정보
-                      </div>
-                      <div
-                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
-                      >
-                        {orderDetail.orderInfos?.deliveryState}
-                      </div>
-                    </div>
+                    {orderDetail.orderInfos?.state !== "입금 대기" &&
+                      orderDetail.orderInfos?.state !== "결제 취소" && (
+                        <div
+                          className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                        >
+                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                            배송 정보
+                          </div>
+                          <div
+                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                          >
+                            {orderDetail.orderInfos?.deliveryState}
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="max-md:mb-10">
@@ -420,9 +506,11 @@ export default function OrderDetails() {
                             입금 계좌
                           </div>
                           <div
-                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                            className={`w-[60%] leading-[24px] max-md:leading-[20px]`}
                           >
-                            {orderDetail.paymentInfos?.payment}
+                            {`${orderDetail.bank.bankName}(${orderDetail.bank.bankNumber})`}{" "}
+                            <br />
+                            {`예금주 : ${orderDetail.bank.bankHolder}`}
                           </div>
                         </div>
                         <div
@@ -450,7 +538,9 @@ export default function OrderDetails() {
                           </div>
                           <div
                             className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
-                          ></div>
+                          >
+                            {orderDetail.paymentInfos?.companyBankDeposit}
+                          </div>
                         </div>
                         <div
                           className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}

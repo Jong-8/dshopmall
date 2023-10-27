@@ -5,18 +5,58 @@ import { useState, useEffect } from "react";
 import CartList from "@components/Cart/CartList";
 import { useCookies } from "react-cookie";
 import { store } from "@stores/index";
+import API from "@services/API";
 
 export default function Cart() {
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalQty, setTotalQty] = useState(0);
-  const [cartItems, setCartItems] = useState<ShopCartType[]>();
   const [count, setCount] = useState(0);
-  const [cookies, setCookie, removeCookie] = useCookies(["cartCount"]);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "cartCount",
+    "cartItems",
+  ]);
   const auth = store.auth.useToken();
+  const cart = store.cart.useCart();
+
+  const calculateCount = (arr: ShopCartType[]) => {
+    let totalCount = 0;
+    arr.map((item: ShopCartType) => {
+      totalCount += item.qty;
+    });
+    return totalCount;
+  };
+
+  const setCart = async (token: string) => {
+    const cartItems = await API.cart.cart(token);
+    if (cartItems.statusCode === 2000) {
+      cart.setCart(cartItems.result.cartItems);
+      auth.setCartCount(calculateCount(cartItems.result.cartItems));
+      setCookie("cartItems", cartItems.result.cartItems, {
+        path: "/",
+      });
+      setCookie("cartCount", cartItems.result.cartItems.length, {
+        path: "/",
+      });
+    } else {
+      alert(cartItems.message);
+      return false;
+    }
+  };
 
   useEffect(() => {
-    setCount(auth.cartCount);
-  }, [auth.cartCount]);
+    if (auth.token) {
+      setCart(auth.token);
+      setCount(auth.cartCount);
+    } else {
+      if (cookies.cartCount) {
+        setCount(cookies.cartCount);
+      } else {
+        setCount(0);
+      }
+    }
+  }, [auth.cartCount, cookies.cartCount, cookies.cartItems]);
+
+  const onResetClick = () => {
+    removeCookie("cartCount");
+  };
 
   return (
     <>
@@ -43,3 +83,9 @@ export default function Cart() {
     </>
   );
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
