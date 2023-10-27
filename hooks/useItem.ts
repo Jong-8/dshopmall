@@ -10,6 +10,15 @@ export default function useItem(counter: number) {
   const [selectOptionList, setSelectOptionList] =
     useState<ShopItemSelectOptionType>();
   const [cookies, setCookie, removeCookie] = useCookies(["itemCounter"]);
+  const [isStock, setIsStock] = useState(0);
+
+  const totalStock = (arr: ShopItemSelectOptDetailType[]) => {
+    let total = 0;
+    arr.map((item) => {
+      total += item.stock;
+    });
+    return total;
+  };
 
   const itemData = async (counter: number) => {
     const res = await API.item.item(counter);
@@ -18,6 +27,9 @@ export default function useItem(counter: number) {
       if (res.result.selectOptions) {
         setIsSelect(true);
         setSelectOptionList(res.result.selectOptions);
+        setIsStock(totalStock(res.result.selectOptions.options));
+      } else {
+        setIsStock(res.result.item.stock);
       }
       setCookie("itemCounter", counter, { path: "/" });
     } else {
@@ -34,5 +46,5 @@ export default function useItem(counter: number) {
     }
   }, []);
 
-  return { item, setItem, selectOptionList, isSelect, setIsSelect };
+  return { item, setItem, selectOptionList, isSelect, setIsSelect, isStock };
 }

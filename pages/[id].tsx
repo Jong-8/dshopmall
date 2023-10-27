@@ -78,6 +78,8 @@ export default function Item() {
     }
   }, [item.item]);
 
+  console.log(item.selectOptionList);
+
   const onImgClick = (url: string) => {
     setMainThumbnail(url);
   };
@@ -567,7 +569,7 @@ export default function Item() {
                           </dd>
                         </dl>
                       </div>
-                      {item.item.stock > 0 ? (
+                      {item.isStock > 0 ? (
                         <div>
                           {/* 선택 옵션 */}
                           {item.item?.isSelectOption && (
