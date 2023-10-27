@@ -87,7 +87,28 @@ export default function Search() {
                         <div>{item.title}</div>
                         <div>
                           {item.isAvailable ? (
-                            `${item.price.toLocaleString()}원`
+                            <div>
+                              {item.regularPrice ? (
+                                <div className="flex">
+                                  <div className="text-red-500 mr-2">
+                                    {item.price.toLocaleString()}원
+                                  </div>
+                                  <div className="line-through">
+                                    {item.regularPrice.toLocaleString()}원
+                                  </div>
+                                </div>
+                              ) : (
+                                <div>
+                                  {item.isAvailable ? (
+                                    `${item.price.toLocaleString()}원`
+                                  ) : (
+                                    <div className="text-red-500">
+                                      품절된 상품
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           ) : (
                             <div className="text-red-500">품절된 상품</div>
                           )}

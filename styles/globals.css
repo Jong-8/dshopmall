@@ -51,6 +51,20 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: "EF_Rebecca";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2210-EF@1.0/EF_Rebecca.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "SDSamliphopangche_Outline";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts-20-12@1.0/SDSamliphopangche_Outline.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
 
 html,
 body {
@@ -75,6 +89,13 @@ input::-webkit-inner-spin-button {
 }
 input:focus {
   outline-width: 0;
+}
+
+.logo {
+  font-family: "SDSamliphopangche_Outline";
+  color: #6846b7;
+  /* text-shadow: -2px -2px 0 #3a1f79, 2px -2px 0 #3a1f79, -2px 2px 0 #3a1f79,
+    2px 2px 0 #3a1f79; */
 }
 
 .gmarket {

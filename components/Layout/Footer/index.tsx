@@ -53,9 +53,9 @@ export default function Footer() {
           <Link href={"/dshop"}>
             <a className="mx-[0.5em] hover:text-[#6846b7]">DSHOP</a>
           </Link>
-          <Link href={"/live"}>
+          {/* <Link href={"/live"}>
             <a className="mx-[0.5em] hover:text-[#6846b7]">LIVE</a>
-          </Link>
+          </Link> */}
           <Link href={"/policy"}>
             <a className="mx-[0.5em] hover:text-[#6846b7]">이용약관</a>
           </Link>

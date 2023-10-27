@@ -125,7 +125,7 @@ export default function Header({ title, description }: HeaderProps) {
           </div>
           <div>
             <Link href={"/"}>
-              <a className="block w-[300px] text-center h-[76px] leading-[76px] text-[36px] bg-[#333] text-white font-black">
+              <a className="logo block w-[300px] text-center h-[76px] leading-[76px] text-[48px] text-[#6846b7] font-black">
                 DSHOPMALL
               </a>
             </Link>
@@ -235,7 +235,7 @@ export default function Header({ title, description }: HeaderProps) {
           </div>
           <div>
             <Link href={"/"}>
-              <a className="block w-[180px] text-center h-[42px] leading-[42px] text-[20px] bg-[#333] text-white font-black">
+              <a className="logo block w-[180px] text-center h-[42px] leading-[42px] text-[28px] text-white font-black">
                 DSHOPMALL
               </a>
             </Link>

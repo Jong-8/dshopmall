@@ -230,7 +230,9 @@ export default function CartList() {
           }
         );
         setCookie("guestCartItems", newGuestCartItems, { path: "/" });
-        setCookie("cartCount", newGuestCartItems.length, { path: "/" });
+        setCookie("cartCount", calculateCount(newGuestCartItems), {
+          path: "/",
+        });
       }
     }
   };

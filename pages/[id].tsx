@@ -412,6 +412,7 @@ export default function Item() {
                   ) {
                     // 같은 아이템이면 수량 추가
                     isItem = true;
+                    guestItemsCount += selectedOption.qty;
                     return {
                       ...guestItem,
                       qty: guestItem.qty + selectedOption.qty,
@@ -442,9 +443,9 @@ export default function Item() {
                   seller: seller ? seller : "",
                 };
                 guestItems = guestItems.concat(itemInfos);
+                guestItemsCount += selectedOption.qty;
               }
             }
-            guestItemsCount++;
           });
         } else {
           if (item.item && selectedOptions) {
@@ -480,8 +481,8 @@ export default function Item() {
                 seller: seller ? seller : "",
               };
               guestItems = guestItems.concat(itemInfos);
+              guestItemsCount += selectedOptions[0].qty;
             }
-            guestItemsCount++;
           }
         }
         setCookie("guestCartItems", guestItems, {
@@ -543,8 +544,18 @@ export default function Item() {
                       </div>
                       {/* 상품 가격 */}
                       <div className="text-[22px] mb-8 max-md:text-[16px] max-md:mb-6">
-                        {item.item?.price && item.item?.price.toLocaleString()}
-                        원
+                        {item.item?.regularPrice ? (
+                          <div className="flex">
+                            <div className="text-red-500 mr-2">
+                              {item.item?.price.toLocaleString()}원
+                            </div>
+                            <div className="line-through">
+                              {item.item?.regularPrice.toLocaleString()}원
+                            </div>
+                          </div>
+                        ) : (
+                          <div>{item.item?.price.toLocaleString()}원</div>
+                        )}
                       </div>
                       {/* 배송비 */}
                       <div className="mb-6">
@@ -556,158 +567,17 @@ export default function Item() {
                           </dd>
                         </dl>
                       </div>
-                      {/* 선택 옵션 */}
-                      {item.item?.isSelectOption && (
-                        <div className="pb-6 relative max-md:hidden">
-                          <div
-                            className={`flex border px-5 py-3 ${
-                              open
-                                ? "rounded-t-md border-[#7862a2] text-[#7862a2]"
-                                : "rounded-md border-[#bbb]"
-                            } justify-between items-center cursor-pointer text-sm relative z-10`}
-                            onClick={onOptionBtnClick}
-                          >
-                            <div>선택옵션</div>
-                            <div className={` ${open && "rotate-180"}`}>
-                              <BsChevronDown />
-                            </div>
-                          </div>
-                          {open && (
-                            <div className="border border-[#bbb] px-5 py-2 rounded-b-md absolute bg-white w-[100%] text-sm mt-[-1px]">
-                              {item.selectOptionList &&
-                                item.selectOptionList.options.map(
-                                  (
-                                    selectOption: ShopItemSelectOptDetailType
-                                  ) => (
-                                    <div
-                                      key={selectOption.optionDetailCounter}
-                                      onClick={() =>
-                                        selectOption.stock > 0
-                                          ? onSelectOptionClick(
-                                              selectOption.optionDetailCounter
-                                            )
-                                          : undefined
-                                      }
-                                      className={`cursor-pointer flex py-2 justify-between ${
-                                        selectOption.stock === 0 && "opacity-40"
-                                      }`}
-                                    >
-                                      <div>{selectOption.title}</div>
-                                      <div>
-                                        {selectOption.price.toLocaleString()}원
-                                      </div>
-                                    </div>
-                                  )
-                                )}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                      {/* 수량 */}
-                      {/* 아이템 정보에서 선택옵션 선택시 노출 */}
-                      {item.isSelect && (
-                        <div className="border-t border-[#dfdfdf] max-md:hidden">
-                          <div className="py-4">
-                            {selectedOptions &&
-                              selectedOptions.length > 0 &&
-                              selectedOptions.map((selectedOption, index) => (
-                                <ProductQtyBox
-                                  item={item.item}
-                                  option={selectedOption}
-                                  qty={selectedOption.qty}
-                                  onQtyChange={(e) =>
-                                    onQtyChange(
-                                      e,
-                                      selectedOption.optionDetailCounter
-                                    )
-                                  }
-                                  onMinusClick={() =>
-                                    onMinusClick(
-                                      selectedOption.optionDetailCounter
-                                    )
-                                  }
-                                  onPlusClick={() =>
-                                    onPlusClick(
-                                      selectedOption.optionDetailCounter
-                                    )
-                                  }
-                                  onDeleteClick={() =>
-                                    onDeleteClick(
-                                      selectedOption.optionDetailCounter
-                                    )
-                                  }
-                                  key={index}
-                                />
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                      {/* 최종 가격 */}
-                      <div className="border-t border-[#dfdfdf] max-md:hidden">
-                        <dl className="flex flex-wrap py-10 text-[15px] items-center leading-6">
-                          <dt className="w-[30%] mb-[1.2em] font-bold">
-                            주문 수량
-                          </dt>
-                          <dd className="w-[70%] mb-[1.2em] text-right">
-                            {qty.toLocaleString()} 개
-                          </dd>
-                          <dt className="w-[30%] font-bold">총 상품 금액</dt>
-                          <dd className="w-[70%] text-right text-sm">
-                            <strong className="text-[#7862a2] text-[17px]">
-                              {totalPrice.toLocaleString()}{" "}
-                            </strong>
-                            원
-                          </dd>
-                        </dl>
-                      </div>
-                      {/* 버튼 */}
-                      <div className="flex w-[100%] max-md:hidden">
-                        <div className="mr-5 w-[40%]">
-                          <Button
-                            text="구매하기"
-                            type=""
-                            width="w-[160px] max-lg:w-[100%]"
-                            name="buy"
-                            onClick={onItemSubmit}
-                          />
-                        </div>
-                        <div className="w-[40%]">
-                          <Button
-                            text="장바구니에 담기"
-                            type="submit"
-                            width="w-[160px] max-lg:w-[100%]"
-                            theme="white"
-                            name="cart"
-                            onClick={onItemSubmit}
-                          />
-                        </div>
-                      </div>
-                      {/* 모바일 버튼 */}
-                      <div
-                        className={`fixed bottom-0 left-0 w-[100%] z-[99] rounded-t-[12px] overflow-hidden bg-white md:hidden ${
-                          mobileBtn && "shadow-line"
-                        }`}
-                      >
-                        {/* 모바일 버튼 상단 */}
+                      {item.item.stock > 0 ? (
                         <div>
-                          {/* 모바일 버튼 쇼하이드 버튼 */}
-                          <div
-                            className="flex justify-center py-3 text-xl"
-                            onClick={onMobileBtnClick}
-                          >
-                            <div className={` ${!mobileBtn && "rotate-180"}`}>
-                              <IoIosArrowDown />
-                            </div>
-                          </div>
                           {/* 선택 옵션 */}
-                          {mobileBtn && item.item?.isSelectOption && (
-                            <div className="px-3 bg-white">
+                          {item.item?.isSelectOption && (
+                            <div className="pb-6 relative max-md:hidden">
                               <div
-                                className={`flex border px-3 py-3 ${
+                                className={`flex border px-5 py-3 ${
                                   open
-                                    ? "border-[#7862a2] text-[#7862a2]"
-                                    : "border-[#bbb]"
-                                } rounded-md justify-between items-center cursor-pointer text-sm relative z-10`}
+                                    ? "rounded-t-md border-[#7862a2] text-[#7862a2]"
+                                    : "rounded-md border-[#bbb]"
+                                } justify-between items-center cursor-pointer text-sm relative z-10`}
                                 onClick={onOptionBtnClick}
                               >
                                 <div>선택옵션</div>
@@ -716,12 +586,11 @@ export default function Item() {
                                 </div>
                               </div>
                               {open && (
-                                <div className="pb-2 w-[100%] text-sm max-h-[400px]">
+                                <div className="border border-[#bbb] px-5 py-2 rounded-b-md absolute bg-white w-[100%] text-sm mt-[-1px]">
                                   {item.selectOptionList &&
                                     item.selectOptionList.options.map(
                                       (
-                                        selectOption: ShopItemSelectOptDetailType,
-                                        index: number
+                                        selectOption: ShopItemSelectOptDetailType
                                       ) => (
                                         <div
                                           key={selectOption.optionDetailCounter}
@@ -732,10 +601,7 @@ export default function Item() {
                                                 )
                                               : undefined
                                           }
-                                          className={`cursor-pointer flex py-4 ${
-                                            index !== 0 &&
-                                            "border-t border-t-[#bbb]"
-                                          } justify-between ${
+                                          className={`cursor-pointer flex py-2 justify-between ${
                                             selectOption.stock === 0 &&
                                             "opacity-40"
                                           }`}
@@ -752,103 +618,266 @@ export default function Item() {
                               )}
                             </div>
                           )}
-                        </div>
-                        {!open && (
-                          <>
-                            {/* 수량 */}
-                            {/* 아이템 정보에서 선택옵션 선택시 노출 */}
-                            {mobileBtn && item.isSelect && (
-                              <div className="bg-white">
-                                <div className="pt-2 px-3">
-                                  {selectedOptions &&
-                                    selectedOptions.length > 0 &&
-                                    selectedOptions.map(
-                                      (selectedOption, index) => (
-                                        <ProductQtyBox
-                                          item={item.item}
-                                          option={selectedOption}
-                                          qty={selectedOption.qty}
-                                          onQtyChange={(e) =>
-                                            onQtyChange(
-                                              e,
-                                              selectedOption.optionDetailCounter
-                                            )
-                                          }
-                                          onMinusClick={() =>
-                                            onMinusClick(
-                                              selectedOption.optionDetailCounter
-                                            )
-                                          }
-                                          onPlusClick={() =>
-                                            onPlusClick(
-                                              selectedOption.optionDetailCounter
-                                            )
-                                          }
-                                          onDeleteClick={() =>
-                                            onDeleteClick(
-                                              selectedOption.optionDetailCounter
-                                            )
-                                          }
-                                          key={index}
-                                        />
-                                      )
-                                    )}
-                                </div>
-                              </div>
-                            )}
-                            {/* 최종 가격 */}
-                            {mobileBtn && (
-                              <div className="border-t border-b border-[#dfdfdf] px-3 my-3">
-                                <div className="flex flex-wrap py-4 text-[13px] items-center leading-6 justify-between">
-                                  <div className="flex">
-                                    <div className="font-bold mr-2">
-                                      주문 수량
-                                    </div>
-                                    <div className="text-right">
-                                      {qty.toLocaleString()} 개
-                                    </div>
-                                  </div>
-                                  <div className="flex">
-                                    <div className="font-bold mr-2">
-                                      총 상품 금액
-                                    </div>
-                                    <div className="text-right">
-                                      <strong className="text-[#7862a2] text-[15px]">
-                                        {totalPrice.toLocaleString()}{" "}
-                                      </strong>
-                                      원
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                            {/* 버튼 */}
-                            <div className="flex w-[100%] justify-between pb-3 px-3">
-                              <div className="mr-2 w-[49%]">
-                                <Button
-                                  text="구매하기"
-                                  type=""
-                                  width="w-[160px] max-lg:w-[100%]"
-                                  height="h-[54px] max-md:h-[48px]"
-                                  fontSize="text-sm"
-                                  name="buy"
-                                />
-                              </div>
-                              <div className="w-[49%]">
-                                <Button
-                                  text="장바구니에 담기"
-                                  type="submit"
-                                  width="w-[160px] max-lg:w-[100%]"
-                                  height="h-[54px] max-md:h-[48px]"
-                                  fontSize="text-sm"
-                                  theme="white"
-                                  name="cart"
-                                />
+                          {/* 수량 */}
+                          {/* 아이템 정보에서 선택옵션 선택시 노출 */}
+                          {item.isSelect && (
+                            <div className="border-t border-[#dfdfdf] max-md:hidden">
+                              <div className="py-4">
+                                {selectedOptions &&
+                                  selectedOptions.length > 0 &&
+                                  selectedOptions.map(
+                                    (selectedOption, index) => (
+                                      <ProductQtyBox
+                                        item={item.item}
+                                        option={selectedOption}
+                                        qty={selectedOption.qty}
+                                        onQtyChange={(e) =>
+                                          onQtyChange(
+                                            e,
+                                            selectedOption.optionDetailCounter
+                                          )
+                                        }
+                                        onMinusClick={() =>
+                                          onMinusClick(
+                                            selectedOption.optionDetailCounter
+                                          )
+                                        }
+                                        onPlusClick={() =>
+                                          onPlusClick(
+                                            selectedOption.optionDetailCounter
+                                          )
+                                        }
+                                        onDeleteClick={() =>
+                                          onDeleteClick(
+                                            selectedOption.optionDetailCounter
+                                          )
+                                        }
+                                        key={index}
+                                      />
+                                    )
+                                  )}
                               </div>
                             </div>
-                          </>
-                        )}
-                      </div>
+                          )}
+                          {/* 최종 가격 */}
+                          <div className="border-t border-[#dfdfdf] max-md:hidden">
+                            <dl className="flex flex-wrap py-10 text-[15px] items-center leading-6">
+                              <dt className="w-[30%] mb-[1.2em] font-bold">
+                                주문 수량
+                              </dt>
+                              <dd className="w-[70%] mb-[1.2em] text-right">
+                                {qty.toLocaleString()} 개
+                              </dd>
+                              <dt className="w-[30%] font-bold">
+                                총 상품 금액
+                              </dt>
+                              <dd className="w-[70%] text-right text-sm">
+                                <strong className="text-[#7862a2] text-[17px]">
+                                  {totalPrice.toLocaleString()}{" "}
+                                </strong>
+                                원
+                              </dd>
+                            </dl>
+                          </div>
+                          {/* 버튼 */}
+                          <div className="flex w-[100%] max-md:hidden">
+                            <div className="mr-5 w-[40%]">
+                              <Button
+                                text="구매하기"
+                                type=""
+                                width="w-[160px] max-lg:w-[100%]"
+                                name="buy"
+                                onClick={onItemSubmit}
+                              />
+                            </div>
+                            <div className="w-[40%]">
+                              <Button
+                                text="장바구니에 담기"
+                                type="submit"
+                                width="w-[160px] max-lg:w-[100%]"
+                                theme="white"
+                                name="cart"
+                                onClick={onItemSubmit}
+                              />
+                            </div>
+                          </div>
+                          {/* 모바일 버튼 */}
+                          <div
+                            className={`fixed bottom-0 left-0 w-[100%] z-[99] rounded-t-[12px] overflow-hidden bg-white md:hidden ${
+                              mobileBtn && "shadow-line"
+                            }`}
+                          >
+                            {/* 모바일 버튼 상단 */}
+                            <div>
+                              {/* 모바일 버튼 쇼하이드 버튼 */}
+                              <div
+                                className="flex justify-center py-3 text-xl"
+                                onClick={onMobileBtnClick}
+                              >
+                                <div
+                                  className={` ${!mobileBtn && "rotate-180"}`}
+                                >
+                                  <IoIosArrowDown />
+                                </div>
+                              </div>
+                              {/* 선택 옵션 */}
+                              {mobileBtn && item.item?.isSelectOption && (
+                                <div className="px-3 bg-white">
+                                  <div
+                                    className={`flex border px-3 py-3 ${
+                                      open
+                                        ? "border-[#7862a2] text-[#7862a2]"
+                                        : "border-[#bbb]"
+                                    } rounded-md justify-between items-center cursor-pointer text-sm relative z-10`}
+                                    onClick={onOptionBtnClick}
+                                  >
+                                    <div>선택옵션</div>
+                                    <div className={` ${open && "rotate-180"}`}>
+                                      <BsChevronDown />
+                                    </div>
+                                  </div>
+                                  {open && (
+                                    <div className="pb-2 w-[100%] text-sm max-h-[400px]">
+                                      {item.selectOptionList &&
+                                        item.selectOptionList.options.map(
+                                          (
+                                            selectOption: ShopItemSelectOptDetailType,
+                                            index: number
+                                          ) => (
+                                            <div
+                                              key={
+                                                selectOption.optionDetailCounter
+                                              }
+                                              onClick={() =>
+                                                selectOption.stock > 0
+                                                  ? onSelectOptionClick(
+                                                      selectOption.optionDetailCounter
+                                                    )
+                                                  : undefined
+                                              }
+                                              className={`cursor-pointer flex py-4 ${
+                                                index !== 0 &&
+                                                "border-t border-t-[#bbb]"
+                                              } justify-between ${
+                                                selectOption.stock === 0 &&
+                                                "opacity-40"
+                                              }`}
+                                            >
+                                              <div>{selectOption.title}</div>
+                                              <div>
+                                                {selectOption.price.toLocaleString()}
+                                                원
+                                              </div>
+                                            </div>
+                                          )
+                                        )}
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                            {!open && (
+                              <>
+                                {/* 수량 */}
+                                {/* 아이템 정보에서 선택옵션 선택시 노출 */}
+                                {mobileBtn && item.isSelect && (
+                                  <div className="bg-white">
+                                    <div className="pt-2 px-3">
+                                      {selectedOptions &&
+                                        selectedOptions.length > 0 &&
+                                        selectedOptions.map(
+                                          (selectedOption, index) => (
+                                            <ProductQtyBox
+                                              item={item.item}
+                                              option={selectedOption}
+                                              qty={selectedOption.qty}
+                                              onQtyChange={(e) =>
+                                                onQtyChange(
+                                                  e,
+                                                  selectedOption.optionDetailCounter
+                                                )
+                                              }
+                                              onMinusClick={() =>
+                                                onMinusClick(
+                                                  selectedOption.optionDetailCounter
+                                                )
+                                              }
+                                              onPlusClick={() =>
+                                                onPlusClick(
+                                                  selectedOption.optionDetailCounter
+                                                )
+                                              }
+                                              onDeleteClick={() =>
+                                                onDeleteClick(
+                                                  selectedOption.optionDetailCounter
+                                                )
+                                              }
+                                              key={index}
+                                            />
+                                          )
+                                        )}
+                                    </div>
+                                  </div>
+                                )}
+                                {/* 최종 가격 */}
+                                {mobileBtn && (
+                                  <div className="border-t border-b border-[#dfdfdf] px-3 my-3">
+                                    <div className="flex flex-wrap py-4 text-[13px] items-center leading-6 justify-between">
+                                      <div className="flex">
+                                        <div className="font-bold mr-2">
+                                          주문 수량
+                                        </div>
+                                        <div className="text-right">
+                                          {qty.toLocaleString()} 개
+                                        </div>
+                                      </div>
+                                      <div className="flex">
+                                        <div className="font-bold mr-2">
+                                          총 상품 금액
+                                        </div>
+                                        <div className="text-right">
+                                          <strong className="text-[#7862a2] text-[15px]">
+                                            {totalPrice.toLocaleString()}{" "}
+                                          </strong>
+                                          원
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                                {/* 버튼 */}
+                                <div className="flex w-[100%] justify-between pb-3 px-3">
+                                  <div className="mr-2 w-[49%]">
+                                    <Button
+                                      text="구매하기"
+                                      type=""
+                                      width="w-[160px] max-lg:w-[100%]"
+                                      height="h-[54px] max-md:h-[48px]"
+                                      fontSize="text-sm"
+                                      name="buy"
+                                    />
+                                  </div>
+                                  <div className="w-[49%]">
+                                    <Button
+                                      text="장바구니에 담기"
+                                      type="submit"
+                                      width="w-[160px] max-lg:w-[100%]"
+                                      height="h-[54px] max-md:h-[48px]"
+                                      fontSize="text-sm"
+                                      theme="white"
+                                      name="cart"
+                                    />
+                                  </div>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="border border-red-500 text-center p-4 text-red-500">
+                          품점된 상품입니다.
+                        </div>
+                      )}
                     </form>
                   </div>
                 </div>
