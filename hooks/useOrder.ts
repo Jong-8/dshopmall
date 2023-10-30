@@ -123,8 +123,6 @@ export default function useOrder() {
   ) => {
     const res = await API.order.payComplete(datas);
     if (res.statusCode === 2000) {
-      alert(res.message);
-
       alert(
         payment !== "withoutBankbook"
           ? `결제가 완료되었습니다. ${userInfos.name}`
@@ -147,6 +145,8 @@ export default function useOrder() {
       } else {
         url = `/orderDetails/${res.result.orderInfo.merchant_uid}?name=${userInfos.name}&phone=${userInfos.phone}`;
       }
+
+      console.log(router);
 
       router.push(url);
     } else alert(res.message);
