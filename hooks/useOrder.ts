@@ -91,20 +91,19 @@ export default function useOrder() {
     return result;
   };
 
-  const orderInit = () => {
+  const calculateTotalItemsPrice = () => {
     let totalItemsPrice = 0;
     cookies.buyItem.map((buyItem: buyItemProps) => {
       buyItem.options.selectOptions.map((option: optionProps) => {
         totalItemsPrice = totalItemsPrice + option.price * option?.qty;
       });
     });
+    return totalItemsPrice;
+  };
+
+  const orderInit = () => {
     setBuyItems(cookies.buyItem);
     setBuyItemsData(cookies.buyItemsData);
-    setTotalItemsPrice(totalItemsPrice);
-    setTotalPrice(
-      totalItemsPrice >= 100000 ? totalItemsPrice : totalItemsPrice + 3000
-    );
-    setDeliveryCost(totalItemsPrice >= 100000 ? 0 : 3000);
   };
 
   useEffect(() => {
@@ -131,6 +130,13 @@ export default function useOrder() {
     } else {
       setMyPoint(0);
     }
+
+    const totalItemsPrice = calculateTotalItemsPrice();
+    setTotalItemsPrice(totalItemsPrice);
+    setTotalPrice(
+      totalItemsPrice >= 100000 ? totalItemsPrice : totalItemsPrice + 3000
+    );
+    setDeliveryCost(totalItemsPrice >= 100000 ? 0 : 3000);
 
     if (shopInfo.shopInfo) {
       setBank({
