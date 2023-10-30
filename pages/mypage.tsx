@@ -136,7 +136,7 @@ export default function Mypage() {
       infos = {
         email: mypage.userInfos?.email ?? "",
         marketing: mypage.userInfos?.marketing,
-        deliveryInfo: {
+        deliveryInfo: JSON.stringify({
           zipcode: mypage.userInfos?.deliveryInfo.zipcode,
           address: mypage.userInfos?.deliveryInfo.address,
           detailed: mypage.userInfos?.deliveryInfo.detailed
@@ -145,7 +145,7 @@ export default function Mypage() {
           name: mypage.userInfos?.username,
           phone: `${mypage.userInfos?.phone1}${mypage.userInfos?.phone2}${mypage.userInfos?.phone3}`,
           requests: "-",
-        },
+        }),
       };
     }
 

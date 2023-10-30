@@ -119,14 +119,14 @@ export default function OrderDetails() {
   const onDeliveryInfoSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const datas = {
-      deliveryInfo: {
+      deliveryInfo: JSON.stringify({
         name: orderDetail.deliveryInfo?.userName,
         zipcode: orderDetail.deliveryInfo?.zipcode,
         address: orderDetail.deliveryInfo?.address,
         detailed: orderDetail.deliveryInfo?.detailed,
         phone: `${orderDetail.deliveryInfo?.phone1}${orderDetail.deliveryInfo?.phone2}${orderDetail.deliveryInfo?.phone3}`,
         requests: orderDetail.deliveryInfo?.requests,
-      },
+      }),
       merchant_uid: orderDetail.merchantUid,
     };
     const res = await API.order.orderDeliveryChange(

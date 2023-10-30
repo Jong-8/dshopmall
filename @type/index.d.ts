@@ -198,7 +198,7 @@ declare global {
   };
 
   type ShopOrderDeliveryRequest = {
-    deliveryInfo: DeliveryInfoType;
+    deliveryInfo: string | DeliveryInfoType;
     merchant_uid: string | string[] | undefined;
   };
 
