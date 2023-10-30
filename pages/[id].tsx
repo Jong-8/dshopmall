@@ -403,6 +403,8 @@ export default function Item() {
         let isItem = false;
         let guestItems: ShopCartType[] = cookies.guestCartItems;
         let guestItemsCount = cookies.cartCount;
+        console.log(guestItems);
+        console.log(guestItemsCount);
         // 상품 옵션이 있으면
         if (item.item && item.item.isSelectOption) {
           // 선택된 옵션들 맵핑
@@ -490,6 +492,9 @@ export default function Item() {
             }
           }
         }
+        console.log(guestItems);
+        console.log(guestItemsCount);
+
         setCookie("guestCartItems", guestItems, {
           path: "/",
         });

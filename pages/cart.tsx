@@ -52,7 +52,7 @@ export default function Cart() {
         setCount(0);
       }
     }
-  }, [auth.cartCount, cookies.cartCount, cookies.cartItems]);
+  }, [auth.cartCount, cookies.cartCount]);
 
   const onResetClick = () => {
     removeCookie("cartCount");

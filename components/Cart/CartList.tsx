@@ -276,6 +276,9 @@ export default function CartList() {
       }
     });
 
+    console.log(buyItemsData);
+    return false;
+
     setCookie("buyItem", buyItem, { path: "/" });
     setCookie("buyItemsData", buyItemsData, { path: "/" });
     setCookie("isCart", true, { path: "/" });
