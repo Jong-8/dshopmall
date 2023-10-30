@@ -94,9 +94,7 @@ export default function useOrder() {
   const orderInit = () => {
     let totalItemsPrice = 0;
     cookies.buyItem.map((buyItem: buyItemProps) => {
-      //console.log(buyItem);
       buyItem.options.selectOptions.map((option: optionProps) => {
-        //console.log(option);
         totalItemsPrice = totalItemsPrice + option.price * option?.qty;
       });
     });
@@ -141,7 +139,7 @@ export default function useOrder() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, shopInfo.shopInfo]);
+  }, [auth.token, shopInfo.shopInfo, totalItemsPrice]);
 
   return {
     userInfo,
