@@ -139,7 +139,7 @@ export default function OrderDetails() {
     } else alert(res.message);
   };
 
-  console.log(orderDetail.orderInfos);
+  //console.log(orderDetail.orderInfos);
 
   return (
     <>

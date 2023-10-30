@@ -125,7 +125,7 @@ export default function useOrder() {
     if (res.statusCode === 2000) {
       alert(
         payment !== "withoutBankbook"
-          ? `결제가 완료되었습니다. ${userInfos.name}`
+          ? `결제가 완료되었습니다.`
           : "입금 확인 후 결제가 완료됩니다."
       );
 
@@ -145,8 +145,6 @@ export default function useOrder() {
       } else {
         url = `/orderDetails/${res.result.orderInfo.merchant_uid}?name=${userInfos.name}&phone=${userInfos.phone}`;
       }
-
-      console.log(router);
 
       router.push(url);
     } else alert(res.message);
@@ -226,3 +224,9 @@ export default function useOrder() {
     payComplete,
   };
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
