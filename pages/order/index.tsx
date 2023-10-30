@@ -264,7 +264,7 @@ export default function Order() {
                 merchant_uid: prepareDatas.merchant_uid,
               },
               {
-                name: userName,
+                name: `${userName}1`,
                 phone: `${userPhone1}${userPhone2}${userPhone3}`,
               }
             );

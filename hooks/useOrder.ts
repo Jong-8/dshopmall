@@ -189,7 +189,7 @@ export default function useOrder() {
           merchant_uid: router.query.merchant_uid,
         },
         {
-          name: cookies.buyerInfo.guest_name,
+          name: `${cookies.buyerInfo.guest_name}2`,
           phone: cookies.buyerInfo.guest_phone,
         }
       );
