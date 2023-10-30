@@ -123,11 +123,15 @@ export default function useOrder() {
   ) => {
     const res = await API.order.payComplete(datas);
     if (res.statusCode === 2000) {
+      alert("0");
+
       alert(
         payment !== "withoutBankbook"
           ? `결제가 완료되었습니다. ${userInfos.name}`
           : "입금 확인 후 결제가 완료됩니다."
       );
+
+      alert("1");
 
       // 장바구니 쿠키, store 비우기
       if (cookies.isCart) {
@@ -138,6 +142,8 @@ export default function useOrder() {
       }
       removeCookie("buyerInfo");
 
+      alert("2");
+
       // 회원, 게스트 url 설정
       let url = "";
       if (auth.token) {
@@ -145,6 +151,8 @@ export default function useOrder() {
       } else {
         url = `/orderDetails/${res.result.orderInfo.merchant_uid}?name=${userInfos.name}&phone=${userInfos.phone}`;
       }
+
+      alert("3");
       router.push(url);
     } else alert(res.message);
   };
