@@ -84,7 +84,6 @@ export default function Mypage() {
   };
 
   const onLogoutClick = () => {
-    removeCookie("token");
     mypage.setToken("", {
       username: "",
       role: "",
@@ -106,8 +105,8 @@ export default function Mypage() {
       },
     });
     mypage.setCartCount(0);
+    removeCookie("token");
     removeCookie("cartItems");
-    removeCookie("cartCount");
     removeCookie("cartCount");
     router.replace("/");
   };
@@ -130,12 +129,12 @@ export default function Mypage() {
     let infos = {};
     if (!mypage.userInfos?.deliveryInfo.zipcode) {
       infos = {
-        email: mypage.userInfos?.email,
+        email: mypage.userInfos?.email ?? "",
         marketing: mypage.userInfos?.marketing,
       };
     } else {
       infos = {
-        email: mypage.userInfos?.email,
+        email: mypage.userInfos?.email ?? "",
         marketing: mypage.userInfos?.marketing,
         deliveryInfo: {
           zipcode: mypage.userInfos?.deliveryInfo.zipcode,
@@ -143,8 +142,8 @@ export default function Mypage() {
           detailed: mypage.userInfos?.deliveryInfo.detailed
             ? mypage.userInfos?.deliveryInfo.detailed
             : "-",
-          name: "-",
-          phone: "-",
+          name: mypage.userInfos?.username,
+          phone: `${mypage.userInfos?.phone1}${mypage.userInfos?.phone2}${mypage.userInfos?.phone3}`,
           requests: "-",
         },
       };

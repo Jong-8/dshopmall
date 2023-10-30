@@ -62,5 +62,5 @@ export default function useAuth() {
         }
       }
     }
-  }, [auth.token, cookies.token, cookies.guestCartItems, cookies.cartCount]);
+  }, [auth.token, cookies.token, cookies.guestCartItems]);
 }

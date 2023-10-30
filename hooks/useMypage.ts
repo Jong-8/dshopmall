@@ -2,30 +2,6 @@ import { useState, useEffect } from "react";
 import { store } from "@stores/index";
 import API from "@services/API";
 
-const orderList = [
-  {
-    id: 1,
-    date: "23.09.20",
-    name: "화장품명1",
-    price: 72000,
-    state: "입금 대기",
-  },
-  {
-    id: 2,
-    date: "23.09.18",
-    name: "화장품명2",
-    price: 90000,
-    state: "배송 준비",
-  },
-  {
-    id: 3,
-    date: "23.09.15",
-    name: "화장품명2",
-    price: 90000,
-    state: "주문 완료",
-  },
-];
-
 export default function useMypage() {
   const [orderList, setOrderList] = useState<ShopOrderType[]>();
   const [userInfos, setUserInfos] = useState<mypageUserType>();

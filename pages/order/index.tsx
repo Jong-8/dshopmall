@@ -204,8 +204,8 @@ export default function Order() {
       return false;
     }
 
-    if (usePoint > order.totalItemsPrice + order.deliveryCost) {
-      alert("상품 합계 금액보다 DR포인트를 많이 사용하실 수 없습니다.");
+    if (usePoint >= order.totalItemsPrice) {
+      alert("상품 합계 금액보다 많은 DR포인트를 사용하실 수 없습니다.");
       return false;
     }
 
@@ -225,11 +225,8 @@ export default function Order() {
   };
 
   const onUseTotalPointClick = () => {
-    if (
-      order.myPoint &&
-      order.myPoint > order.totalItemsPrice + order.deliveryCost
-    ) {
-      alert("상품 합계 금액보다 DR포인트를 많이 사용하실 수 없습니다.");
+    if (order.myPoint && order.myPoint >= order.totalItemsPrice) {
+      alert("상품 합계 금액보다 많은 DR포인트를 사용하실 수 없습니다.");
       return false;
     }
 
@@ -667,11 +664,13 @@ export default function Order() {
                 <div className="py-5 border-b border-[#e0e0e0] max-md:py-3 max-md:text-sm">
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>상품 합계</div>
-                    <div>{order.totalItemsPrice.toLocaleString()}원</div>
+                    <div>{order.totalItemsPrice.toLocaleString()} 원</div>
                   </div>
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>배송비</div>
-                    <div>{order.totalItemsPrice >= 100000 ? 0 : "3,000"}원</div>
+                    <div>
+                      {order.totalItemsPrice >= 100000 ? 0 : "3,000"} 원
+                    </div>
                   </div>
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>총 할인 DR</div>

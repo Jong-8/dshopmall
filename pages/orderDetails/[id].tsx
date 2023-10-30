@@ -457,6 +457,22 @@ export default function OrderDetails() {
                         {orderDetail.paymentInfos?.price.toLocaleString()}원
                       </div>
                     </div>
+                    {orderDetail.paymentInfos &&
+                      orderDetail.paymentInfos?.point > 0 && (
+                        <div
+                          className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
+                        >
+                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                            사용 DR포인트
+                          </div>
+                          <div
+                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                          >
+                            {orderDetail.paymentInfos?.point.toLocaleString()}{" "}
+                            DR
+                          </div>
+                        </div>
+                      )}
                     <div
                       className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                     >
