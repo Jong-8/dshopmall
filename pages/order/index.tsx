@@ -2,13 +2,12 @@ import ContentLayout from "@components/Layout/ContentLayout";
 import Footer from "@components/Layout/Footer";
 import Header from "@components/Layout/Header";
 import DaumPostcodeEmbed, { Address } from "react-daum-postcode";
-import { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import Payment from "@components/Order/Payment";
 import AddrRadio from "@components/Order/AddrRadio";
 import useOrder from "@hooks/useOrder";
 import API from "@services/API";
 import { useRouter } from "next/router";
-import { store } from "@stores/index";
 import { useCookies } from "react-cookie";
 
 let IMP: any;

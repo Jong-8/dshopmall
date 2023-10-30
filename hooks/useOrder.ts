@@ -91,19 +91,20 @@ export default function useOrder() {
     return result;
   };
 
-  const calculateTotalItemsPrice = () => {
+  const orderInit = () => {
     let totalItemsPrice = 0;
     cookies.buyItem.map((buyItem: buyItemProps) => {
       buyItem.options.selectOptions.map((option: optionProps) => {
         totalItemsPrice = totalItemsPrice + option.price * option?.qty;
       });
     });
-    return totalItemsPrice;
-  };
-
-  const orderInit = () => {
+    const totalPrice =
+      totalItemsPrice >= 100000 ? totalItemsPrice : totalItemsPrice + 3000;
     setBuyItems(cookies.buyItem);
     setBuyItemsData(cookies.buyItemsData);
+    setTotalItemsPrice(totalItemsPrice);
+    setTotalPrice(totalPrice);
+    setDeliveryCost(totalItemsPrice >= 100000 ? 0 : 3000);
   };
 
   useEffect(() => {
@@ -131,13 +132,6 @@ export default function useOrder() {
       setMyPoint(0);
     }
 
-    const totalItemsPrice = calculateTotalItemsPrice();
-    setTotalItemsPrice(totalItemsPrice);
-    setTotalPrice(
-      totalItemsPrice >= 100000 ? totalItemsPrice : totalItemsPrice + 3000
-    );
-    setDeliveryCost(totalItemsPrice >= 100000 ? 0 : 3000);
-
     if (shopInfo.shopInfo) {
       setBank({
         bankName: shopInfo.shopInfo.bankName,
@@ -145,7 +139,7 @@ export default function useOrder() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, shopInfo.shopInfo, totalPrice]);
+  }, [auth.token, shopInfo.shopInfo]);
 
   return {
     userInfo,

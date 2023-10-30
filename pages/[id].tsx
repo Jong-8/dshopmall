@@ -339,7 +339,6 @@ export default function Item() {
 
     if (e.target.name === "buy") {
       // 바로구매시
-
       const buyItemsData = selectedOptions?.map((selectedOption) => {
         if (item.item) {
           return {
