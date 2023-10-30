@@ -325,6 +325,8 @@ export default function Order() {
       return false;
     }
 
+    console.log(datas);
+
     const res = await API.order.payPrepare(order.auth.token, datas);
     if (res.statusCode === 2000) {
       if (order.payment !== "withoutBankbook") {
