@@ -341,7 +341,7 @@ export default function Order() {
           }
         );
       }
-    } else alert(res.message);
+    } else alert(res.statusCode + " " + res.message);
   };
   return (
     <>

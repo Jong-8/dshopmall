@@ -78,7 +78,7 @@ export default function Item() {
     }
   }, [item.item]);
 
-  console.log(item.selectOptionList);
+  //console.log(item.selectOptionList);
 
   const onImgClick = (url: string) => {
     setMainThumbnail(url);
