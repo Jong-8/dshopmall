@@ -68,6 +68,7 @@ export default function useOrder() {
   const [totalItemsPrice, setTotalItemsPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [deliveryCost, setDeliveryCost] = useState(0);
+  const [btn, setBtn] = useState(false);
   const [bank, setBank] = useState({
     bankName: "",
     bankNumber: "",
@@ -105,6 +106,7 @@ export default function useOrder() {
     setTotalItemsPrice(totalItemsPrice);
     setTotalPrice(totalPrice);
     setDeliveryCost(totalItemsPrice >= 100000 ? 0 : 3000);
+    setBtn(true);
   };
 
   useEffect(() => {
@@ -156,5 +158,6 @@ export default function useOrder() {
     auth,
     bank,
     phoneForm,
+    btn,
   };
 }

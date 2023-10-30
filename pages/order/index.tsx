@@ -369,7 +369,7 @@ export default function Order() {
                     {buyItem.options.selectOptions?.map(
                       (option: optionProps, index: number) => (
                         <div key={index}>
-                          <div className="flex justify-between pb-5 max-md:pb-6">
+                          <div className="flex justify-between pb-5 max-md:pb-3">
                             <div className="w-[160px] rounded-lg overflow-hidden max-md:w-[80px]">
                               <a href={`/${buyItem.counter}`} target="_blank">
                                 <img
@@ -409,7 +409,7 @@ export default function Order() {
                     )}
                   </div>
                 ))}
-                <div className="pt-[30px] flex justify-between items-center border-t border-[#e0e0e0] mt-5 max-md:text-sm max-md:pt-6">
+                <div className="pt-[30px] flex justify-between items-center border-t border-[#e0e0e0] mt-5 max-md:text-sm max-md:pt-6 max-md:mt-0">
                   <div className="font-bold">상품합계</div>
                   <div className="font-bold text-2xl text-[#7c34d2] max-md:text-lg max-md:font-jamsilRegular">
                     {order.totalItemsPrice.toLocaleString()}원
@@ -779,8 +779,12 @@ export default function Order() {
                 </div>
               )}
             </div>
-            <div className="sticky bottom-0 py-4 max-md:pb-0">
-              <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[58px] max-md:leading-[58px] max-md:text-lg">
+            <div
+              className={`${
+                order.btn ? "sticky" : "fixed"
+              } bottom-0 py-4 max-md:pb-0`}
+            >
+              <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[52px] max-md:leading-[52px] max-md:text-lg">
                 {order.totalPrice.toLocaleString()}원{" "}
                 {payment !== "withoutBankbook" ? "결제하기" : "진행하기"}
               </button>
