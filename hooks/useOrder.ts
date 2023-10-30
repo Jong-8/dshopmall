@@ -125,7 +125,7 @@ export default function useOrder() {
     if (res.statusCode === 2000) {
       alert(
         payment !== "withoutBankbook"
-          ? "결제가 완료되었습니다.1"
+          ? `결제가 완료되었습니다. ${userInfo.userName}`
           : "입금 확인 후 결제가 완료됩니다."
       );
 
