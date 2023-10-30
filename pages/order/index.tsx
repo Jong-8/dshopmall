@@ -732,13 +732,12 @@ export default function Order() {
                   <div className="od_input_box">
                     <div className="od_label">입금계좌</div>
                     <div>
-                      <input
-                        type="text"
-                        className="od_input"
+                      <textarea
                         name="depositAccount"
                         value={`${order.bank.bankName}(${order.bank.bankNumber}) 예금주 : ${order.bank.bankHolder}`}
+                        className="od_input resize-none leading-[34px] max-md:!h-[70px] max-md:leading-[24px]"
                         readOnly
-                      />
+                      ></textarea>
                     </div>
                   </div>
                   <div className="od_input_box">
