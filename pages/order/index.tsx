@@ -336,6 +336,26 @@ export default function Order() {
       companyBankDeposit: depositor ?? "",
     };
 
+    if (!userName) {
+      alert("주문자 이름을 입력해주시기 바랍니다.");
+      return false;
+    }
+
+    if (!userPhone1 || !userPhone2 || !userPhone3) {
+      alert("주문자 연락처를 입력해주시기 바랍니다.");
+      return false;
+    }
+
+    if (!addrName) {
+      alert("배송 받는 사람의 이름을 입력해주시기 바랍니다.");
+      return false;
+    }
+
+    if (!addrPhone1 || !addrPhone2 || !addrPhone3) {
+      alert("배송 받는 사람의 연락처를 입력해주시기 바랍니다.");
+      return false;
+    }
+
     const res = await API.order.payPrepare(order.auth.token, datas);
     if (res.statusCode === 2000) {
       if (payment !== "withoutBankbook") {
@@ -352,7 +372,7 @@ export default function Order() {
           }
         );
       }
-    } else alert(res.statusCode + " " + res.message);
+    } else alert(res.message);
   };
   return (
     <>

@@ -220,11 +220,11 @@ export default function OrderDetails() {
                     <div
                       className={`flex border-b border-[#dfdfdf] pb-4 max-md:pb-2 max-md:text-xs`}
                     >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                      <div className="detail_left leading-[45px] max-md:leading-[40px]">
                         주문번호
                       </div>
                       <div
-                        className={`w-[60%] leading-[45px]  max-md:leading-[40px]`}
+                        className={`detail_right leading-[45px]  max-md:leading-[40px]`}
                       >
                         {orderDetail.orderInfos?.merchant_uid}
                       </div>
@@ -232,11 +232,11 @@ export default function OrderDetails() {
                     <div
                       className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                     >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                      <div className="detail_left leading-[45px] max-md:leading-[40px]">
                         주문 일자
                       </div>
                       <div
-                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                        className={`detail_right leading-[45px] max-md:leading-[40px]`}
                       >
                         {orderDetail.orderInfos &&
                           new Date(
@@ -247,11 +247,11 @@ export default function OrderDetails() {
                     <div
                       className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                     >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                      <div className="detail_left leading-[45px] max-md:leading-[40px]">
                         주문 상태
                       </div>
                       <div
-                        className={`w-[60%] leading-[45px] ${
+                        className={`detail_right leading-[45px] ${
                           orderDetail.orderInfos?.state === "입금 대기" &&
                           "flex justify-between items-center"
                         } 
@@ -273,12 +273,14 @@ export default function OrderDetails() {
                               취소 요청
                             </div>
                             {orderCancel && (
-                              <div className="border border-[#333] w-[420px] my-[10px] p-4 bg-white fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-md:w-[calc(100%-1.5rem)]">
-                                <div className="text-base mb-4 flex justify-between items-center">
-                                  <div>취소사유 입력</div>
+                              <div className="border border-[#666] w-[420px] my-[10px] p-4 bg-white fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-md:w-[calc(100%-1.5rem)] max-md:p-3">
+                                <div className="text-base mb-4 flex justify-between items-center max-md:mb-2">
+                                  <div className="max-md:text-sm">
+                                    취소사유 입력
+                                  </div>
                                   <div
                                     onClick={() => setOrderCancel(false)}
-                                    className="cursor-pointer text-xl"
+                                    className="cursor-pointer text-xl max-md:text-lg"
                                   >
                                     <AiOutlineClose />
                                   </div>
@@ -290,9 +292,9 @@ export default function OrderDetails() {
                                       name="cancelReason"
                                       value={cancelReason}
                                       onChange={onCancelReasonChange}
-                                      className="border border-[d8d8d8] w-[68%] p-[10px] h-[42px]"
+                                      className="border border-[#d8d8d8] rounded-[3px] w-[68%] p-[10px] h-[42px]"
                                     />
-                                    <button className="w-[30%] h-[42px] leading-[40px] border border-[#6846b7] text-[#6846b7]">
+                                    <button className="w-[30%] h-[42px] leading-[40px] border border-[#6846b7] text-[#6846b7] rounded-[3px]">
                                       취소하기
                                     </button>
                                   </div>
@@ -308,11 +310,11 @@ export default function OrderDetails() {
                         <div
                           className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                          <div className="detail_left leading-[45px] max-md:leading-[40px]">
                             배송 정보
                           </div>
                           <div
-                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                            className={`detail_right leading-[45px] max-md:leading-[40px]`}
                           >
                             {orderDetail.orderInfos?.deliveryState}
                           </div>
@@ -448,11 +450,11 @@ export default function OrderDetails() {
                     <div
                       className={`flex border-b border-[#dfdfdf] pb-4 max-md:pb-2 max-md:text-xs`}
                     >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                      <div className="detail_left leading-[45px] max-md:leading-[40px]">
                         상품 합계
                       </div>
                       <div
-                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                        className={`detail_right leading-[45px] max-md:leading-[40px]`}
                       >
                         {orderDetail.paymentInfos?.price.toLocaleString()}원
                       </div>
@@ -462,11 +464,11 @@ export default function OrderDetails() {
                         <div
                           className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                          <div className="detail_left leading-[45px] max-md:leading-[40px]">
                             사용 DR포인트
                           </div>
                           <div
-                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                            className={`detail_right leading-[45px] max-md:leading-[40px]`}
                           >
                             {orderDetail.paymentInfos?.point.toLocaleString()}{" "}
                             DR
@@ -476,11 +478,11 @@ export default function OrderDetails() {
                     <div
                       className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                     >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                      <div className="detail_left leading-[45px] max-md:leading-[40px]">
                         배송비
                       </div>
                       <div
-                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                        className={`detail_right leading-[45px] max-md:leading-[40px]`}
                       >
                         {orderDetail.paymentInfos?.deliveryCost &&
                         orderDetail.paymentInfos?.deliveryCost > 0
@@ -492,11 +494,11 @@ export default function OrderDetails() {
                     <div
                       className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                     >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                      <div className="detail_left leading-[45px] max-md:leading-[40px]">
                         결제 금액
                       </div>
                       <div
-                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                        className={`detail_right leading-[45px] max-md:leading-[40px]`}
                       >
                         {`${orderDetail.paymentInfos?.paymentPrice.toLocaleString()}원`}
                       </div>
@@ -504,11 +506,11 @@ export default function OrderDetails() {
                     <div
                       className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                     >
-                      <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                      <div className="detail_left leading-[45px] max-md:leading-[40px]">
                         결제 방법
                       </div>
                       <div
-                        className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                        className={`detail_right leading-[45px] max-md:leading-[40px]`}
                       >
                         {orderDetail.paymentInfos?.payment}
                       </div>
@@ -518,11 +520,11 @@ export default function OrderDetails() {
                         <div
                           className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                          <div className="detail_left leading-[45px] max-md:leading-[40px]">
                             입금 계좌
                           </div>
                           <div
-                            className={`w-[60%] leading-[24px] max-md:leading-[20px]`}
+                            className={`detail_right leading-[24px] max-md:leading-[20px]`}
                           >
                             {`${orderDetail.bank.bankName}(${orderDetail.bank.bankNumber})`}{" "}
                             <br />
@@ -532,11 +534,11 @@ export default function OrderDetails() {
                         <div
                           className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                          <div className="detail_left leading-[45px] max-md:leading-[40px]">
                             입금 기한
                           </div>
                           <div
-                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                            className={`detail_right leading-[45px] max-md:leading-[40px]`}
                           >
                             {`${
                               orderDetail.orderInfos &&
@@ -549,11 +551,11 @@ export default function OrderDetails() {
                         <div
                           className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                          <div className="detail_left leading-[45px] max-md:leading-[40px]">
                             입금자
                           </div>
                           <div
-                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                            className={`detail_right leading-[45px] max-md:leading-[40px]`}
                           >
                             {orderDetail.paymentInfos?.companyBankDeposit}
                           </div>
@@ -561,11 +563,11 @@ export default function OrderDetails() {
                         <div
                           className={`flex border-b border-[#dfdfdf] py-4 max-md:py-2 max-md:text-xs`}
                         >
-                          <div className="w-[40%] leading-[45px] max-md:leading-[40px]">
+                          <div className="detail_left leading-[45px] max-md:leading-[40px]">
                             환불 계좌
                           </div>
                           <div
-                            className={`w-[60%] leading-[45px] max-md:leading-[40px]`}
+                            className={`detail_right leading-[45px] max-md:leading-[40px]`}
                           >
                             {`${orderDetail.paymentInfos?.refund_bank}(${orderDetail.paymentInfos?.refund_account}) ${orderDetail.paymentInfos?.refund_holder}`}
                           </div>
@@ -599,6 +601,12 @@ export default function OrderDetails() {
           width: 100%;
           height: 45px;
         }
+        .detail_left {
+          width: 40%;
+        }
+        .detail_right {
+          width: 60%;
+        }
         @media not all and (min-width: 768px) {
           .odd_title {
             font-size: 18px;
@@ -612,6 +620,12 @@ export default function OrderDetails() {
           }
           .odd_input {
             height: 40px;
+          }
+          .detail_left {
+            width: 30%;
+          }
+          .detail_right {
+            width: 70%;
           }
         }
       `}</style>
