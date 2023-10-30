@@ -139,7 +139,7 @@ export default function useOrder() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, shopInfo.shopInfo, totalItemsPrice]);
+  }, [auth.token, shopInfo.shopInfo, totalPrice]);
 
   return {
     userInfo,
