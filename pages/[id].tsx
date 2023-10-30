@@ -324,12 +324,16 @@ export default function Item() {
   };
 
   const onItemSubmit = (
-    e: BaseSyntheticEvent<MouseEvent<EventTarget & HTMLButtonElement>>
+    e: BaseSyntheticEvent<MouseEvent<EventTarget & HTMLButtonElement>>,
+    type: string = "PC"
   ) => {
     e.preventDefault();
 
     if (item.item?.isSelectOption && selectedOptions?.length === 0) {
       alert("선택옵션을 선택해주세요.");
+      if (type === "MOBILE" && !mobileBtn) {
+        setMobileBtn(!mobileBtn);
+      }
       return false;
     }
 
@@ -857,7 +861,7 @@ export default function Item() {
                                       height="h-[54px] max-md:h-[48px]"
                                       fontSize="text-sm"
                                       name="buy"
-                                      onClick={onItemSubmit}
+                                      onClick={(e) => onItemSubmit(e, "MOBILE")}
                                     />
                                   </div>
                                   <div className="w-[49%]">
@@ -869,7 +873,7 @@ export default function Item() {
                                       fontSize="text-sm"
                                       theme="white"
                                       name="cart"
-                                      onClick={onItemSubmit}
+                                      onClick={(e) => onItemSubmit(e, "MOBILE")}
                                     />
                                   </div>
                                 </div>
