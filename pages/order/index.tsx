@@ -358,7 +358,7 @@ export default function Order() {
     <>
       <Header title="주문하기" description="주문하기" />
       <ContentLayout>
-        <div className="max-w-[660px] m-auto pt-[60px] pb-[70px] max-md:pt-10 max-md:pb-0">
+        <div className="max-w-[660px] m-auto pt-[60px] pb-[70px] max-md:pt-10 max-md:pb-0 relative">
           <form action="" onSubmit={onSubmit}>
             {/* 주문 상품 */}
             <div className="od_box">
@@ -779,7 +779,7 @@ export default function Order() {
                 </div>
               )}
             </div>
-            <div className="sticky bottom-0 pb-4 max-md:pb-0">
+            <div className="absolute top-0 pb-4 max-md:pb-0">
               <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[58px] max-md:leading-[58px] max-md:text-lg">
                 {order.totalPrice.toLocaleString()}원{" "}
                 {payment !== "withoutBankbook" ? "결제하기" : "진행하기"}
