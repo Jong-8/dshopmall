@@ -515,7 +515,7 @@ declare global {
   };
 
   type ShopPayItemType = {
-    counter?: number;
+    counter?: number | string;
     itemCounter: number;
     optionCounter: number;
     optionDetailCounter: number;
