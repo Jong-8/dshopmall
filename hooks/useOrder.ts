@@ -202,7 +202,12 @@ export default function useOrder() {
         }
       );
     }
-  }, [auth.token, shopInfo.shopInfo]);
+  }, [
+    auth.token,
+    shopInfo.shopInfo,
+    router.query.imp_uid,
+    router.query.imp_success,
+  ]);
 
   return {
     userInfo,
