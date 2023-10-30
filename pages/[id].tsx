@@ -857,6 +857,7 @@ export default function Item() {
                                       height="h-[54px] max-md:h-[48px]"
                                       fontSize="text-sm"
                                       name="buy"
+                                      onClick={onItemSubmit}
                                     />
                                   </div>
                                   <div className="w-[49%]">
@@ -868,6 +869,7 @@ export default function Item() {
                                       fontSize="text-sm"
                                       theme="white"
                                       name="cart"
+                                      onClick={onItemSubmit}
                                     />
                                   </div>
                                 </div>
@@ -939,7 +941,7 @@ export default function Item() {
                             } overflow-hidden px-7 bg-[#fbfbfb] tracking-tighter max-md:px-5 max-md:text-xs`}
                           >
                             <div className="py-5 max-md:py-4 max-md:leading-5">
-                              {shopInfo.shopInfo.cancel}
+                              {/* {shopInfo.shopInfo.cancel} */}
                               <div className="">1. 주문취소 가능시점</div>
                               <div className="text-[#888]">
                                 회원은 상품 주문 및 결제 완료 후 주문을 취소할
@@ -969,7 +971,7 @@ export default function Item() {
                             } overflow-hidden px-7 bg-[#fbfbfb] tracking-tighter max-md:px-5 max-md:text-xs`}
                           >
                             <div className="py-5 max-md:py-4 max-md:leading-5">
-                              {shopInfo.shopInfo.delivery}
+                              {/* {shopInfo.shopInfo.delivery} */}
                               <div>1. 배송업체</div>
                               <div className="text-[#888]">CJ 대한통운</div>
                               <div>2. 배송비</div>
@@ -1025,7 +1027,7 @@ export default function Item() {
                             } overflow-hidden px-7 bg-[#fbfbfb] tracking-tighter max-md:px-5 max-md:text-xs`}
                           >
                             <div className="py-5 max-md:py-4 max-md:leading-5">
-                              {shopInfo.shopInfo.returnInfo}
+                              {/* {shopInfo.shopInfo.returnInfo} */}
                               <div>1. 반품 기준</div>
                               <div className="text-[#888]">
                                 ① 미개봉, 미사용 상태(QR 스티커가 뜯어지지 않은
