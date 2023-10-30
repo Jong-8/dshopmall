@@ -7,7 +7,6 @@ import Payment from "@components/Order/Payment";
 import AddrRadio from "@components/Order/AddrRadio";
 import useOrder from "@hooks/useOrder";
 import API from "@services/API";
-import { useRouter } from "next/router";
 import { useCookies } from "react-cookie";
 
 let IMP: any;
@@ -65,20 +64,19 @@ const bankList = [
 export default function Order() {
   const [post, setPost] = useState(false);
   const [point, setPoint] = useState<number | undefined>(undefined);
-  const [payment, setPayment] = useState("creditCard");
   const [deposit, setDeposit] = useState({
     depositor: "",
     refundBank: "",
     refundAccountHolder: "",
     refundAccount: "",
   });
-  const router = useRouter();
   const order = useOrder();
   const [cookies, setCookie, removeCookie] = useCookies([
     "isCart",
     "cartItems",
     "guestCartItems",
     "cartCount",
+    "buyerInfo",
   ]);
   const { userName, userPhone1, userPhone2, userPhone3, userEmail } =
     order.userInfo;
@@ -234,38 +232,7 @@ export default function Order() {
   };
 
   const onPaymentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPayment(e.target.value);
-  };
-
-  const payComplete = async (
-    datas: ShopPayCompleteRequest,
-    userInfos: { name: string; phone: string }
-  ) => {
-    const res = await API.order.payComplete(datas);
-    if (res.statusCode === 2000) {
-      alert(
-        payment !== "withoutBankbook"
-          ? "결제가 완료되었습니다."
-          : "입금 확인 후 결제가 완료됩니다."
-      );
-
-      // 장바구니 쿠키, store 비우기
-      if (cookies.isCart) {
-        setCookie("cartItems", [], { path: "/" });
-        order.auth.setCartCount(0);
-        setCookie("guestCartItems", [], { path: "/" });
-        setCookie("cartCount", 0, { path: "/" });
-      }
-
-      // 회원, 게스트 url 설정
-      let url = "";
-      if (order.auth.token) {
-        url = `/orderDetails/${res.result.orderInfo.merchant_uid}`;
-      } else {
-        url = `/orderDetails/${res.result.orderInfo.merchant_uid}?name=${userInfos.name}&phone=${userInfos.phone}`;
-      }
-      router.push(url);
-    } else alert(res.message);
+    order.setPayment(e.target.value);
   };
 
   const handlePay = async (prepareDatas: ShopPayPrepareResponse) => {
@@ -291,7 +258,7 @@ export default function Order() {
           // callback
           if (rsp.success) {
             // 결제 성공 시 로직
-            payComplete(
+            order.payComplete(
               {
                 imp_uid: rsp.imp_uid,
                 merchant_uid: prepareDatas.merchant_uid,
@@ -332,9 +299,11 @@ export default function Order() {
       refund_bank: refundBank ?? "",
       refund_account: refundAccount ?? "",
       refund_tel: "",
-      companyBank: payment === "withoutBankbook",
+      companyBank: order.payment === "withoutBankbook",
       companyBankDeposit: depositor ?? "",
     };
+
+    setCookie("buyerInfo", datas, { path: "/" });
 
     if (!userName) {
       alert("주문자 이름을 입력해주시기 바랍니다.");
@@ -358,10 +327,10 @@ export default function Order() {
 
     const res = await API.order.payPrepare(order.auth.token, datas);
     if (res.statusCode === 2000) {
-      if (payment !== "withoutBankbook") {
+      if (order.payment !== "withoutBankbook") {
         handlePay(res.result);
       } else {
-        payComplete(
+        order.payComplete(
           {
             imp_uid: "imp15801485",
             merchant_uid: res.result.merchant_uid,
@@ -735,7 +704,7 @@ export default function Order() {
                   onChange={onPaymentChange}
                 />
               </div>
-              {payment === "withoutBankbook" && (
+              {order.payment === "withoutBankbook" && (
                 <div className="pt-6">
                   <div className="od_input_box">
                     <div className="od_label">입금자</div>
@@ -805,7 +774,7 @@ export default function Order() {
             >
               <button className="w-[100%] h-[70px] leading-[70px] text-center bg-[#7865a5] text-white text-xl max-md:h-[52px] max-md:leading-[52px] max-md:text-lg">
                 {order.totalPrice.toLocaleString()}원{" "}
-                {payment !== "withoutBankbook" ? "결제하기" : "진행하기"}
+                {order.payment !== "withoutBankbook" ? "결제하기" : "진행하기"}
               </button>
             </div>
           </form>

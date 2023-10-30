@@ -147,7 +147,7 @@ export default function OrderDetails() {
       <ContentLayout>
         <div className="max-w-[960px] m-auto">
           {/* 주문 상세 정보 레이아웃 */}
-          <div className="px-4 pt-[60px] pb-[70px] max-md:px-3">
+          <div className="px-4 pt-[60px] pb-[70px] max-md:px-3 max-md:pb-[40px]">
             <div className="text-2xl mb-8 font-semibold max-md:text-lg">
               주문 상세 정보
             </div>

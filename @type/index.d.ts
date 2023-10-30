@@ -232,8 +232,8 @@ declare global {
   };
 
   type ShopPayCompleteRequest = {
-    imp_uid: string;
-    merchant_uid: string;
+    imp_uid: string | string[] | undefined;
+    merchant_uid: string | string[] | undefined;
   };
 
   type ShopPayCancelRequest = {
