@@ -9,11 +9,20 @@ export const payPrepare = async (
 ) => {
   const config = apiHeader(token);
   const body = datas;
-  const res = await helper.Post<ShopPayPrepareResponse>(
-    "/user/payments/prepare",
-    body,
-    config
-  );
+  let res;
+
+  if (token) {
+    res = await helper.Post<ShopPayPrepareResponse>(
+      "/user/payments/prepare",
+      body,
+      config
+    );
+  } else {
+    res = await helper.Post<ShopPayPrepareResponse>(
+      "/user/payments/prepare",
+      body
+    );
+  }
   return res;
 };
 
