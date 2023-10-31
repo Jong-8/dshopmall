@@ -142,7 +142,6 @@ export default function useOrder() {
     userInfos: { name: string; phone: string }
   ) => {
     const res = await API.order.payComplete(datas);
-    alert(res.statusCode);
     if (res.statusCode === 2000) {
       if (cookies.buyerInfo) {
         alert(
@@ -166,8 +165,10 @@ export default function useOrder() {
 
   useEffect(() => {
     if (router.query.imp_uid && router.query.imp_success) {
+      alert("1 " + router.query.imp_uid);
       // 모바일 결제 리다이렉트시 imp_uid가 있으면
       if (!router.query.error_msg) {
+        alert("2 " + router.query.imp_uid);
         // 결제 성공시
         payComplete(
           {
