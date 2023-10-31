@@ -69,6 +69,7 @@ export default function useOrder() {
     setBasic: false,
   });
   const [myPoint, setMyPoint] = useState<number | undefined>(undefined);
+  const [point, setPoint] = useState<number | undefined>(undefined);
   const [buyItems, setBuyItems] = useState<buyItemProps[]>();
   const [buyItemsData, setBuyItemsData] = useState<ShopPayItemType[]>();
   const [totalItemsPrice, setTotalItemsPrice] = useState(0);
@@ -180,17 +181,22 @@ export default function useOrder() {
         userPhone3: phoneForm(cookies.buyerInfo.guest_phone, 3),
         userEmail: auth.user.email,
       });
+      const buyerDeliveryInfo = JSON.parse(cookies.buyerInfo.deliveryInfo);
       setAddressInfo({
-        addrName: cookies.buyerInfo.deliveryInfo.name,
-        zipcode: cookies.buyerInfo.deliveryInfo.zipcode,
-        address: cookies.buyerInfo.deliveryInfo.address,
-        detailed: cookies.buyerInfo.deliveryInfo.detailed,
-        addrPhone1: phoneForm(cookies.buyerInfo.deliveryInfo.phone, 1),
-        addrPhone2: phoneForm(cookies.buyerInfo.deliveryInfo.phone, 2),
-        addrPhone3: phoneForm(cookies.buyerInfo.deliveryInfo.phone, 3),
+        addrName: buyerDeliveryInfo.name,
+        zipcode: buyerDeliveryInfo.zipcode,
+        address: buyerDeliveryInfo.address,
+        detailed: buyerDeliveryInfo.detailed,
+        addrPhone1: phoneForm(buyerDeliveryInfo.phone, 1),
+        addrPhone2: phoneForm(buyerDeliveryInfo.phone, 2),
+        addrPhone3: phoneForm(buyerDeliveryInfo.phone, 3),
         setBasic: false,
-        requests: cookies.buyerInfo.deliveryInfo.requests,
+        requests: buyerDeliveryInfo.requests,
       });
+
+      setMyPoint(auth.user.point ?? 0);
+      setPoint(cookies.buyerInfo.point);
+      setTotalPrice(totalItemsPrice + deliveryCost - cookies.buyerInfo.point);
     } else {
       // 처음 진입
       orderInit();
@@ -226,12 +232,7 @@ export default function useOrder() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [
-    auth.token,
-    shopInfo.shopInfo,
-    router.query.imp_uid,
-    router.query.imp_success,
-  ]);
+  }, [auth.token, shopInfo.shopInfo]);
 
   return {
     userInfo,
@@ -253,6 +254,8 @@ export default function useOrder() {
     payment,
     setPayment,
     payComplete,
+    point,
+    setPoint,
   };
 }
 

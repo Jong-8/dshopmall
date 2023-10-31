@@ -63,7 +63,6 @@ const bankList = [
 
 export default function Order() {
   const [post, setPost] = useState(false);
-  const [point, setPoint] = useState<number | undefined>(undefined);
   const [deposit, setDeposit] = useState({
     depositor: "",
     refundBank: "",
@@ -206,7 +205,7 @@ export default function Order() {
       return false;
     }
 
-    setPoint(usePoint);
+    order.setPoint(usePoint);
     order.setTotalPrice(order.totalItemsPrice + order.deliveryCost - usePoint);
   };
 
@@ -227,7 +226,7 @@ export default function Order() {
       return false;
     }
 
-    setPoint(order.myPoint);
+    order.setPoint(order.myPoint);
     order.myPoint && order.setTotalPrice(order.totalItemsPrice - order.myPoint);
   };
 
@@ -255,9 +254,9 @@ export default function Order() {
           auth_mode: "key-in", // 키인결제(일회성 결제)이용시 설정
         },
         (rsp?: any) => {
-          console.log(rsp);
           // callback
           if (rsp.success) {
+            alert(rsp);
             // 결제 성공 시 로직
             order.payComplete(
               {
@@ -295,7 +294,7 @@ export default function Order() {
         phone: `${addrPhone1}${addrPhone2}${addrPhone3}`,
         requests: requests,
       }),
-      point: point ?? 0,
+      point: order.point ?? 0,
       refund_holder: refundAccountHolder ?? "",
       refund_bank: refundBank ?? "",
       refund_account: refundAccount ?? "",
@@ -636,7 +635,7 @@ export default function Order() {
                       <input
                         type="text"
                         className="od_input"
-                        value={point === 0 ? "" : point}
+                        value={order.point === 0 ? "" : order.point}
                         name="point"
                         onChange={onPointChange}
                         placeholder="0"
@@ -663,7 +662,9 @@ export default function Order() {
                   </div>
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>총 할인 DR</div>
-                    <div>{point ? point.toLocaleString() : 0} DR</div>
+                    <div>
+                      {order.point ? order.point.toLocaleString() : 0} DR
+                    </div>
                   </div>
                 </div>
                 <div>
