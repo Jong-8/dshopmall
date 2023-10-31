@@ -47,5 +47,5 @@ export default function orderMobile() {
       imp_uid: router.query.imp_uid,
       merchant_uid: router.query.merchant_uid,
     });
-  }, []);
+  }, [router.query.imp_uid, router.query.merchant_uid]);
 }
