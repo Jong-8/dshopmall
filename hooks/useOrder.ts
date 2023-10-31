@@ -110,12 +110,15 @@ export default function useOrder() {
     });
     const totalPrice =
       totalItemsPrice >= 100000 ? totalItemsPrice : totalItemsPrice + 3000;
+    const deliveryCost = totalItemsPrice >= 100000 ? 0 : 3000;
     setBuyItems(cookies.buyItem);
     setBuyItemsData(cookies.buyItemsData);
     setTotalItemsPrice(totalItemsPrice);
     setTotalPrice(totalPrice);
-    setDeliveryCost(totalItemsPrice >= 100000 ? 0 : 3000);
+    setDeliveryCost(deliveryCost);
     setBtn(true);
+
+    return totalPrice;
   };
 
   const payComplete = async (
@@ -123,21 +126,25 @@ export default function useOrder() {
     userInfos: { name: string; phone: string }
   ) => {
     const res = await API.order.payComplete(datas);
+    alert(res.statusCode);
     if (res.statusCode === 2000) {
-      alert(
-        payment !== "withoutBankbook"
-          ? `결제가 완료되었습니다.`
-          : "입금 확인 후 결제가 완료됩니다."
-      );
+      if (cookies.buyerInfo) {
+        alert(
+          payment !== "withoutBankbook"
+            ? `결제가 완료되었습니다.`
+            : "입금 확인 후 결제가 완료됩니다."
+        );
 
-      // 장바구니 쿠키, store 비우기
-      if (cookies.isCart) {
-        setCookie("cartItems", [], { path: "/" });
-        auth.setCartCount(0);
-        setCookie("guestCartItems", [], { path: "/" });
-        setCookie("cartCount", 0, { path: "/" });
+        // 장바구니 쿠키, store 비우기
+        if (cookies.isCart) {
+          setCookie("cartItems", [], { path: "/" });
+          auth.setCartCount(0);
+          setCookie("guestCartItems", [], { path: "/" });
+          setCookie("cartCount", 0, { path: "/" });
+          removeCookie("isCart");
+        }
+        removeCookie("buyerInfo");
       }
-      removeCookie("buyerInfo");
 
       // 회원, 게스트 url 설정
       let url = "";
@@ -172,7 +179,7 @@ export default function useOrder() {
       }
     } else if (router.query.imp_uid && !router.query.imp_success) {
       // 결제 실패 후 리다이렉트
-      orderInit();
+      const init = orderInit();
 
       setUserInfo({
         userName: cookies.buyerInfo.guest_name,
@@ -181,6 +188,7 @@ export default function useOrder() {
         userPhone3: phoneForm(cookies.buyerInfo.guest_phone, 3),
         userEmail: auth.user.email,
       });
+
       const buyerDeliveryInfo = JSON.parse(cookies.buyerInfo.deliveryInfo);
       setAddressInfo({
         addrName: buyerDeliveryInfo.name,
@@ -196,7 +204,7 @@ export default function useOrder() {
 
       setMyPoint(auth.user.point ?? 0);
       setPoint(cookies.buyerInfo.point);
-      setTotalPrice(totalItemsPrice + deliveryCost - cookies.buyerInfo.point);
+      setTotalPrice(init - cookies.buyerInfo.point);
     } else {
       // 처음 진입
       orderInit();
@@ -232,7 +240,7 @@ export default function useOrder() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, shopInfo.shopInfo]);
+  }, [auth.token, shopInfo.shopInfo, router.query.imp_uid]);
 
   return {
     userInfo,
