@@ -152,7 +152,9 @@ export default function useOrder() {
 
   useEffect(() => {
     if (router.query.imp_uid) {
+      // 모바일 결제 리다이렉트시 imp_uid가 있으면
       if (router.query.imp_success === "true") {
+        // 결제 성공시
         payComplete(
           {
             imp_uid: router.query.imp_uid,
@@ -164,33 +166,58 @@ export default function useOrder() {
           }
         );
       } else {
-        router.back();
+        // 결제 실패시 주문페이지로 리다이렉트
+        router.push("/order");
       }
-    }
-
-    orderInit();
-
-    if (auth.token) {
-      setMyPoint(auth.user.point);
-      setUserInfo({
-        userName: auth.user.name,
-        userPhone1: phoneForm(auth.user.phone, 1),
-        userPhone2: phoneForm(auth.user.phone, 2),
-        userPhone3: phoneForm(auth.user.phone, 3),
-        userEmail: auth.user.email,
-      });
-      setAddressInfo({
-        ...addressInfo,
-        addrName: auth.user.deliveryInfo.name,
-        zipcode: auth.user.deliveryInfo.zipcode,
-        address: auth.user.deliveryInfo.address,
-        detailed: auth.user.deliveryInfo.detailed,
-        addrPhone1: phoneForm(auth.user.deliveryInfo.phone, 1),
-        addrPhone2: phoneForm(auth.user.deliveryInfo.phone, 2),
-        addrPhone3: phoneForm(auth.user.deliveryInfo.phone, 3),
-      });
     } else {
-      setMyPoint(0);
+      // 처음 진입 or 결제 실패 후 리다이렉트
+      orderInit();
+
+      if (cookies.buyerInfo) {
+        // 구매자 정보가 있을 때
+        setUserInfo({
+          userName: cookies.buyerInfo.guest_name,
+          userPhone1: phoneForm(cookies.buyerInfo.guest_phone, 1),
+          userPhone2: phoneForm(cookies.buyerInfo.guest_phone, 2),
+          userPhone3: phoneForm(cookies.buyerInfo.guest_phone, 3),
+          userEmail: auth.user.email,
+        });
+        setAddressInfo({
+          addrName: cookies.buyerInfo.deliveryInfo.name,
+          zipcode: cookies.buyerInfo.deliveryInfo.zipcode,
+          address: cookies.buyerInfo.deliveryInfo.address,
+          detailed: cookies.buyerInfo.deliveryInfo.detailed,
+          addrPhone1: phoneForm(cookies.buyerInfo.deliveryInfo.phone, 1),
+          addrPhone2: phoneForm(cookies.buyerInfo.deliveryInfo.phone, 2),
+          addrPhone3: phoneForm(cookies.buyerInfo.deliveryInfo.phone, 3),
+          setBasic: false,
+          requests: cookies.buyerInfo.deliveryInfo.requests,
+        });
+      } else {
+        // 구매자 정보가 없을 때
+        if (auth.token) {
+          setMyPoint(auth.user.point);
+          setUserInfo({
+            userName: auth.user.name,
+            userPhone1: phoneForm(auth.user.phone, 1),
+            userPhone2: phoneForm(auth.user.phone, 2),
+            userPhone3: phoneForm(auth.user.phone, 3),
+            userEmail: auth.user.email,
+          });
+          setAddressInfo({
+            ...addressInfo,
+            addrName: auth.user.deliveryInfo.name,
+            zipcode: auth.user.deliveryInfo.zipcode,
+            address: auth.user.deliveryInfo.address,
+            detailed: auth.user.deliveryInfo.detailed,
+            addrPhone1: phoneForm(auth.user.deliveryInfo.phone, 1),
+            addrPhone2: phoneForm(auth.user.deliveryInfo.phone, 2),
+            addrPhone3: phoneForm(auth.user.deliveryInfo.phone, 3),
+          });
+        } else {
+          setMyPoint(0);
+        }
+      }
     }
 
     if (shopInfo.shopInfo) {
