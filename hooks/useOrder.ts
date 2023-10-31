@@ -152,7 +152,7 @@ export default function useOrder() {
 
   useEffect(() => {
     if (router.query.imp_uid) {
-      if (router.query.imp_success) {
+      if (router.query.imp_success === "true") {
         payComplete(
           {
             imp_uid: router.query.imp_uid,
