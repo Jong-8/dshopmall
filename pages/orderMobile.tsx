@@ -18,6 +18,8 @@ export default function orderMobile() {
   const order = useOrder();
 
   const payComplete = async (datas: ShopPayCompleteRequest) => {
+    alert(datas.imp_uid);
+    alert(datas.merchant_uid);
     const res = await API.order.payComplete(datas);
     if (res.statusCode === 2000) {
       alert("결제가 완료되었습니다.");
