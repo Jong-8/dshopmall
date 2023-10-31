@@ -18,8 +18,6 @@ export default function orderMobile() {
   const order = useOrder();
 
   const payComplete = async (datas: ShopPayCompleteRequest) => {
-    alert(datas.imp_uid);
-    alert(datas.merchant_uid);
     const res = await API.order.payComplete(datas);
     if (res.statusCode === 2000) {
       alert("결제가 완료되었습니다.");
@@ -49,6 +47,7 @@ export default function orderMobile() {
       // 모바일 결제 리다이렉트시 imp_uid가 있으면
       if (router.query.error_msg) {
         // 결제 실패시 주문페이지로 리다이렉트
+        alert(router.query.error_msg);
         router.push(`/order?imp_uid=${router.query.imp_uid}`);
       } else {
         payComplete({

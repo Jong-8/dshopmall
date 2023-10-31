@@ -191,7 +191,7 @@ export default function Order() {
 
   const onPointChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    const usePoint = Number(value);
+    let usePoint = Number(value);
 
     if (order.myPoint && usePoint > order.myPoint) {
       alert(
@@ -202,7 +202,7 @@ export default function Order() {
 
     if (usePoint >= order.totalItemsPrice) {
       alert("상품 합계 금액보다 많은 DR포인트를 사용하실 수 없습니다.");
-      return false;
+      usePoint = order.totalItemsPrice;
     }
 
     order.setPoint(usePoint);
@@ -223,11 +223,16 @@ export default function Order() {
   const onUseTotalPointClick = () => {
     if (order.myPoint && order.myPoint >= order.totalItemsPrice) {
       alert("상품 합계 금액보다 많은 DR포인트를 사용하실 수 없습니다.");
+      order.setPoint(order.totalItemsPrice);
+      order.myPoint && order.setTotalPrice(order.deliveryCost);
       return false;
     }
 
     order.setPoint(order.myPoint);
-    order.myPoint && order.setTotalPrice(order.totalItemsPrice - order.myPoint);
+    order.myPoint &&
+      order.setTotalPrice(
+        order.totalItemsPrice + order.deliveryCost - order.myPoint
+      );
   };
 
   const onPaymentChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -21,7 +21,11 @@ export default function Header({ title, description }: HeaderProps) {
   const menuRef = useRef<HTMLDivElement>(null);
   const menuBgRef = useRef<HTMLDivElement>(null);
   const auth = store.auth.useToken();
-  const [cookies, setCookie, removeCookie] = useCookies(["cartCount"]);
+  const [cookies, setCookie, removeCookie] = useCookies([
+    "cartCount",
+    "cartItems",
+    "token",
+  ]);
 
   useAuth();
 
@@ -75,6 +79,34 @@ export default function Header({ title, description }: HeaderProps) {
     menuRef.current && menuRef.current.classList.remove("show");
     await sleep(350);
     menuRef.current && menuRef.current.classList.remove("max-md:flex");
+  };
+
+  const onLogoutClick = () => {
+    auth.setToken("", {
+      username: "",
+      role: "",
+      name: "",
+      phone: "",
+      email: "",
+      mycode: "",
+      code: "",
+      profile: "",
+      marketing: false,
+      point: 0,
+      deliveryInfo: {
+        name: "",
+        zipcode: "",
+        address: "",
+        detailed: "",
+        phone: "",
+        requests: "",
+      },
+    });
+    auth.setCartCount(0);
+    removeCookie("token");
+    removeCookie("cartItems");
+    removeCookie("cartCount");
+    router.replace("/");
   };
   return (
     <>
@@ -241,7 +273,7 @@ export default function Header({ title, description }: HeaderProps) {
             </Link>
           </div>
           <div className="flex flex-wrap flex-1 justify-end">
-            <Link href={"/login"}>
+            <Link href={auth.user.username ? "/mypage" : "/login"}>
               <a
                 className={`mr-2 text-[24px] md:hover:text-[#6846b7] ${
                   router.pathname === "/login" ? "active" : ""
@@ -273,12 +305,23 @@ export default function Header({ title, description }: HeaderProps) {
               <AiOutlineClose />
             </div>
             <div className="flex justify-between uppercase px-6 py-5 text-sm text-gray-500">
-              <Link href={"/login"}>
-                <div>login</div>
-              </Link>
-              <Link href={"/signup"}>
-                <div>join us</div>
-              </Link>
+              {auth.user.username ? (
+                <>
+                  <Link href={"/login"}>
+                    <div>login</div>
+                  </Link>
+                  <Link href={"/signup"}>
+                    <div>join us</div>
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div onClick={onLogoutClick}>logout</div>
+                  <Link href={"/mypage"}>
+                    <div>mypage</div>
+                  </Link>
+                </>
+              )}
               <Link href={"/mypage"}>
                 <div>mypage</div>
               </Link>

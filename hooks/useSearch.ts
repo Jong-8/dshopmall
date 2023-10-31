@@ -9,7 +9,10 @@ export default function useSearch(search: string | string[] | undefined) {
   const searchItems = async () => {
     const res = await API.item.search(search);
     if (res.statusCode === 2000) {
-      setItems(res.result.item);
+      const items = res.result.item.filter((item) => {
+        return item.isAvailable;
+      });
+      setItems(items);
       setKeyword(search);
       setKeywordReset(true);
     } else alert(res.message);
