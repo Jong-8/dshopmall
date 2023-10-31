@@ -250,23 +250,20 @@ export default function Order() {
           buyer_addr: prepareDatas.buyer_addr, // 주문자 주소
           buyer_postcode: prepareDatas.buyer_postcode, // 주문자 우편번호
           language: "ko", // en 설정시 영문으로 출력되면 해당 파라미터 생략시 한국어 default
-          m_redirect_url: `http://dshopmall.co.kr/order`,
+          m_redirect_url: `http://dshopmall.co.kr/orderMobile${
+            !order.auth.token &&
+            `?name=${userName}&phone=${userPhone1}${userPhone2}${userPhone3}`
+          }`,
           auth_mode: "key-in", // 키인결제(일회성 결제)이용시 설정
         },
         (rsp?: any) => {
           // callback
           if (rsp.success) {
             // 결제 성공 시 로직
-            order.payComplete(
-              {
-                imp_uid: rsp.imp_uid,
-                merchant_uid: prepareDatas.merchant_uid,
-              },
-              {
-                name: `${userName}`,
-                phone: `${userPhone1}${userPhone2}${userPhone3}`,
-              }
-            );
+            order.payComplete({
+              imp_uid: rsp.imp_uid,
+              merchant_uid: prepareDatas.merchant_uid,
+            });
 
             // 회원, 게스트 url 설정
             order.gotoUrl(
@@ -337,16 +334,10 @@ export default function Order() {
       if (order.payment !== "withoutBankbook") {
         handlePay(res.result);
       } else {
-        order.payComplete(
-          {
-            imp_uid: "imp15801485",
-            merchant_uid: res.result.merchant_uid,
-          },
-          {
-            name: userName,
-            phone: `${userPhone1}${userPhone2}${userPhone3}`,
-          }
-        );
+        order.payComplete({
+          imp_uid: "imp15801485",
+          merchant_uid: res.result.merchant_uid,
+        });
 
         // 회원, 게스트 url 설정
         order.gotoUrl(

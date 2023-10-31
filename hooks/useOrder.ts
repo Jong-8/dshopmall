@@ -137,10 +137,7 @@ export default function useOrder() {
     return totalPrice;
   };
 
-  const payComplete = async (
-    datas: ShopPayCompleteRequest,
-    userInfos: { name: string; phone: string }
-  ) => {
+  const payComplete = async (datas: ShopPayCompleteRequest) => {
     const res = await API.order.payComplete(datas);
     if (res.statusCode === 2000) {
       if (cookies.buyerInfo) {
@@ -165,29 +162,8 @@ export default function useOrder() {
 
   useEffect(() => {
     if (router.query.imp_uid && router.query.imp_success) {
-      alert("1 " + router.query.imp_uid);
       // 모바일 결제 리다이렉트시 imp_uid가 있으면
-      if (!router.query.error_msg) {
-        alert("2 " + router.query.imp_uid);
-        // 결제 성공시
-        payComplete(
-          {
-            imp_uid: router.query.imp_uid,
-            merchant_uid: router.query.merchant_uid,
-          },
-          {
-            name: `${cookies.buyerInfo.guest_name}`,
-            phone: cookies.buyerInfo.guest_phone,
-          }
-        );
-
-        gotoUrl(
-          auth.token,
-          router.query.merchant_uid,
-          cookies.buyerInfo.guest_name,
-          cookies.buyerInfo.guest_phone
-        );
-      } else {
+      if (router.query.error_msg) {
         // 결제 실패시 주문페이지로 리다이렉트
         router.push(`/order?imp_uid=${router.query.imp_uid}`);
       }
@@ -286,9 +262,3 @@ export default function useOrder() {
     gotoUrl,
   };
 }
-
-export const getServerSideProps = async () => {
-  return {
-    props: {},
-  };
-};
