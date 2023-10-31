@@ -164,7 +164,7 @@ export default function useOrder() {
           }
         );
       } else {
-        router.push("/order");
+        router.back();
       }
     }
 
