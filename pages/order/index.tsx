@@ -255,6 +255,7 @@ export default function Order() {
           auth_mode: "key-in", // 키인결제(일회성 결제)이용시 설정
         },
         (rsp?: any) => {
+          console.log(rsp);
           // callback
           if (rsp.success) {
             // 결제 성공 시 로직

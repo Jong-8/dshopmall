@@ -267,7 +267,7 @@ export default function CartList() {
     const buyItemsData = items?.map((item) => {
       if (item) {
         return {
-          counter: item?.counter,
+          counter: auth.token ? item?.counter : "",
           itemCounter: item?.itemCounter,
           optionCounter: item.selectOption?.optionCounter,
           optionDetailCounter: item.selectOption?.optionDetailCounter,

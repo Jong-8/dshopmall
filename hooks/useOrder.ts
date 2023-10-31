@@ -151,7 +151,25 @@ export default function useOrder() {
   };
 
   useEffect(() => {
+    if (router.query.imp_uid) {
+      if (router.query.imp_success) {
+        payComplete(
+          {
+            imp_uid: router.query.imp_uid,
+            merchant_uid: router.query.merchant_uid,
+          },
+          {
+            name: `${cookies.buyerInfo.guest_name}`,
+            phone: cookies.buyerInfo.guest_phone,
+          }
+        );
+      } else {
+        router.push("/order");
+      }
+    }
+
     orderInit();
+
     if (auth.token) {
       setMyPoint(auth.user.point);
       setUserInfo({
@@ -181,19 +199,6 @@ export default function useOrder() {
         bankNumber: shopInfo.shopInfo.bankNumber,
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
-    }
-
-    if (router.query.imp_uid && router.query.imp_success) {
-      payComplete(
-        {
-          imp_uid: router.query.imp_uid,
-          merchant_uid: router.query.merchant_uid,
-        },
-        {
-          name: `${cookies.buyerInfo.guest_name}`,
-          phone: cookies.buyerInfo.guest_phone,
-        }
-      );
     }
   }, [
     auth.token,
