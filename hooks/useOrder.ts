@@ -167,7 +167,7 @@ export default function useOrder() {
   useEffect(() => {
     if (router.query.imp_uid && router.query.imp_success) {
       // 모바일 결제 리다이렉트시 imp_uid가 있으면
-      if (router.query.imp_success === "true") {
+      if (!router.query.error_msg) {
         // 결제 성공시
         payComplete(
           {
@@ -258,6 +258,7 @@ export default function useOrder() {
     shopInfo.shopInfo,
     router.query.imp_uid,
     router.query.imp_success,
+    payComplete,
   ]);
 
   return {
