@@ -101,6 +101,22 @@ export default function useOrder() {
     return result;
   };
 
+  const gotoUrl = (
+    token: string = "",
+    merchant_uid: string | string[] | undefined,
+    name: string | string[] | undefined = "",
+    phone: string | string[] | undefined = ""
+  ) => {
+    let url = "";
+    if (token) {
+      url = `/orderDetails/${merchant_uid}`;
+    } else {
+      url = `/orderDetails/${merchant_uid}?name=${name}&phone=${phone}`;
+    }
+
+    router.push(url);
+  };
+
   const orderInit = () => {
     let totalItemsPrice = 0;
     cookies.buyItem.map((buyItem: buyItemProps) => {
@@ -145,16 +161,6 @@ export default function useOrder() {
         }
         removeCookie("buyerInfo");
       }
-
-      // 회원, 게스트 url 설정
-      let url = "";
-      if (auth.token) {
-        url = `/orderDetails/${res.result.orderInfo.merchant_uid}`;
-      } else {
-        url = `/orderDetails/${res.result.orderInfo.merchant_uid}?name=${userInfos.name}&phone=${userInfos.phone}`;
-      }
-
-      router.push(url);
     } else alert(res.message);
   };
 
@@ -172,6 +178,13 @@ export default function useOrder() {
             name: `${cookies.buyerInfo.guest_name}`,
             phone: cookies.buyerInfo.guest_phone,
           }
+        );
+
+        gotoUrl(
+          auth.token,
+          router.query.merchant_uid,
+          cookies.buyerInfo.guest_name,
+          cookies.buyerInfo.guest_phone
         );
       } else {
         // 결제 실패시 주문페이지로 리다이렉트
@@ -240,7 +253,12 @@ export default function useOrder() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, shopInfo.shopInfo, router.query.imp_uid]);
+  }, [
+    auth.token,
+    shopInfo.shopInfo,
+    router.query.imp_uid,
+    router.query.imp_success,
+  ]);
 
   return {
     userInfo,
@@ -264,6 +282,7 @@ export default function useOrder() {
     payComplete,
     point,
     setPoint,
+    gotoUrl,
   };
 }
 

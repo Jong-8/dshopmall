@@ -256,7 +256,6 @@ export default function Order() {
         (rsp?: any) => {
           // callback
           if (rsp.success) {
-            alert(rsp);
             // 결제 성공 시 로직
             order.payComplete(
               {
@@ -267,6 +266,14 @@ export default function Order() {
                 name: `${userName}`,
                 phone: `${userPhone1}${userPhone2}${userPhone3}`,
               }
+            );
+
+            // 회원, 게스트 url 설정
+            order.gotoUrl(
+              order.auth.token,
+              prepareDatas.merchant_uid,
+              userName,
+              `${userPhone1}${userPhone2}${userPhone3}`
             );
           } else {
             // 결제 실패 시 로직
@@ -339,6 +346,14 @@ export default function Order() {
             name: userName,
             phone: `${userPhone1}${userPhone2}${userPhone3}`,
           }
+        );
+
+        // 회원, 게스트 url 설정
+        order.gotoUrl(
+          order.auth.token,
+          res.result.merchant_uid,
+          userName,
+          `${userPhone1}${userPhone2}${userPhone3}`
         );
       }
     } else alert(res.statusCode + " " + res.message);
