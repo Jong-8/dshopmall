@@ -258,7 +258,6 @@ export default function useOrder() {
     shopInfo.shopInfo,
     router.query.imp_uid,
     router.query.imp_success,
-    payComplete,
   ]);
 
   return {
