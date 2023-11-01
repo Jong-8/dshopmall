@@ -118,15 +118,17 @@ export default function Header({ title, description }: HeaderProps) {
       <header className="border-b-[#999] border-b fixed top-0 left-0 w-[100%] z-[99] bg-white">
         <div className="flex items-center max-w-[1800px] m-auto px-[90px] pt-5 pb-1 max-lg:px-[0] max-md:hidden">
           <div className="flex flex-wrap flex-1 pl-4">
-            {/* <Link href={""}>
+            <Link href={"/"}>
               <a
                 className={`mr-7 text-[15px] hover:text-[#6846b7] ${
-                  router.pathname === "/shop" ? "active" : ""
+                  router.pathname === "/shop" || router.pathname === "/"
+                    ? "active"
+                    : ""
                 }`}
               >
                 SHOP
               </a>
-            </Link> */}
+            </Link>
             <Link href={"/about"}>
               <a
                 className={`mr-7 text-[15px] hover:text-[#6846b7] ${
