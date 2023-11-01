@@ -152,6 +152,7 @@ export default function Mypage() {
     const res = await API.auth.modify(cookies.token, infos);
     if (res.statusCode === 2000) {
       alert("회원 정보가 변경되었습니다.");
+      mypage.setToken(cookies.token, res.result.user);
       router.push("/mypage");
     } else alert(res.message);
   };
