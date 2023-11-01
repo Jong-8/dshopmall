@@ -273,7 +273,7 @@ export default function Header({ title, description }: HeaderProps) {
             </Link>
           </div>
           <div className="flex flex-wrap flex-1 justify-end">
-            <Link href={auth.user.username ? "/mypage" : "/login"}>
+            <Link href={auth.user.username ? "/mypage" : "/login?url=mypage"}>
               <a
                 className={`mr-2 text-[24px] md:hover:text-[#6846b7] ${
                   router.pathname === "/login" ? "active" : ""
@@ -305,7 +305,7 @@ export default function Header({ title, description }: HeaderProps) {
               <AiOutlineClose />
             </div>
             <div className="flex justify-between uppercase px-6 py-5 text-sm text-gray-500">
-              {auth.user.username ? (
+              {!auth.user.username ? (
                 <>
                   <Link href={"/login"}>
                     <div>login</div>
@@ -315,17 +315,14 @@ export default function Header({ title, description }: HeaderProps) {
                   </Link>
                 </>
               ) : (
-                <>
-                  <div onClick={onLogoutClick}>logout</div>
-                  <Link href={"/mypage"}>
-                    <div>mypage</div>
-                  </Link>
-                </>
+                <div onClick={onLogoutClick}>logout</div>
               )}
-              <Link href={"/mypage"}>
+              <Link
+                href={!auth.user.username ? "/login?url=mypage" : "/mypage"}
+              >
                 <div>mypage</div>
               </Link>
-              <Link href={"/login?member=no"}>
+              <Link href={!auth.user.username ? "/checkGuestOrder" : "/mypage"}>
                 <div>order</div>
               </Link>
             </div>
