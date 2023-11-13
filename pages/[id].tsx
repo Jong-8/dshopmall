@@ -564,15 +564,17 @@ export default function Item() {
                         )}
                       </div>
                       {/* 배송비 */}
-                      <div className="mb-6">
-                        <dl className="flex text-[13px] max-md:text-xs">
-                          <dt className="w-[90px] font-bold">배송비</dt>
-                          <dd>
-                            3,000원 (100,000원 이상 구매 시 무료)
-                            <br /> 제주 및 도서 산간 3,000원 추가
-                          </dd>
-                        </dl>
-                      </div>
+                      {item.item?.counter !== 9 && (
+                        <div className="mb-6">
+                          <dl className="flex text-[13px] max-md:text-xs">
+                            <dt className="w-[90px] font-bold">배송비</dt>
+                            <dd>
+                              3,000원 (50,000원 이상 구매 시 무료)
+                              <br /> 제주 및 도서 산간 3,000원 추가
+                            </dd>
+                          </dl>
+                        </div>
+                      )}
                       {item.isStock > 0 ? (
                         <div>
                           {/* 선택 옵션 */}
@@ -980,9 +982,9 @@ export default function Item() {
                               <div className="text-[#888]">CJ 대한통운</div>
                               <div>2. 배송비</div>
                               <div className="text-[#888]">
-                                ① 주문 상품 기준 100,000원 이상 구매 시 무료배송
+                                ① 주문 상품 기준 50,000원 이상 구매 시 무료배송
                                 <br />
-                                ② 주문 상품 기준 100,000원 미만 주문 시 3,000원
+                                ② 주문 상품 기준 50,000원 미만 주문 시 3,000원
                                 배송비 부과 (도서산간 지역 추가비용 없음)
                                 <br />※ 기본 배송비는 변경될 수 있으며 변경될
                                 경우 회사는 상품 대금 결제 시 이를 안내해

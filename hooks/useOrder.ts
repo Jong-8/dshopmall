@@ -85,6 +85,7 @@ export default function useOrder() {
   const router = useRouter();
   const auth = store.auth.useToken();
   const shopInfo = store.shop.useShopInfo();
+  const [onlyTicket, setOnlyTicket] = useState<boolean>(false);
 
   const phoneForm = (num: string | undefined, type: number) => {
     let result = "";
@@ -120,6 +121,9 @@ export default function useOrder() {
   const orderInit = () => {
     let totalItemsPrice = 0;
     cookies.buyItem.map((buyItem: buyItemProps) => {
+      if (cookies.buyItem.length === 1 && buyItem.counter === 9) {
+        setOnlyTicket(true);
+      }
       buyItem.options.selectOptions.map((option: optionProps) => {
         totalItemsPrice = totalItemsPrice + option.price * option?.qty;
       });
@@ -260,5 +264,6 @@ export default function useOrder() {
     point,
     setPoint,
     gotoUrl,
+    onlyTicket,
   };
 }

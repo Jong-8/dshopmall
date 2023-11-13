@@ -482,157 +482,159 @@ export default function Order() {
               </div>
             </div>
             {/* 배송지 */}
-            <div className="od_box">
-              <div className="od_title">배송지</div>
-              <div>
-                <div className="flex mb-5 max-md:mb-3">
-                  <AddrRadio
-                    id="basicAddr"
-                    label="기본 배송지"
-                    defaultChecked={true}
-                    onChange={onDeliverySetChange}
-                  />
-                  <AddrRadio
-                    id="newAddr"
-                    label="신규 입력"
-                    defaultChecked={false}
-                    onChange={onDeliverySetChange}
-                  />
-                </div>
-                <div className="border-b border-[#e0e0e0] pb-8 max-md:pb-6">
-                  <div className="od_input_box">
-                    <div className="od_label">이름</div>
-                    <div>
-                      <input
-                        type="text"
-                        className="od_input"
-                        name="addrName"
-                        value={addrName}
-                        onChange={onAddrChange}
-                      />
-                    </div>
+            {!order.onlyTicket && (
+              <div className="od_box">
+                <div className="od_title">배송지</div>
+                <div>
+                  <div className="flex mb-5 max-md:mb-3">
+                    <AddrRadio
+                      id="basicAddr"
+                      label="기본 배송지"
+                      defaultChecked={true}
+                      onChange={onDeliverySetChange}
+                    />
+                    <AddrRadio
+                      id="newAddr"
+                      label="신규 입력"
+                      defaultChecked={false}
+                      onChange={onDeliverySetChange}
+                    />
                   </div>
-                  <div className="od_input_box">
-                    <div className="od_label">우편번호</div>
-                    <div className="flex justify-between">
-                      <input
-                        type="text"
-                        className="od_input read-only:bg-[#f9f9f9]"
-                        name="zipcode"
-                        value={zipcode}
-                        onChange={onAddrChange}
-                        readOnly
-                      />
-                      <div
-                        className="w-[100px] h-[56px] ml-3 text-center leading-[56px] text-[#7a1cea] border border-[#7a1cea] rounded-[3px] cursor-pointer max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
-                        onClick={onPostClick}
-                      >
-                        검색하기
-                      </div>
-                    </div>
-                    {post && (
-                      <div
-                        id="wrap"
-                        className="border w-[100%] h-[400px] my-[10px] relative"
-                      >
-                        <img
-                          src="//t1.daumcdn.net/postcode/resource/images/close.png"
-                          className="cursor-pointer absolute right-0 top-[-1px] z-10"
-                          onClick={foldDaumPostcode}
-                          alt="접기 버튼"
+                  <div className="border-b border-[#e0e0e0] pb-8 max-md:pb-6">
+                    <div className="od_input_box">
+                      <div className="od_label">이름</div>
+                      <div>
+                        <input
+                          type="text"
+                          className="od_input"
+                          name="addrName"
+                          value={addrName}
+                          onChange={onAddrChange}
                         />
-                        <DaumPostcodeEmbed onComplete={handleComplete} />
                       </div>
-                    )}
-                  </div>
-                  <div className="od_input_box">
-                    <div className="od_label">주소</div>
-                    <div className="mb-3 max-md:mb-2">
-                      <input
-                        type="text"
-                        className="od_input read-only:bg-[#f9f9f9]"
-                        name="address"
-                        value={address}
-                        onChange={onAddrChange}
-                        readOnly
-                      />
                     </div>
-                    <div>
+                    <div className="od_input_box">
+                      <div className="od_label">우편번호</div>
+                      <div className="flex justify-between">
+                        <input
+                          type="text"
+                          className="od_input read-only:bg-[#f9f9f9]"
+                          name="zipcode"
+                          value={zipcode}
+                          onChange={onAddrChange}
+                          readOnly
+                        />
+                        <div
+                          className="w-[100px] h-[56px] ml-3 text-center leading-[56px] text-[#7a1cea] border border-[#7a1cea] rounded-[3px] cursor-pointer max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
+                          onClick={onPostClick}
+                        >
+                          검색하기
+                        </div>
+                      </div>
+                      {post && (
+                        <div
+                          id="wrap"
+                          className="border w-[100%] h-[400px] my-[10px] relative"
+                        >
+                          <img
+                            src="//t1.daumcdn.net/postcode/resource/images/close.png"
+                            className="cursor-pointer absolute right-0 top-[-1px] z-10"
+                            onClick={foldDaumPostcode}
+                            alt="접기 버튼"
+                          />
+                          <DaumPostcodeEmbed onComplete={handleComplete} />
+                        </div>
+                      )}
+                    </div>
+                    <div className="od_input_box">
+                      <div className="od_label">주소</div>
+                      <div className="mb-3 max-md:mb-2">
+                        <input
+                          type="text"
+                          className="od_input read-only:bg-[#f9f9f9]"
+                          name="address"
+                          value={address}
+                          onChange={onAddrChange}
+                          readOnly
+                        />
+                      </div>
+                      <div>
+                        <input
+                          type="text"
+                          className="od_input"
+                          name="detailed"
+                          value={detailed}
+                          onChange={onAddrChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="od_input_box">
+                      <div className="od_label">연락처</div>
+                      <div className="flex justify-between items-center">
+                        <input
+                          type="text"
+                          className="od_input"
+                          minLength={3}
+                          maxLength={3}
+                          name="addrPhone1"
+                          value={addrPhone1}
+                          onChange={onAddrChange}
+                        />
+                        <div className="px-3">-</div>
+                        <input
+                          type="text"
+                          className="od_input"
+                          minLength={3}
+                          maxLength={4}
+                          name="addrPhone2"
+                          value={addrPhone2}
+                          onChange={onAddrChange}
+                        />
+                        <div className="px-3">-</div>
+                        <input
+                          type="text"
+                          className="od_input"
+                          minLength={4}
+                          maxLength={4}
+                          name="addrPhone3"
+                          value={addrPhone3}
+                          onChange={onAddrChange}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center max-md:text-xs">
                       <input
-                        type="text"
-                        className="od_input"
-                        name="detailed"
-                        value={detailed}
+                        type="checkbox"
+                        id="setBasic"
+                        name="setBasic"
+                        className="mr-1 w-[15px] h-[15px] accent-[#7a1cea] max-md:w-[12px] max-md:h-[12px]"
+                        value="1"
                         onChange={onAddrChange}
-                      />
+                      />{" "}
+                      <label htmlFor="setBasic">기본 배송지로 설정하기</label>
                     </div>
                   </div>
-                  <div className="od_input_box">
-                    <div className="od_label">연락처</div>
-                    <div className="flex justify-between items-center">
-                      <input
-                        type="text"
-                        className="od_input"
-                        minLength={3}
-                        maxLength={3}
-                        name="addrPhone1"
-                        value={addrPhone1}
-                        onChange={onAddrChange}
-                      />
-                      <div className="px-3">-</div>
-                      <input
-                        type="text"
-                        className="od_input"
-                        minLength={3}
-                        maxLength={4}
-                        name="addrPhone2"
-                        value={addrPhone2}
-                        onChange={onAddrChange}
-                      />
-                      <div className="px-3">-</div>
-                      <input
-                        type="text"
-                        className="od_input"
-                        minLength={4}
-                        maxLength={4}
-                        name="addrPhone3"
-                        value={addrPhone3}
-                        onChange={onAddrChange}
-                      />
+                  <div className="pt-8 max-md:pt-6">
+                    <div className="od_input_box">
+                      <div className="od_label">배송 시 요청 사항</div>
+                      <div>
+                        <input
+                          type="text"
+                          className="od_input"
+                          name="requests"
+                          value={requests}
+                          onChange={onAddrChange}
+                        />
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center max-md:text-xs">
-                    <input
-                      type="checkbox"
-                      id="setBasic"
-                      name="setBasic"
-                      className="mr-1 w-[15px] h-[15px] accent-[#7a1cea] max-md:w-[12px] max-md:h-[12px]"
-                      value="1"
-                      onChange={onAddrChange}
-                    />{" "}
-                    <label htmlFor="setBasic">기본 배송지로 설정하기</label>
-                  </div>
-                </div>
-                <div className="pt-8 max-md:pt-6">
-                  <div className="od_input_box">
-                    <div className="od_label">배송 시 요청 사항</div>
-                    <div>
-                      <input
-                        type="text"
-                        className="od_input"
-                        name="requests"
-                        value={requests}
-                        onChange={onAddrChange}
-                      />
+                    <div className="mt-6 max-md:mt-4 max-md:text-xs">
+                      제주 및 도서 산간 지역의 배송은 추가 배송비가 발생할 수
+                      있습니다.
                     </div>
-                  </div>
-                  <div className="mt-6 max-md:mt-4 max-md:text-xs">
-                    제주 및 도서 산간 지역의 배송은 추가 배송비가 발생할 수
-                    있습니다.
                   </div>
                 </div>
               </div>
-            </div>
+            )}
             {/* 결제 정보 */}
             <div className="od_box">
               <div className="od_title">결제 정보</div>

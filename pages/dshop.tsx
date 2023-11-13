@@ -25,10 +25,12 @@ export default function Dshop() {
             </div>
             <div className="py-[80px] max-md:pt-[50px] max-md:pb-0">
               <div className="flex flex-wrap">
-                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%]">
-                  <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[100%]">
-                    커뮤니티 이미지
-                  </div>
+                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%] overflow-hidden">
+                  <img
+                    src="/img/dshop_community.png"
+                    alt=""
+                    className="absolute h-[100%] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-[fit-content]"
+                  />
                 </div>
                 <div className="w-[50%] flex items-center justify-center flex-col max-md:w-[100%] max-md:pt-8 max-md:pb-16">
                   <div className="text-xl font-bold mb-3 max-md:text-base">
@@ -43,10 +45,12 @@ export default function Dshop() {
                 </div>
               </div>
               <div className="flex flex-wrap flex-row-reverse">
-                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%]">
-                  <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[100%]">
-                    엔터테인먼트 사업 이미지
-                  </div>
+                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%] overflow-hidden">
+                  <img
+                    src="/img/dshop_enter.png"
+                    alt=""
+                    className="absolute h-[100%] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-[fit-content]"
+                  />
                 </div>
                 <div className="w-[50%] flex items-center justify-center flex-col max-md:w-[100%] max-md:pt-8 max-md:pb-16">
                   <div className="text-xl font-bold mb-3 max-md:text-base">
@@ -61,10 +65,12 @@ export default function Dshop() {
                 </div>
               </div>
               <div className="flex flex-wrap">
-                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%]">
-                  <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[100%]">
-                    쇼핑몰 이미지
-                  </div>
+                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%] overflow-hidden">
+                  <img
+                    src="/img/dshop_shoppingmall.png"
+                    alt=""
+                    className="absolute h-[100%] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-[fit-content]"
+                  />
                 </div>
                 <div className="w-[50%] flex items-center justify-center flex-col max-md:w-[100%] max-md:pt-8 max-md:pb-16">
                   <div className="text-xl font-bold mb-3 max-md:text-base">
@@ -79,10 +85,12 @@ export default function Dshop() {
                 </div>
               </div>
               <div className="flex flex-wrap flex-row-reverse">
-                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%]">
-                  <div className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-[100%]">
-                    예약 서비스 이미지
-                  </div>
+                <div className="w-[50%] h-[524px] bg-gray-600 relative text-lg text-white max-md:w-[100%] max-md:h-[auto] max-md:pt-[100%] overflow-hidden">
+                  <img
+                    src="/img/dshop_reservation.png"
+                    alt=""
+                    className="absolute h-[100%] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-[fit-content]"
+                  />
                 </div>
                 <div className="w-[50%] flex items-center justify-center flex-col max-md:w-[100%] max-md:pt-8 max-md:pb-16">
                   <div className="text-xl font-bold mb-3 max-md:text-base">
