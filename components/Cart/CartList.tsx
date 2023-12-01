@@ -272,6 +272,7 @@ export default function CartList() {
           optionCounter: item.selectOption?.optionCounter,
           optionDetailCounter: item.selectOption?.optionDetailCounter,
           qty: item.qty,
+          seller: item.seller ? item.seller : "",
         };
       }
     });

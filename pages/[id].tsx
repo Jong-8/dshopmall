@@ -346,6 +346,7 @@ export default function Item() {
             optionCounter: item.selectOptionList?.optionCounter,
             optionDetailCounter: selectedOption.optionDetailCounter,
             qty: selectedOption.qty,
+            seller: seller ? seller : "",
           };
         }
       });
