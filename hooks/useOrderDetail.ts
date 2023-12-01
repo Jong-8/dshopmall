@@ -60,6 +60,7 @@ export default function useOrderDetail() {
       };
     }
     const res = await API.order.orderDetail(type, datas, auth.token ?? "");
+    console.log(router.query.id)
     if (res.statusCode === 2000) {
       setOrderItems(res.result.items);
       setDeliveryInfo({
@@ -81,11 +82,13 @@ export default function useOrderDetail() {
         }
       });
     } else alert(res.message);
+    console.log(router.query.id)
   };
 
   useEffect(() => {
     if(!router.isReady) return;
     if(!router.query.id) return;
+    console.log(router.query.id)
 
     setMerchantUid(router.query.id);
     if (auth.token) {
