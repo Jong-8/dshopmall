@@ -44,9 +44,6 @@ export default function Login() {
         });
       } else alert(cartItems.message);
 
-      //console.log(res.result);
-      //console.log(cartItems.result);
-
       setToken(res.result.token, res.result.user);
       setCookie("token", res.result.token, {
         path: "/",
@@ -54,6 +51,7 @@ export default function Login() {
       router.replace(router.query.url ? `/${router.query.url}` : "/");
     } else alert(res.message);
   };
+
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({
@@ -61,6 +59,7 @@ export default function Login() {
       [name]: value,
     });
   };
+
   return (
     <SubLayout title="로그인">
       <form onSubmit={onLoginSubmit}>

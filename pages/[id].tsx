@@ -74,7 +74,7 @@ export default function Item() {
     }
 
     if (router.query.seller) {
-      //setSeller(router.query.seller);
+      setSeller(String(router.query.seller));
     }
   }, [item.item]);
 

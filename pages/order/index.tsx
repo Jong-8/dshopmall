@@ -324,14 +324,16 @@ export default function Order() {
       return false;
     }
 
-    if (!addrName) {
-      alert("배송 받는 사람의 이름을 입력해주시기 바랍니다.");
-      return false;
-    }
+    if (!order.onlyTicket) {
+      if (!addrName) {
+        alert("배송 받는 사람의 이름을 입력해주시기 바랍니다.");
+        return false;
+      }
 
-    if (!addrPhone1 || !addrPhone2 || !addrPhone3) {
-      alert("배송 받는 사람의 연락처를 입력해주시기 바랍니다.");
-      return false;
+      if (!addrPhone1 || !addrPhone2 || !addrPhone3) {
+        alert("배송 받는 사람의 연락처를 입력해주시기 바랍니다.");
+        return false;
+      }
     }
 
     const res = await API.order.payPrepare(order.auth.token, datas);
