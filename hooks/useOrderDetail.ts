@@ -113,3 +113,9 @@ export default function useOrderDetail() {
     isTicket
   };
 }
+
+export const getServerSideProps = async () => {
+  return {
+    props: {},
+  };
+};
