@@ -84,6 +84,8 @@ export default function useOrderDetail() {
   };
 
   useEffect(() => {
+    if(!router.isReady) return;
+
     setMerchantUid(router.query.id);
     if (auth.token) {
       orderData("member", router.query);
@@ -98,7 +100,7 @@ export default function useOrderDetail() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, router.query, shopInfo.shopInfo]);
+  }, [auth.token, router.query, router.isReady, router.query.id, shopInfo.shopInfo]);
 
   return {
     merchantUid,
