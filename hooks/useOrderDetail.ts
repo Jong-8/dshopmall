@@ -61,6 +61,7 @@ export default function useOrderDetail() {
     }
     const res = await API.order.orderDetail(type, datas, auth.token ?? "");
     console.log(router.query.id)
+    console.log(res)
     if (res.statusCode === 2000) {
       setOrderItems(res.result.items);
       setDeliveryInfo({
