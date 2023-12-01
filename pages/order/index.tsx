@@ -311,8 +311,6 @@ export default function Order() {
       companyBank: order.payment === "withoutBankbook",
       companyBankDeposit: depositor ?? "",
     };
-    console.log(datas);
-    return false;
 
     setCookie("buyerInfo", datas, { path: "/" });
 
