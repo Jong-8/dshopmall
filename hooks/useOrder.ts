@@ -144,7 +144,7 @@ export default function useOrder() {
   const payComplete = async (datas: ShopPayCompleteRequest) => {
     const res = await API.order.payComplete(datas);
     if (res.statusCode === 2000) {
-      if (cookies.buyerInfo) {
+      if (cookies.buyerInfo || datas) {
         alert(
           payment !== "withoutBankbook"
             ? `결제가 완료되었습니다.`
