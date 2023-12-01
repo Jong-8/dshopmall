@@ -54,10 +54,6 @@ export default function Cart() {
     }
   }, [auth.cartCount, cookies.cartCount]);
 
-  const onResetClick = () => {
-    removeCookie("cartCount");
-  };
-
   return (
     <>
       <Header title="장바구니" description="장바구니" />

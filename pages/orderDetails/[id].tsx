@@ -489,6 +489,7 @@ export default function OrderDetails() {
                           ? orderDetail.paymentInfos?.deliveryCost.toLocaleString() +
                             "원"
                           : "무료"}
+                        {orderDetail.paymentInfos?.deliveryCost}
                       </div>
                     </div>
                     <div

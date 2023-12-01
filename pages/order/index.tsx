@@ -671,9 +671,7 @@ export default function Order() {
                   </div>
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>배송비</div>
-                    <div>
-                      {order.totalItemsPrice >= 100000 ? 0 : "3,000"} 원
-                    </div>
+                    <div>{order.totalItemsPrice >= 50000 ? 0 : "3,000"} 원</div>
                   </div>
                   <div className="flex justify-between py-4 max-md:py-2">
                     <div>총 할인 DR</div>

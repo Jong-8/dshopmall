@@ -129,8 +129,8 @@ export default function useOrder() {
       });
     });
     const totalPrice =
-      totalItemsPrice >= 100000 ? totalItemsPrice : totalItemsPrice + 3000;
-    const deliveryCost = totalItemsPrice >= 100000 ? 0 : 3000;
+      totalItemsPrice >= 50000 ? totalItemsPrice : totalItemsPrice + 3000;
+    const deliveryCost = totalItemsPrice >= 50000 ? 0 : 3000;
     setBuyItems(cookies.buyItem);
     setBuyItemsData(cookies.buyItemsData);
     setTotalItemsPrice(totalItemsPrice);
