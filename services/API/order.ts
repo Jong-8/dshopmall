@@ -41,9 +41,10 @@ export const orderDetail = async (
   token: string
 ) => {
   const body = datas;
-  const config = apiHeader(token);
   let res;
+  
   if (type === "member") {
+    const config = apiHeader(token);
     res = await helper.Post<ShopOrderDetailResponse>(
       "/user/order/detail",
       body,

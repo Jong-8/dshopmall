@@ -60,6 +60,7 @@ export default function useOrderDetail() {
       };
     }
     const res = await API.order.orderDetail(type, datas, auth.token ?? "");
+    console.log(datas)
     console.log(router.query.id)
     console.log(res)
     if (res.statusCode === 2000) {
