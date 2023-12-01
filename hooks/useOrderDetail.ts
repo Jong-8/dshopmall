@@ -26,6 +26,7 @@ export default function useOrderDetail() {
     bankNumber: "",
     bankHolder: "",
   });
+  const [isTicket, setIsTicket] = useState<boolean>(false);
   const auth = store.auth.useToken();
   const shopInfo = store.shop.useShopInfo();
   const router = useRouter();
@@ -74,6 +75,12 @@ export default function useOrderDetail() {
       });
       setOrderInfos(res.result.orderInfo);
       setPaymentInfos(res.result.paymentInfo);
+
+      res.result.items.map((item) => {
+        if (item.counter === 9) {
+          setIsTicket(true);
+        }
+      });
     } else alert(res.message);
   };
 
@@ -103,5 +110,6 @@ export default function useOrderDetail() {
     router,
     auth,
     bank,
+    isTicket
   };
 }

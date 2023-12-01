@@ -139,8 +139,6 @@ export default function OrderDetails() {
     } else alert(res.message);
   };
 
-  //console.log(orderDetail.orderInfos);
-
   return (
     <>
       <Header title="주문 상세 정보" description="주문 상세 정보" />
@@ -322,126 +320,129 @@ export default function OrderDetails() {
                       )}
                   </div>
                 </div>
-                <div className="max-md:mb-10">
-                  <div className="odd_title">배송지 정보</div>
-                  <div className="text-sm">
-                    <form action="" onSubmit={onDeliveryInfoSubmit}>
-                      <div className="odd_input_box">
-                        <div className="odd_label">이름</div>
-                        <div>
-                          <input
-                            type="text"
-                            className="odd_input"
-                            name="userName"
-                            value={orderDetail.deliveryInfo?.userName}
-                            onChange={onDeliveryInfoChange}
-                          />
-                        </div>
-                      </div>
-                      <div className="odd_input_box">
-                        <div className="odd_label">우편번호</div>
-                        <div className="flex justify-between">
-                          <input
-                            type="text"
-                            className="odd_input read-only:bg-[#f9f9f9]"
-                            value={orderDetail.deliveryInfo?.zipcode}
-                            readOnly
-                          />
-                          <div
-                            className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
-                            onClick={onPostClick}
-                          >
-                            검색하기
-                          </div>
-                        </div>
-                        {post && (
-                          <div
-                            id="wrap"
-                            className="border border-[#333] w-[420px] h-[402px] my-[10px] fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-md:w-[calc(100%-1.5rem)]"
-                          >
-                            <img
-                              src="//t1.daumcdn.net/postcode/resource/images/close.png"
-                              className="cursor-pointer absolute right-0 top-[-1px] z-10"
-                              onClick={foldDaumPostcode}
-                              alt="접기 버튼"
+                {!orderDetail.isTicket && (
+                  <div className="max-md:mb-10">
+                    <div className="odd_title">배송지 정보</div>
+                    <div className="text-sm">
+                      <form action="" onSubmit={onDeliveryInfoSubmit}>
+                        <div className="odd_input_box">
+                          <div className="odd_label">이름</div>
+                          <div>
+                            <input
+                              type="text"
+                              className="odd_input"
+                              name="userName"
+                              value={orderDetail.deliveryInfo?.userName}
+                              onChange={onDeliveryInfoChange}
                             />
-                            <DaumPostcodeEmbed onComplete={handleComplete} />
                           </div>
-                        )}
-                      </div>
-                      <div className="odd_input_box">
-                        <div className="odd_label">주소</div>
-                        <div className="mb-3 max-md:mb-2">
-                          <input
-                            type="text"
-                            className="odd_input read-only:bg-[#f9f9f9]"
-                            value={orderDetail.deliveryInfo?.address}
-                            readOnly
-                          />
                         </div>
-                        <div>
-                          <input
-                            type="text"
-                            className="odd_input"
-                            name="detailed"
-                            value={orderDetail.deliveryInfo?.detailed}
-                            onChange={onDeliveryInfoChange}
-                          />
+                        <div className="odd_input_box">
+                          <div className="odd_label">우편번호</div>
+                          <div className="flex justify-between">
+                            <input
+                              type="text"
+                              className="odd_input read-only:bg-[#f9f9f9]"
+                              value={orderDetail.deliveryInfo?.zipcode}
+                              readOnly
+                            />
+                            <div
+                              className="w-[140px] h-[45px] ml-3 text-center leading-[45px] text-[#6846b7] border border-[#6846b7] rounded-[23px] cursor-pointer md:hover:bg-[#6846b7] md:hover:text-white ease-in-out duration-300 max-md:h-[40px] max-md:leading-[40px] max-md:text-xs"
+                              onClick={onPostClick}
+                            >
+                              검색하기
+                            </div>
+                          </div>
+                          {post && (
+                            <div
+                              id="wrap"
+                              className="border border-[#333] w-[420px] h-[402px] my-[10px] fixed top-[40%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-md:w-[calc(100%-1.5rem)]"
+                            >
+                              <img
+                                src="//t1.daumcdn.net/postcode/resource/images/close.png"
+                                className="cursor-pointer absolute right-0 top-[-1px] z-10"
+                                onClick={foldDaumPostcode}
+                                alt="접기 버튼"
+                              />
+                              <DaumPostcodeEmbed onComplete={handleComplete} />
+                            </div>
+                          )}
                         </div>
-                      </div>
-                      <div className="odd_input_box">
-                        <div className="odd_label">휴대폰 번호</div>
-                        <div className="flex justify-between items-center">
-                          <input
-                            type="number"
-                            className="odd_input"
-                            name="phone1"
-                            value={orderDetail.deliveryInfo?.phone1}
-                            onChange={onDeliveryInfoChange}
-                            minLength={3}
-                            maxLength={3}
-                          />
-                          <div className="px-3">-</div>
-                          <input
-                            type="number"
-                            className="odd_input"
-                            name="phone2"
-                            value={orderDetail.deliveryInfo?.phone2}
-                            onChange={onDeliveryInfoChange}
-                            minLength={3}
-                            maxLength={4}
-                          />
-                          <div className="px-3">-</div>
-                          <input
-                            type="number"
-                            className="odd_input"
-                            name="phone3"
-                            value={orderDetail.deliveryInfo?.phone3}
-                            onChange={onDeliveryInfoChange}
-                            minLength={4}
-                            maxLength={4}
-                          />
+                        <div className="odd_input_box">
+                          <div className="odd_label">주소</div>
+                          <div className="mb-3 max-md:mb-2">
+                            <input
+                              type="text"
+                              className="odd_input read-only:bg-[#f9f9f9]"
+                              value={orderDetail.deliveryInfo?.address}
+                              readOnly
+                            />
+                          </div>
+                          <div>
+                            <input
+                              type="text"
+                              className="odd_input"
+                              name="detailed"
+                              value={orderDetail.deliveryInfo?.detailed}
+                              onChange={onDeliveryInfoChange}
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div className="odd_input_box">
-                        <div className="odd_label">배송 시 요청 사항</div>
-                        <div>
-                          <input
-                            type="text"
-                            className="odd_input"
-                            name="requests"
-                            value={orderDetail.deliveryInfo?.requests}
-                            onChange={onDeliveryInfoChange}
-                          />
+                        <div className="odd_input_box">
+                          <div className="odd_label">휴대폰 번호</div>
+                          <div className="flex justify-between items-center">
+                            <input
+                              type="number"
+                              className="odd_input"
+                              name="phone1"
+                              value={orderDetail.deliveryInfo?.phone1}
+                              onChange={onDeliveryInfoChange}
+                              minLength={3}
+                              maxLength={3}
+                            />
+                            <div className="px-3">-</div>
+                            <input
+                              type="number"
+                              className="odd_input"
+                              name="phone2"
+                              value={orderDetail.deliveryInfo?.phone2}
+                              onChange={onDeliveryInfoChange}
+                              minLength={3}
+                              maxLength={4}
+                            />
+                            <div className="px-3">-</div>
+                            <input
+                              type="number"
+                              className="odd_input"
+                              name="phone3"
+                              value={orderDetail.deliveryInfo?.phone3}
+                              onChange={onDeliveryInfoChange}
+                              minLength={4}
+                              maxLength={4}
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div className="text-center mt-10">
-                        <Button text="변경 사항 저장하기" type="submit" />
-                      </div>
-                    </form>
+                        <div className="odd_input_box">
+                          <div className="odd_label">배송 시 요청 사항</div>
+                          <div>
+                            <input
+                              type="text"
+                              className="odd_input"
+                              name="requests"
+                              value={orderDetail.deliveryInfo?.requests}
+                              onChange={onDeliveryInfoChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="text-center mt-10">
+                          <Button text="변경 사항 저장하기" type="submit" />
+                        </div>
+                      </form>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
+
               {/* 주문 상세 정보 하단 오른쪽 컨텐츠 */}
               <div className="w-[45%] max-md:w-[100%]">
                 <div>
@@ -489,7 +490,6 @@ export default function OrderDetails() {
                           ? orderDetail.paymentInfos?.deliveryCost.toLocaleString() +
                             "원"
                           : "무료"}
-                        {orderDetail.paymentInfos?.deliveryCost}
                       </div>
                     </div>
                     <div

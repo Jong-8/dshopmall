@@ -73,8 +73,8 @@ export default function Item() {
       setMainThumbnail(item.item.thumbnailUrl);
     }
 
-    if (router.query.seller) {
-      setSeller(String(router.query.seller));
+    if (router.query.code) {
+      setSeller(String(router.query.code));
     }
   }, [item.item]);
 
