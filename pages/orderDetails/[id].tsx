@@ -60,7 +60,7 @@ export default function OrderDetails() {
       deliveryFee += orderItem.price * orderItem.qty;
     });
 
-    return deliveryFee > 100000 ? "무료" : "3,000원";
+    return deliveryFee > 50000 ? "무료" : "3,000원";
   };
 
   const onDeliveryInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
