@@ -47,7 +47,6 @@ export default function useOrderDetail() {
   };
 
   const orderData = async (type: string, query: ParsedUrlQuery) => {
-    setMerchantUid(query.id);
     let datas;
     if (type === "member") {
       datas = {
@@ -85,6 +84,7 @@ export default function useOrderDetail() {
   };
 
   useEffect(() => {
+    setMerchantUid(router.query.id);
     if (auth.token) {
       orderData("member", router.query);
     } else {
