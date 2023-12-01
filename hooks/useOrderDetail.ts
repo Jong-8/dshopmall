@@ -98,7 +98,7 @@ export default function useOrderDetail() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, router.query.id, shopInfo.shopInfo]);
+  }, [auth.token, router.query, shopInfo.shopInfo]);
 
   return {
     merchantUid,
