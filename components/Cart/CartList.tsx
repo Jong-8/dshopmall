@@ -60,7 +60,7 @@ export default function CartList() {
     setCookie("cartCount", calculateCount(cartItems), { path: "/" });
     cart.setCart(cartItems);
     const totalPrice = calculateTotal(cartItems);
-    if (totalPrice > 100000) {
+    if (totalPrice > 50000) {
       setDeliveryFee(0);
     } else {
       setDeliveryFee(3000);
@@ -86,7 +86,7 @@ export default function CartList() {
       }
     }
 
-    if (totalPrice > 100000) {
+    if (totalPrice > 50000) {
       setDeliveryFee(0);
     } else {
       setDeliveryFee(3000);
@@ -385,7 +385,7 @@ export default function CartList() {
           <div className="flex-[1] flex justify-center items-center flex-col max-md:flex-auto max-md:w-[100%] max-md:py-5 max-md:border-t max-md:border-[#ccc]">
             {deliveryFee > 0 ? `${deliveryFee.toLocaleString()}원` : "무료"}
             <span className="block mt-1 text-sm text-[#999]">
-              100,000원 이상 구매 시 무료
+              50,000원 이상 구매 시 무료
             </span>
           </div>
         </div>
