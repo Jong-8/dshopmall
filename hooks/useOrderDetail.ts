@@ -85,6 +85,7 @@ export default function useOrderDetail() {
 
   useEffect(() => {
     if(!router.isReady) return;
+    if(!router.query.id) return;
 
     setMerchantUid(router.query.id);
     if (auth.token) {
