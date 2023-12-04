@@ -88,10 +88,12 @@ export default function useOrderDetail() {
     if (!router.query.id) return;
 
     setMerchantUid(router.query.id);
+
+    let setOrderData: any;
     if (auth.token) {
-      orderData("member", router.query);
+      setOrderData = setTimeout(() => orderData("member", router.query), 1000);
     } else {
-      orderData("guest", router.query);
+      setOrderData = setTimeout(() => orderData("guest", router.query), 1000);
     }
 
     if (shopInfo.shopInfo) {
@@ -101,6 +103,10 @@ export default function useOrderDetail() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
+
+    return () => {
+      clearTimeout(setOrderData);
+    };
   }, [
     auth.token,
     router.query,
