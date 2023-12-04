@@ -7,11 +7,11 @@ export const payPrepare = async (
   token: string,
   datas: ShopPayPrepareRequest
 ) => {
-  const config = apiHeader(token);
   const body = datas;
   let res;
 
   if (token) {
+    const config = apiHeader(token);
     res = await helper.Post<ShopPayPrepareResponse>(
       "/user/payments/prepare",
       body,
@@ -41,9 +41,10 @@ export const orderDetail = async (
   token: string
 ) => {
   const body = datas;
-  const config = apiHeader(token);
   let res;
+  
   if (type === "member") {
+    const config = apiHeader(token);
     res = await helper.Post<ShopOrderDetailResponse>(
       "/user/order/detail",
       body,
@@ -81,9 +82,9 @@ export const orderCancel = async (
   token: string
 ) => {
   const body = datas;
-  const config = apiHeader(token);
   let res;
   if (type === "member") {
+    const config = apiHeader(token);
     res = await helper.Post<ShopOrderDetailResponse>(
       "/user/payments/cancel",
       body,
