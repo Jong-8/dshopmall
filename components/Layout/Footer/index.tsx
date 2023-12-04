@@ -90,7 +90,8 @@ export default function Footer() {
         <div className="text-center">
           <div className="flex justify-center flex-wrap">
             <p className="max-lg:w-[100%]">
-              고객센터: {tel} <span className="px-1 max-lg:hidden">|</span>
+              고객센터: 02-6952-3250{" "}
+              <span className="px-1 max-lg:hidden">|</span>
             </p>
             <p className="max-lg:w-[100%]">
               운영시간: {operatingTime} <span className="px-1">|</span>
