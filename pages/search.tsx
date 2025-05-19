@@ -86,32 +86,24 @@ export default function Search() {
                       <div className="w-[101%] h-[101%] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] hidden md:group-hover:flex justify-center items-center flex-col bg-white/[.7] text-lg">
                         <div>{item.title}</div>
                         <div>
-                          {item.isAvailable ? (
                             <div>
-                              {item.regularPrice ? (
+                              {item.price ? (
                                 <div className="flex">
                                   <div className="text-red-500 mr-2">
                                     {item.price.toLocaleString()}원
                                   </div>
                                   <div className="line-through">
-                                    {item.regularPrice.toLocaleString()}원
+                                    {item.price.toLocaleString()}원
                                   </div>
                                 </div>
                               ) : (
                                 <div>
-                                  {item.isAvailable ? (
-                                    `${item.price.toLocaleString()}원`
-                                  ) : (
-                                    <div className="text-red-500">
-                                      품절된 상품
-                                    </div>
-                                  )}
+                                  <div className="text-red-500">
+                                    품절된 상품
+                                  </div>
                                 </div>
                               )}
                             </div>
-                          ) : (
-                            <div className="text-red-500">품절된 상품</div>
-                          )}
                         </div>
                       </div>
                     </a>
