@@ -2,7 +2,7 @@
 /* 메인의 전체 상품 리스트를 받아오는 api */
 const itemList = [
   {
-    counter: 1,
+    id: 1,
     title: "9:35 발라또 퍼플 세럼",
     price: 57000,
     category: "cosmetics",
@@ -18,7 +18,7 @@ const itemList = [
       '<img src="https://www.935.co.kr/upload/product/20230526160302415015.JPG" alt="9:35 발라또 퍼플 세럼 설명" />',
   },
   {
-    counter: 2,
+    id: 2,
     title: "9:35 발라또 퍼플 오일미스트",
     price: 66000,
     category: "cosmetics",
@@ -34,7 +34,7 @@ const itemList = [
       '<img src="https://www.935.co.kr/upload/product/20230526160813261200.JPG" alt="9:35 발라또 퍼플 오일미스트 설명" />',
   },
   {
-    counter: 3,
+    id: 3,
     title: "9:35 발라또 퍼플 부스터",
     price: 42000,
     category: "cosmetics",
@@ -50,7 +50,7 @@ const itemList = [
       '<img src="https://www.935.co.kr/upload/product/20230526160320124504.JPG" alt="9:35 발라또 퍼플 부스터 설명" />',
   },
   {
-    counter: 4,
+    id: 4,
     title: "9:35 화이트닝 토마토 미백앰플",
     price: 99000,
     category: "cosmetics",
@@ -66,7 +66,7 @@ const itemList = [
       '<img src="https://www.935.co.kr/upload/product/20230526160727534524.JPG" alt="9:35 화이트닝 토마토 미백앰플 설명" />',
   },
   {
-    counter: 5,
+    id: 5,
     title: "9시 35분 멀티비타민미네랄",
     price: 37000,
     category: "etc",
@@ -82,7 +82,7 @@ const itemList = [
       '<img src="https://www.935.co.kr/upload/product/20230403090441144670.JPG" alt="9:35 멀티비타민미네랄 설명" />',
   },
   {
-    counter: 6,
+    id: 6,
     title: "9시 35분 콜라겐 파우더",
     price: 37000,
     category: "etc",
@@ -101,7 +101,7 @@ const itemList = [
 
 /* 카테고리 리스트 */
 /* 메인의 카테고리 리스트를 받아오는 api */
-const category:ShopItemCategoryType[] = [{name: "all", counter: 1}, {name: "cosmetics", counter: 2}, {name: "etc", counter: 3}];
+const categories = ["all", "cosmetics", "etc"];
 
 /* 선택옵션 리스트 */
 /* 상품상세페이지에서 해당 상품의 선택옵션을 받아오는 api */
@@ -193,4 +193,4 @@ const cartItems = [
   },
 ];
 
-export { itemList, category, selectOptions, cartItems };
+export { itemList, categories, selectOptions, cartItems };
