@@ -44,6 +44,7 @@ export default function Item() {
     "guestCartItems",
     "cartCount",
     "isCart",
+    "seller",
   ]);
   const auth = store.auth.useToken();
 
@@ -75,6 +76,11 @@ export default function Item() {
 
     if (router.query.code) {
       setSeller(String(router.query.code));
+      setCookie("seller", String(router.query.code), { path: "/" });
+    } else {
+      if (cookies.seller) {
+        setSeller(cookies.seller);
+      }
     }
   }, [item.item]);
 

@@ -33,6 +33,7 @@ export default function useOrder() {
     "cartCount",
     "buyerInfo",
     "isCart",
+    "seller",
   ]);
   const [userInfo, setUserInfo] = useState<{
     userName: string;
@@ -160,6 +161,7 @@ export default function useOrder() {
           removeCookie("isCart");
         }
         removeCookie("buyerInfo");
+        removeCookie("seller");
       }
     } else alert(res.message);
   };

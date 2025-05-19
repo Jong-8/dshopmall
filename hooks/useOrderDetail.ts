@@ -60,9 +60,6 @@ export default function useOrderDetail() {
       };
     }
     const res = await API.order.orderDetail(type, datas, auth.token ?? "");
-    console.log(datas)
-    console.log(router.query.id)
-    console.log(res)
     if (res.statusCode === 2000) {
       setOrderItems(res.result.items);
       setDeliveryInfo({
@@ -84,19 +81,19 @@ export default function useOrderDetail() {
         }
       });
     } else alert(res.message);
-    console.log(router.query.id)
   };
 
   useEffect(() => {
-    if(!router.isReady) return;
-    if(!router.query.id) return;
-    console.log(router.query.id)
+    if (!router.isReady) return;
+    if (!router.query.id) return;
 
     setMerchantUid(router.query.id);
+
+    let setOrderData: any;
     if (auth.token) {
-      orderData("member", router.query);
+      setOrderData = setTimeout(() => orderData("member", router.query), 1000);
     } else {
-      orderData("guest", router.query);
+      setOrderData = setTimeout(() => orderData("guest", router.query), 1000);
     }
 
     if (shopInfo.shopInfo) {
@@ -106,7 +103,17 @@ export default function useOrderDetail() {
         bankHolder: shopInfo.shopInfo.bankHolder,
       });
     }
-  }, [auth.token, router.query, router.isReady, router.query.id, shopInfo.shopInfo]);
+
+    return () => {
+      clearTimeout(setOrderData);
+    };
+  }, [
+    auth.token,
+    router.query,
+    router.isReady,
+    router.query.id,
+    shopInfo.shopInfo,
+  ]);
 
   return {
     merchantUid,
@@ -118,7 +125,7 @@ export default function useOrderDetail() {
     router,
     auth,
     bank,
-    isTicket
+    isTicket,
   };
 }
 
