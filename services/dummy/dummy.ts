@@ -107,17 +107,17 @@ const category:ShopItemCategoryType[] = [{name: "all", counter: 1}, {name: "cosm
 /* 상품상세페이지에서 해당 상품의 선택옵션을 받아오는 api */
 const selectOptions = [
   {
-    id: 1, // 상품id
+    optionCounter: 1, // 상품id
     options: [
       // 선택옵션 리스트
       {
-        optionId: 1,
+        optionDetailCounter: 1,
         title: "화장품명1",
         price: 54000,
         stock: 3,
       },
       {
-        optionId: 2,
+        optionDetailCounter: 2,
         title: "화장품명1 + 소량",
         price: 69000,
         stock: 2,
@@ -125,16 +125,16 @@ const selectOptions = [
     ],
   },
   {
-    id: 2,
+    optionCounter: 2,
     options: [
       {
-        optionId: 1,
+        optionDetailCounter: 1,
         title: "화장품명2",
         price: 59000,
         stock: 4,
       },
       {
-        optionId: 2,
+        optionDetailCounter: 2,
         title: "화장품명2 기획",
         price: 89000,
         stock: 4,
@@ -142,16 +142,16 @@ const selectOptions = [
     ],
   },
   {
-    id: 5,
+    optionCounter: 5,
     options: [
       {
-        optionId: 1,
+        optionDetailCounter: 1,
         title: "기타상품명1",
         price: 10000,
         stock: 2,
       },
       {
-        optionId: 2,
+        optionDetailCounter: 2,
         title: "기타상품명1 기획",
         price: 20000,
         stock: 2,
@@ -164,7 +164,7 @@ const selectOptions = [
 /* 카트에 담긴 상품리스트를 받아오는 api - 회원ID로 셀렉 */
 const cartItems = [
   {
-    id: 1,
+    counter: 1,
     title: "9:35 발라또 퍼플 세럼",
     price: 57000,
     thumbnailUrl:
@@ -178,7 +178,7 @@ const cartItems = [
     stock: 3, // 선택옵션이 있으면 해당 선택옵션 재고, 없으면 상품 재고
   },
   {
-    id: 2,
+    counter: 2,
     title: "9:35 발라또 퍼플 오일미스트",
     price: 66000,
     thumbnailUrl:

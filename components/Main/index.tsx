@@ -24,14 +24,14 @@ export default function Main() {
       <ContentTitle title="shop" />
       <div className="w-[100%] p-4 max-md:p-3">
         <div className="flex justify-center uppercase max-md:text-xs">
-          <div
+          {/* <div
             className={`mx-3 cursor-pointer ${
               tabs === "all" && "text-[#6846b7]"
             }`}
             onClick={() => onTabClick("all")}
           >
             ALL
-          </div>
+          </div> */}
           {items.categories?.map((category, index) => (
             <div
               key={index}

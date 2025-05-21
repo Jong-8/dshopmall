@@ -2,6 +2,7 @@ import API from "@services/API";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { itemList, selectOptions } from "@services/dummy/dummy";
 
 export default function useItem(counter: number) {
   const [item, setItem] = useState<ShopItemDetailType>();
@@ -20,22 +21,24 @@ export default function useItem(counter: number) {
     return total;
   };
 
-  const itemData = async (counter: number) => {
-    const res = await API.item.item(counter);
-    if (res.statusCode === 2000) {
-      setItem(res.result.item);
-      if (res.result.selectOptions) {
+  const itemData = (counter: number) => {
+    //const res = await API.item.item(counter);
+    //if (res.statusCode === 2000) {
+    const item = itemList.filter((item) => item.counter === counter)[0];
+      setItem(item);
+      if (item.isSelectOption) {
+        const selectOption = selectOptions.filter((item) => item.optionCounter === counter)[0];
         setIsSelect(true);
-        setSelectOptionList(res.result.selectOptions);
-        setIsStock(totalStock(res.result.selectOptions.options));
+        setSelectOptionList(selectOption);
+        setIsStock(totalStock(selectOption.options));
       } else {
-        setIsStock(res.result.item.stock);
+        setIsStock(item.stock);
       }
       setCookie("itemCounter", counter, { path: "/" });
-    } else {
-      alert(res.message);
-      router.back();
-    }
+    //} else {
+      //alert(res.message);
+      //router.back();
+    //}
   };
 
   useEffect(() => {
