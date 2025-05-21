@@ -370,7 +370,7 @@ declare global {
   type ShopItemDetailType = {
     counter: number;
     title: string;
-    regularPrice: number;
+    regularPrice?: number;
     price: number;
     category: string;
     thumbnailUrl: string;
@@ -387,7 +387,6 @@ declare global {
 
   type ShopItemSelectOptionType = {
     optionCounter: number;
-    title: string;
     options: ShopItemSelectOptDetailType[];
   };
 
