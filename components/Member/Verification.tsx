@@ -31,15 +31,16 @@ export default function Verification({
         if (rsp.success) {
           //console.log(rsp);
           // 인증 성공 시 로직,
-          const res = await API.verification.verification(rsp.imp_uid);
-          if (res.statusCode === 2000) {
-            //console.log(res.result);
-            //onChange()
-            onVeriChange(res.result.name, res.result.phone, res.result.imp_uid);
-            setShowButton(!showButton);
-          } else {
-            alert(res.result);
-          }
+          // const res = await API.verification.verification(rsp.imp_uid);
+          // if (res.statusCode === 2000) {
+          //   //console.log(res.result);
+          //   //onChange()
+          //   onVeriChange(res.result.name, res.result.phone, res.result.imp_uid);
+          //   setShowButton(!showButton);
+          // } else {
+          //   alert(res.result);
+          // }
+          return false;
         } else {
           // 인증 실패 시 로직,
           alert(rsp.error_msg);
