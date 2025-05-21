@@ -346,13 +346,11 @@ declare global {
   type ShopItemType = {
     counter: number;
     title: string;
+    regularPrice: number;
     price: number;
     category: string;
     thumbnailUrl: string;
-    stock: number;
-    isSelectOption: boolean;
-    images: string[];
-    description: string;
+    isAvailable: boolean;
   };
 
   type ShopLiveItemType = {

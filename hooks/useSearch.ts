@@ -105,7 +105,6 @@ export default function useSearch(search: string | string[] | undefined) {
   const [keyword, setKeyword] = useState<string | string[] | undefined>();
   const [keywordReset, setKeywordReset] = useState<boolean>();
   const [items, setItems] = useState<ShopItemType[]>();
-
   const searchItems = () => {
     const items = itemList.filter((item) => item.title.match(search as string));
     setItems(items);
