@@ -59,28 +59,29 @@ export default function useOrderDetail() {
         phone: query.phone,
       };
     }
-    const res = await API.order.orderDetail(type, datas, auth.token ?? "");
-    if (res.statusCode === 2000) {
-      setOrderItems(res.result.items);
-      setDeliveryInfo({
-        userName: res.result.deliveryInfo?.name,
-        zipcode: res.result.deliveryInfo?.zipcode,
-        address: res.result.deliveryInfo?.address,
-        detailed: res.result.deliveryInfo?.detailed,
-        requests: res.result.deliveryInfo?.requests,
-        phone1: phoneForm(res.result.deliveryInfo?.phone, 1),
-        phone2: phoneForm(res.result.deliveryInfo?.phone, 2),
-        phone3: phoneForm(res.result.deliveryInfo?.phone, 3),
-      });
-      setOrderInfos(res.result.orderInfo);
-      setPaymentInfos(res.result.paymentInfo);
+    return false;
+    // const res = await API.order.orderDetail(type, datas, auth.token ?? "");
+    // if (res.statusCode === 2000) {
+    //   setOrderItems(res.result.items);
+    //   setDeliveryInfo({
+    //     userName: res.result.deliveryInfo?.name,
+    //     zipcode: res.result.deliveryInfo?.zipcode,
+    //     address: res.result.deliveryInfo?.address,
+    //     detailed: res.result.deliveryInfo?.detailed,
+    //     requests: res.result.deliveryInfo?.requests,
+    //     phone1: phoneForm(res.result.deliveryInfo?.phone, 1),
+    //     phone2: phoneForm(res.result.deliveryInfo?.phone, 2),
+    //     phone3: phoneForm(res.result.deliveryInfo?.phone, 3),
+    //   });
+    //   setOrderInfos(res.result.orderInfo);
+    //   setPaymentInfos(res.result.paymentInfo);
 
-      res.result.items.map((item) => {
-        if (item.counter === 9) {
-          setIsTicket(true);
-        }
-      });
-    } else alert(res.message);
+    //   res.result.items.map((item) => {
+    //     if (item.counter === 9) {
+    //       setIsTicket(true);
+    //     }
+    //   });
+    // } else alert(res.message);
   };
 
   useEffect(() => {
