@@ -25,16 +25,16 @@ export default function useItem(counter: number) {
     //const res = await API.item.item(counter);
     //if (res.statusCode === 2000) {
     const item = itemList.filter((item) => item.counter === counter)[0];
-      setItem(item);
-      if (item.isSelectOption) {
-        const selectOption = selectOptions.filter((item) => item.optionCounter === counter)[0];
-        setIsSelect(true);
-        setSelectOptionList(selectOption);
-        setIsStock(totalStock(selectOption.options));
-      } else {
-        setIsStock(item.stock);
-      }
-      setCookie("itemCounter", counter, { path: "/" });
+    setItem(item);
+    if (item.isSelectOption) {
+      const selectOption = selectOptions.filter((item) => item.optionCounter === counter)[0];
+      setIsSelect(true);
+      setSelectOptionList(selectOption);
+      setIsStock(totalStock(selectOption.options));
+    } else {
+      setIsStock(item.stock);
+    }
+    setCookie("itemCounter", counter, { path: "/" });
     //} else {
       //alert(res.message);
       //router.back();
