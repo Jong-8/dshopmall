@@ -98,18 +98,18 @@ export default function CartList() {
     let err = "";
     let stock = 0;
 
-    const item = await API.item.item(counter);
-    if (item.statusCode === 2000) {
-      //console.log(item.result);
-      if (item.result.selectOptions) {
-        item.result.selectOptions.options.filter((option) => {
-          if (option.optionDetailCounter === optionCounter)
-            stock = option.stock;
-        });
-      } else {
-        stock = item.result.item.stock;
-      }
-    } else err = item.message;
+    // const item = await API.item.item(counter);
+    // if (item.statusCode === 2000) {
+    //   //console.log(item.result);
+    //   if (item.result.selectOptions) {
+    //     item.result.selectOptions.options.filter((option) => {
+    //       if (option.optionDetailCounter === optionCounter)
+    //         stock = option.stock;
+    //     });
+    //   } else {
+    //     stock = item.result.item.stock;
+    //   }
+    // } else err = item.message;
 
     return { err, stock };
   };
