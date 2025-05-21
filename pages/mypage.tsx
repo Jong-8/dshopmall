@@ -113,14 +113,14 @@ export default function Mypage() {
 
   const onUnsubscribeClick = async () => {
     const confirmUnsubscribe = confirm("회원을 탈퇴하시겠습니까?");
-    if (confirmUnsubscribe) {
-      const res = await API.auth.unsubscribe(cookies.token);
-      //console.log(cookies.token);
-      if (res.statusCode === 2000) {
-        alert("회원이 탈퇴되었습니다. 감사합니다.");
-        router.replace("/");
-      } else alert(res.message);
-    }
+    // if (confirmUnsubscribe) {
+    //   const res = await API.auth.unsubscribe(cookies.token);
+    //   //console.log(cookies.token);
+    //   if (res.statusCode === 2000) {
+    //     alert("회원이 탈퇴되었습니다. 감사합니다.");
+    //     router.replace("/");
+    //   } else alert(res.message);
+    // }
   };
 
   const onInfoSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -149,12 +149,12 @@ export default function Mypage() {
       };
     }
 
-    const res = await API.auth.modify(cookies.token, infos);
-    if (res.statusCode === 2000) {
-      alert("회원 정보가 변경되었습니다.");
-      mypage.setToken(cookies.token, res.result.user);
-      router.push("/mypage");
-    } else alert(res.message);
+    // const res = await API.auth.modify(cookies.token, infos);
+    // if (res.statusCode === 2000) {
+    //   alert("회원 정보가 변경되었습니다.");
+    //   mypage.setToken(cookies.token, res.result.user);
+    //   router.push("/mypage");
+    // } else alert(res.message);
   };
   return (
     <>

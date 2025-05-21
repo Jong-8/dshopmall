@@ -29,27 +29,28 @@ export default function Login() {
 
   const onLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await API.auth.login(id, password);
-    if (res.statusCode === 2000) {
-      /* 정상 반환시 비즈니스 로직*/
-      const cartItems = await API.cart.cart(res.result.token);
-      if (cartItems.statusCode === 2000) {
-        setCart(cartItems.result.cartItems);
-        setCartCount(cartItems.result.cartItems.length);
-        setCookie("cartItems", cartItems.result.cartItems, {
-          path: "/",
-        });
-        setCookie("cartCount", cartItems.result.cartItems.length, {
-          path: "/",
-        });
-      } else alert(cartItems.message);
+    // const res = await API.auth.login(id, password);
+    // if (res.statusCode === 2000) {
+    //   /* 정상 반환시 비즈니스 로직*/
+    //   const cartItems = await API.cart.cart(res.result.token);
+    //   if (cartItems.statusCode === 2000) {
+    //     setCart(cartItems.result.cartItems);
+    //     setCartCount(cartItems.result.cartItems.length);
+    //     setCookie("cartItems", cartItems.result.cartItems, {
+    //       path: "/",
+    //     });
+    //     setCookie("cartCount", cartItems.result.cartItems.length, {
+    //       path: "/",
+    //     });
+    //   } else alert(cartItems.message);
 
-      setToken(res.result.token, res.result.user);
-      setCookie("token", res.result.token, {
-        path: "/",
-      });
-      router.replace(router.query.url ? `/${router.query.url}` : "/");
-    } else alert(res.message);
+    //   setToken(res.result.token, res.result.user);
+    //   setCookie("token", res.result.token, {
+    //     path: "/",
+    //   });
+    //   router.replace(router.query.url ? `/${router.query.url}` : "/");
+    // } else alert(res.message);
+    return false;
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
