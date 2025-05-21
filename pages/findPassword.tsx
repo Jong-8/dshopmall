@@ -50,18 +50,19 @@ export default function FindPassword() {
       phone,
     };
 
-    const res = await API.auth.findPassword(infos);
-    if (res.statusCode === 2000) {
-      //console.log(res.result);
-      const temporaryLogin = await API.auth.login(id, res.result.password);
-      if (temporaryLogin.statusCode === 2000) {
-        //await API.auth.tokenLogin(temporaryLogin.result.token);
-        setCookie("temporaryToken", temporaryLogin.result.token, {
-          path: "/",
-        });
-        router.push("/changePassword");
-      }
-    } else alert(res.message);
+    // const res = await API.auth.findPassword(infos);
+    // if (res.statusCode === 2000) {
+    //   //console.log(res.result);
+    //   const temporaryLogin = await API.auth.login(id, res.result.password);
+    //   if (temporaryLogin.statusCode === 2000) {
+    //     //await API.auth.tokenLogin(temporaryLogin.result.token);
+    //     setCookie("temporaryToken", temporaryLogin.result.token, {
+    //       path: "/",
+    //     });
+    //     router.push("/changePassword");
+    //   }
+    // } else alert(res.message);
+    return false;
   };
   return (
     <SubLayout title="비밀번호 찾기">

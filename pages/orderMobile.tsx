@@ -18,28 +18,28 @@ export default function orderMobile() {
   const order = useOrder();
 
   const payComplete = async (datas: ShopPayCompleteRequest) => {
-    const res = await API.order.payComplete(datas);
-    if (res.statusCode === 2000) {
-      alert("결제가 완료되었습니다.");
+    // const res = await API.order.payComplete(datas);
+    // if (res.statusCode === 2000) {
+    //   alert("결제가 완료되었습니다.");
 
-      // 장바구니 쿠키, store 비우기
-      if (cookies.isCart) {
-        setCookie("cartItems", [], { path: "/" });
-        auth.setCartCount(0);
-        setCookie("guestCartItems", [], { path: "/" });
-        setCookie("cartCount", 0, { path: "/" });
-        removeCookie("isCart");
-      }
-      removeCookie("buyerInfo");
+    //   // 장바구니 쿠키, store 비우기
+    //   if (cookies.isCart) {
+    //     setCookie("cartItems", [], { path: "/" });
+    //     auth.setCartCount(0);
+    //     setCookie("guestCartItems", [], { path: "/" });
+    //     setCookie("cartCount", 0, { path: "/" });
+    //     removeCookie("isCart");
+    //   }
+    //   removeCookie("buyerInfo");
 
-      // 회원, 게스트 url 설정
-      order.gotoUrl(
-        auth.token,
-        router.query.merchant_uid,
-        router.query.name,
-        router.query.phone
-      );
-    } else alert(res.message);
+    //   // 회원, 게스트 url 설정
+    //   order.gotoUrl(
+    //     auth.token,
+    //     router.query.merchant_uid,
+    //     router.query.name,
+    //     router.query.phone
+    //   );
+    // } else alert(res.message);
   };
 
   useEffect(() => {

@@ -23,12 +23,13 @@ export default function useMypage() {
   };
 
   const orderListData = async (token: string) => {
-    const res = await API.order.orderList(token);
-    if (res.statusCode === 2000) {
-      setOrderList(res.result.orderItems);
-    } else {
-      alert(res.message);
-    }
+    // const res = await API.order.orderList(token);
+    // if (res.statusCode === 2000) {
+    //   setOrderList(res.result.orderItems);
+    // } else {
+    //   alert(res.message);
+    // }
+    setOrderList([])
   };
 
   useEffect(() => {

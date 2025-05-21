@@ -21,13 +21,13 @@ export default function Footer() {
   } = shopInfo.shopInfo;
 
   const shopInfoApi = async () => {
-    const res = await API.shopInfo.shopInfo();
-    if (res.statusCode === 2000) {
-      shopInfo.setShopInfo(res.result);
-      setCookies("shopInfo", res.result, {
-        path: "/",
-      });
-    } else alert(res.message);
+    // const res = await API.shopInfo.shopInfo();
+    // if (res.statusCode === 2000) {
+    //   shopInfo.setShopInfo(res.result);
+    //   setCookies("shopInfo", res.result, {
+    //     path: "/",
+    //   });
+    // } else alert(res.message);
   };
 
   useEffect(() => {

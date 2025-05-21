@@ -31,14 +31,14 @@ export default function CheckGuestOrder() {
       phone: phone,
     };
 
-    const res = await API.order.orderDetail("guest", datas, "");
-    if (res.statusCode === 2000) {
-      if (res.message === "해당 주문 내역이 존재하지 않습니다.") {
-        alert(res.message);
-        return false;
-      }
-      router.push(`/orderDetails/${orderId}?name=${name}&phone=${phone}`);
-    } else alert(res.message);
+    // const res = await API.order.orderDetail("guest", datas, "");
+    // if (res.statusCode === 2000) {
+    //   if (res.message === "해당 주문 내역이 존재하지 않습니다.") {
+    //     alert(res.message);
+    //     return false;
+    //   }
+    //   router.push(`/orderDetails/${orderId}?name=${name}&phone=${phone}`);
+    // } else alert(res.message);
   };
   return (
     <SubLayout title="비회원 주문 조회하기">

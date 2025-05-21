@@ -25,20 +25,20 @@ export default function Cart() {
   };
 
   const setCart = async (token: string) => {
-    const cartItems = await API.cart.cart(token);
-    if (cartItems.statusCode === 2000) {
-      cart.setCart(cartItems.result.cartItems);
-      auth.setCartCount(calculateCount(cartItems.result.cartItems));
-      setCookie("cartItems", cartItems.result.cartItems, {
-        path: "/",
-      });
-      setCookie("cartCount", cartItems.result.cartItems.length, {
-        path: "/",
-      });
-    } else {
-      alert(cartItems.message);
-      return false;
-    }
+    // const cartItems = await API.cart.cart(token);
+    // if (cartItems.statusCode === 2000) {
+    //   cart.setCart(cartItems.result.cartItems);
+    //   auth.setCartCount(calculateCount(cartItems.result.cartItems));
+    //   setCookie("cartItems", cartItems.result.cartItems, {
+    //     path: "/",
+    //   });
+    //   setCookie("cartCount", cartItems.result.cartItems.length, {
+    //     path: "/",
+    //   });
+    // } else {
+    //   alert(cartItems.message);
+    //   return false;
+    // }
   };
 
   useEffect(() => {

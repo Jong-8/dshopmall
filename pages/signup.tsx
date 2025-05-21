@@ -73,15 +73,17 @@ export default function Signup() {
       imp_uid: imp_uid,
     };
 
-    const res = await API.auth.signup(infos);
-    if (res.statusCode === 2000) {
-      /* 정상 반환시 비즈니스 로직*/
-      setToken(res.result.token, res.result.user);
-      setCookie("token", res.result.token, {
-        path: "/",
-      });
-      router.replace("/");
-    } else alert(res.message);
+    return false;
+
+    // const res = await API.auth.signup(infos);
+    // if (res.statusCode === 2000) {
+    //   /* 정상 반환시 비즈니스 로직*/
+    //   setToken(res.result.token, res.result.user);
+    //   setCookie("token", res.result.token, {
+    //     path: "/",
+    //   });
+    //   router.replace("/");
+    // } else alert(res.message);
   };
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -114,28 +116,28 @@ export default function Signup() {
     });
 
     const code = async (code: ShopCheckCodeRequest) => {
-      const res = await API.auth.checkCode(code);
-      if (res.statusCode === 2000) {
-        setCheckCode({
-          isCode: true,
-          chkCode: true,
-          codeMessage: "추천 가능한 코드입니다.",
-        });
-      } else {
-        if (!code.code) {
-          setCheckCode({
-            isCode: false,
-            chkCode: false,
-            codeMessage: "",
-          });
-        } else {
-          setCheckCode({
-            isCode: true,
-            chkCode: false,
-            codeMessage: res.message,
-          });
-        }
-      }
+      // const res = await API.auth.checkCode(code);
+      // if (res.statusCode === 2000) {
+      //   setCheckCode({
+      //     isCode: true,
+      //     chkCode: true,
+      //     codeMessage: "추천 가능한 코드입니다.",
+      //   });
+      // } else {
+      //   if (!code.code) {
+      //     setCheckCode({
+      //       isCode: false,
+      //       chkCode: false,
+      //       codeMessage: "",
+      //     });
+      //   } else {
+      //     setCheckCode({
+      //       isCode: true,
+      //       chkCode: false,
+      //       codeMessage: res.message,
+      //     });
+      //   }
+      // }
     };
     code({ code: value });
   };

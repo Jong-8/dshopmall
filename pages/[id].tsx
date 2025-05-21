@@ -318,15 +318,15 @@ export default function Item() {
   };
 
   const addCart = async (items: ShopCartAddRequest, token?: string) => {
-    if (token) {
-      const res = await API.cart.addCart(token, items);
-      if (res.statusCode === 2000) {
-        //console.log(res.result);
-      } else {
-        alert(res.message);
-        return false;
-      }
-    }
+    // if (token) {
+    //   const res = await API.cart.addCart(token, items);
+    //   if (res.statusCode === 2000) {
+    //     //console.log(res.result);
+    //   } else {
+    //     alert(res.message);
+    //     return false;
+    //   }
+    // }
   };
 
   const onItemSubmit = (

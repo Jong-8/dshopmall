@@ -336,25 +336,26 @@ export default function Order() {
       }
     }
 
-    const res = await API.order.payPrepare(order.auth.token, datas);
-    if (res.statusCode === 2000) {
-      if (order.payment !== "withoutBankbook") {
-        handlePay(res.result);
-      } else {
-        order.payComplete({
-          imp_uid: "imp15801485",
-          merchant_uid: res.result.merchant_uid,
-        });
+    // const res = await API.order.payPrepare(order.auth.token, datas);
+    // if (res.statusCode === 2000) {
+    //   if (order.payment !== "withoutBankbook") {
+    //     handlePay(res.result);
+    //   } else {
+    //     order.payComplete({
+    //       imp_uid: "imp15801485",
+    //       merchant_uid: res.result.merchant_uid,
+    //     });
 
-        // 회원, 게스트 url 설정
-        order.gotoUrl(
-          order.auth.token,
-          res.result.merchant_uid,
-          userName,
-          `${userPhone1}${userPhone2}${userPhone3}`
-        );
-      }
-    } else alert(res.statusCode + " " + res.message);
+    //     // 회원, 게스트 url 설정
+    //     order.gotoUrl(
+    //       order.auth.token,
+    //       res.result.merchant_uid,
+    //       userName,
+    //       `${userPhone1}${userPhone2}${userPhone3}`
+    //     );
+    //   }
+    // } else alert(res.statusCode + " " + res.message);
+    return false;
   };
   return (
     <>

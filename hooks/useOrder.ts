@@ -143,27 +143,28 @@ export default function useOrder() {
   };
 
   const payComplete = async (datas: ShopPayCompleteRequest) => {
-    const res = await API.order.payComplete(datas);
-    if (res.statusCode === 2000) {
-      if (cookies.buyerInfo || datas) {
-        alert(
-          payment !== "withoutBankbook"
-            ? `결제가 완료되었습니다.`
-            : "입금 확인 후 결제가 완료됩니다."
-        );
+    // const res = await API.order.payComplete(datas);
+    // if (res.statusCode === 2000) {
+    //   if (cookies.buyerInfo || datas) {
+    //     alert(
+    //       payment !== "withoutBankbook"
+    //         ? `결제가 완료되었습니다.`
+    //         : "입금 확인 후 결제가 완료됩니다."
+    //     );
 
-        // 장바구니 쿠키, store 비우기
-        if (cookies.isCart) {
-          setCookie("cartItems", [], { path: "/" });
-          auth.setCartCount(0);
-          setCookie("guestCartItems", [], { path: "/" });
-          setCookie("cartCount", 0, { path: "/" });
-          removeCookie("isCart");
-        }
-        removeCookie("buyerInfo");
-        removeCookie("seller");
-      }
-    } else alert(res.message);
+    //     // 장바구니 쿠키, store 비우기
+    //     if (cookies.isCart) {
+    //       setCookie("cartItems", [], { path: "/" });
+    //       auth.setCartCount(0);
+    //       setCookie("guestCartItems", [], { path: "/" });
+    //       setCookie("cartCount", 0, { path: "/" });
+    //       removeCookie("isCart");
+    //     }
+    //     removeCookie("buyerInfo");
+    //     removeCookie("seller");
+    //   }
+    // } else alert(res.message);
+    return false;
   };
 
   useEffect(() => {

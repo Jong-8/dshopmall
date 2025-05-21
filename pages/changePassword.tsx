@@ -36,16 +36,18 @@ export default function ChangePassword() {
       password: changePassword,
     };
 
-    const res = await API.auth.modify(cookies.temporaryToken, infos);
-    if (res.statusCode === 2000) {
-      alert("비밀번호 변경이 완료되었습니다.");
-      removeCookie("temporaryToken");
-      if (cookies.token) {
-        router.push("/mypage");
-      } else {
-        router.replace("/login");
-      }
-    } else alert(res.message);
+    return false;
+
+    // const res = await API.auth.modify(cookies.temporaryToken, infos);
+    // if (res.statusCode === 2000) {
+    //   alert("비밀번호 변경이 완료되었습니다.");
+    //   removeCookie("temporaryToken");
+    //   if (cookies.token) {
+    //     router.push("/mypage");
+    //   } else {
+    //     router.replace("/login");
+    //   }
+    // } else alert(res.message);
   };
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

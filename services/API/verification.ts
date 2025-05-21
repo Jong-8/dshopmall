@@ -1,9 +1,9 @@
-import { apiHelper } from "./serviceHelper";
+// import { apiHelper } from "./serviceHelper";
 
-const helper = apiHelper();
+// const helper = apiHelper();
 
-export const verification = async (imp_uid: string) => {
-  const body = { imp_uid };
-  const res = await helper.Post<ShopPortOneCertiResponse>("/auth/certi", body);
-  return res;
-};
+// export const verification = async (imp_uid: string) => {
+//   const body = { imp_uid };
+//   const res = await helper.Post<ShopPortOneCertiResponse>("/auth/certi", body);
+//   return res;
+// };

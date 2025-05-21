@@ -22,31 +22,32 @@ export default function useAuth() {
   };
 
   const tokenLogin = async (token: string) => {
-    const res = await API.auth.tokenLogin(token);
-    if (res.statusCode === 2000) {
-      auth.setToken(res.result.token, res.result.user);
-      setCookie("token", token, {
-        path: "/",
-      });
-    } else {
-      alert(res.message);
-      return false;
-    }
+    // const res = await API.auth.tokenLogin(token);
+    // if (res.statusCode === 2000) {
+    //   auth.setToken(res.result.token, res.result.user);
+    //   setCookie("token", token, {
+    //     path: "/",
+    //   });
+    // } else {
+    //   alert(res.message);
+    //   return false;
+    // }
 
-    const cartItems = await API.cart.cart(token);
-    if (cartItems.statusCode === 2000) {
-      cart.setCart(cartItems.result.cartItems);
-      auth.setCartCount(calculateCount(cartItems.result.cartItems));
-      setCookie("cartItems", cartItems.result.cartItems, {
-        path: "/",
-      });
-      setCookie("cartCount", cartItems.result.cartItems.length, {
-        path: "/",
-      });
-    } else {
-      alert(cartItems.message);
-      return false;
-    }
+    // const cartItems = await API.cart.cart(token);
+    // if (cartItems.statusCode === 2000) {
+    //   cart.setCart(cartItems.result.cartItems);
+    //   auth.setCartCount(calculateCount(cartItems.result.cartItems));
+    //   setCookie("cartItems", cartItems.result.cartItems, {
+    //     path: "/",
+    //   });
+    //   setCookie("cartCount", cartItems.result.cartItems.length, {
+    //     path: "/",
+    //   });
+    // } else {
+    //   alert(cartItems.message);
+    //   return false;
+    // }
+    return false;
   };
 
   useEffect(() => {
