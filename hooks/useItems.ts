@@ -5,98 +5,62 @@ const itemList = [
   {
     counter: 1,
     title: "9:35 발라또 퍼플 세럼",
+    regularPrice: 57000,
     price: 57000,
     category: "cosmetics",
     thumbnailUrl:
       "https://www.935.co.kr/upload/product/thumb_20230418161252037400.JPG",
-    stock: 3,
-    isSelectOption: true,
-    images: [
-      "https://www.935.co.kr/upload/product/thumb_20230418161252037400.JPG",
-      "https://www.935.co.kr/upload/product/thumb_20221220131452063268.JPEG",
-    ],
-    description:
-      '<img src="https://www.935.co.kr/upload/product/20230526160302415015.JPG" alt="9:35 발라또 퍼플 세럼 설명" />',
+      isAvailable: true,
   },
   {
     counter: 2,
     title: "9:35 발라또 퍼플 오일미스트",
+    regularPrice: 66000,
     price: 66000,
     category: "cosmetics",
     thumbnailUrl:
       "https://www.935.co.kr/upload/product/thumb_20230418161839810305.JPG",
-    stock: 4,
-    isSelectOption: true,
-    images: [
-      "https://www.935.co.kr/upload/product/thumb_20230418161839810305.JPG",
-      "https://www.935.co.kr/upload/product/thumb_20221220131600687051.JPEG",
-    ],
-    description:
-      '<img src="https://www.935.co.kr/upload/product/20230526160813261200.JPG" alt="9:35 발라또 퍼플 오일미스트 설명" />',
+      isAvailable: true,
   },
   {
     counter: 3,
     title: "9:35 발라또 퍼플 부스터",
+    regularPrice: 42000,
     price: 42000,
     category: "cosmetics",
     thumbnailUrl:
       "https://www.935.co.kr/upload/product/thumb_20230418161305601800.JPG",
-    stock: 99,
-    isSelectOption: false,
-    images: [
-      "https://www.935.co.kr/upload/product/thumb_20230418161305601800.JPG",
-      "https://www.935.co.kr/upload/product/thumb_20221220131513850221.JPEG",
-    ],
-    description:
-      '<img src="https://www.935.co.kr/upload/product/20230526160320124504.JPG" alt="9:35 발라또 퍼플 부스터 설명" />',
+      isAvailable: true,
   },
   {
     counter: 4,
     title: "9:35 화이트닝 토마토 미백앰플",
+    regularPrice: 99000,
     price: 99000,
     category: "cosmetics",
     thumbnailUrl:
       "https://www.935.co.kr/upload/product/thumb_20230418161806538376.JPG",
-    stock: 10,
-    isSelectOption: false,
-    images: [
-      "https://www.935.co.kr/upload/product/thumb_20230418161806538376.JPG",
-      "https://www.935.co.kr/upload/product/thumb_20221220131536802048.JPEG",
-    ],
-    description:
-      '<img src="https://www.935.co.kr/upload/product/20230526160727534524.JPG" alt="9:35 화이트닝 토마토 미백앰플 설명" />',
+      isAvailable: true,
   },
   {
     counter: 5,
     title: "9시 35분 멀티비타민미네랄",
+    regularPrice: 37000,
     price: 37000,
     category: "etc",
     thumbnailUrl:
       "https://www.935.co.kr/upload/product/thumb_20230418161444331575.JPG",
-    stock: 8,
-    isSelectOption: true,
-    images: [
-      "https://www.935.co.kr/upload/product/thumb_20230418161444331575.JPG",
-      "https://www.935.co.kr/upload/product/thumb_20221220132044045458.JPEG",
-    ],
-    description:
-      '<img src="https://www.935.co.kr/upload/product/20230403090441144670.JPG" alt="9:35 멀티비타민미네랄 설명" />',
+      isAvailable: true,
   },
   {
     counter: 6,
     title: "9시 35분 콜라겐 파우더",
+    regularPrice: 37000,
     price: 37000,
     category: "etc",
     thumbnailUrl:
       "https://www.935.co.kr/upload/product/thumb_20230418161424180313.JPG",
-    stock: 2,
-    isSelectOption: false,
-    images: [
-      "https://www.935.co.kr/upload/product/thumb_20230418161424180313.JPG",
-      "https://www.935.co.kr/upload/product/thumb_20221220131953814146.JPEG",
-    ],
-    description:
-      '<img src="https://www.935.co.kr/upload/product/20230403090414060818.JPG" alt="9:35 콜라겐 파우더 설명" />',
+    isAvailable: true,
   },
 ];
 
@@ -105,17 +69,12 @@ const category:ShopItemCategoryType[] = [{name: "all", counter: 1}, {name: "cosm
 export default function useItems() {
   const [originItems, setOriginItems] = useState<ShopItemType[]>(); // 본 상품 리스트
   const [items, setItems] = useState<ShopItemType[]>(); // 수정되는 상품 리스트
-  const [categories, setCategories] = useState<ShopItemCategoryType[]>(); // 카테고리 리스트
-  const itemsData = async () => {
-    const res = await API.item.items();
-    if (res.statusCode === 2000) {
-      const saleItems = res.result.item.filter((item) => {
-        return item.isAvailable;
-      });
-      setItems(saleItems);
-      setOriginItems(saleItems);
-      setCategories(res.result.category);
-    } else alert(res.message);
+  const [categories, setCategories] = useState<ShopItemCategoryType[]>(category); // 카테고리 리스트
+  const itemsData = () => {
+    const saleItems = itemList;
+    setItems(saleItems);
+    setOriginItems(saleItems);
+    setCategories(categories);
   };
 
   useEffect(() => {
