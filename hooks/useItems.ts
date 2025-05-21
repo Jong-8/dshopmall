@@ -107,16 +107,10 @@ export default function useItems() {
   const [items, setItems] = useState<ShopItemType[]>(); // 수정되는 상품 리스트
   const [categories, setCategories] = useState<ShopItemCategoryType[]>(category); // 카테고리 리스트
   const itemsData = () => {
-    //const res = await API.item.items();
-    //if (res.statusCode === 2000) {
-      // const saleItems = res.result.item.filter((item) => {
-      //   return item.isAvailable;
-      // });
-      const saleItems = itemList;
-      setItems(saleItems);
-      setOriginItems(saleItems);
-      setCategories(categories);
-    //} else alert(res.message);
+    const saleItems = itemList;
+    setItems(saleItems);
+    setOriginItems(saleItems);
+    setCategories(categories);
   };
 
   useEffect(() => {
