@@ -28,30 +28,32 @@ export default function OrderDetails() {
 
     if (!confirm("주문을 취소하시겠습니까?")) return false;
 
-    let res;
-    if (orderDetail.auth.token) {
-      const datas = {
-        merchant_uid: orderDetail.merchantUid,
-        reason: cancelReason,
-      };
-      res = await API.order.orderCancel(
-        "member",
-        datas,
-        orderDetail.auth.token
-      );
-    } else {
-      const datas = {
-        merchant_uid: orderDetail.merchantUid,
-        guest_name: orderDetail.router.query.name,
-        guest_phone: orderDetail.router.query.phone,
-        reason: cancelReason,
-      };
-      res = await API.order.orderCancel("guest", datas, "");
-    }
-    if (res.statusCode === 2000) {
-      alert("주문이 취소되었습니다.");
-      orderDetail.router.reload();
-    } else alert(res.message);
+    return false;
+
+    // let res;
+    // if (orderDetail.auth.token) {
+    //   const datas = {
+    //     merchant_uid: orderDetail.merchantUid,
+    //     reason: cancelReason,
+    //   };
+    //   res = await API.order.orderCancel(
+    //     "member",
+    //     datas,
+    //     orderDetail.auth.token
+    //   );
+    // } else {
+    //   const datas = {
+    //     merchant_uid: orderDetail.merchantUid,
+    //     guest_name: orderDetail.router.query.name,
+    //     guest_phone: orderDetail.router.query.phone,
+    //     reason: cancelReason,
+    //   };
+    //   res = await API.order.orderCancel("guest", datas, "");
+    // }
+    // if (res.statusCode === 2000) {
+    //   alert("주문이 취소되었습니다.");
+    //   orderDetail.router.reload();
+    // } else alert(res.message);
   };
 
   const calculateDelivery = (arr: ShopOrderDetailItemType[]) => {
@@ -129,14 +131,15 @@ export default function OrderDetails() {
       }),
       merchant_uid: orderDetail.merchantUid,
     };
-    const res = await API.order.orderDeliveryChange(
-      datas,
-      orderDetail.auth.token ?? ""
-    );
-    if (res.statusCode === 2000) {
-      alert("배송지 정보 변경 사항이 저장되었습니다.");
-      orderDetail.router.reload();
-    } else alert(res.message);
+    // const res = await API.order.orderDeliveryChange(
+    //   datas,
+    //   orderDetail.auth.token ?? ""
+    // );
+    // if (res.statusCode === 2000) {
+    //   alert("배송지 정보 변경 사항이 저장되었습니다.");
+    //   orderDetail.router.reload();
+    // } else alert(res.message);
+    return false;
   };
 
   return (

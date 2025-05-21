@@ -116,10 +116,10 @@ export default function CartList() {
 
   const changeQty = async (qty: number, counter: number | string) => {
     if (auth.token) {
-      const res = await API.cart.changeCart(auth.token, { counter, qty });
-      if (res.statusCode === 2000) {
-        changeCart(res.result.cartItems);
-      } else alert(res.message);
+      // const res = await API.cart.changeCart(auth.token, { counter, qty });
+      // if (res.statusCode === 2000) {
+      //   changeCart(res.result.cartItems);
+      // } else alert(res.message);
     } else {
       let guestItems: ShopCartType[] = cookies.guestCartItems;
       guestItems = guestItems.map((guestItem) => {
@@ -218,11 +218,11 @@ export default function CartList() {
     const chkDelete = confirm("선택한 상품을 삭제하시겠습니까?");
     if (chkDelete) {
       if (auth.token) {
-        const res = await API.cart.deleteCart(auth.token, { counter: id });
-        if (res.statusCode === 2000) {
-          alert("선택한 상품 장바구니에서 삭제되었습니다.");
-          changeCart(res.result.cartItems);
-        } else alert(res.message);
+        // const res = await API.cart.deleteCart(auth.token, { counter: id });
+        // if (res.statusCode === 2000) {
+        //   alert("선택한 상품 장바구니에서 삭제되었습니다.");
+        //   changeCart(res.result.cartItems);
+        // } else alert(res.message);
       } else {
         const newGuestCartItems = cookies.guestCartItems.filter(
           (item: ShopCartType) => {
